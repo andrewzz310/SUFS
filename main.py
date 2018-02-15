@@ -1,4 +1,5 @@
 def main():
+    print("all the things!")
 
 """
     Some weird python thing to make main work(?).

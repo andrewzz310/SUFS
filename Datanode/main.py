@@ -1,4 +1,12 @@
+def displayDatanodeWelcomeMessage():
+    """
+    Displays a simple welcome message to terminal
+    """
+    print("Hello, Datanode!")
+
+
 def main():
+    displayDatanodeWelcomeMessage()
 
 """
     Some weird python thing to make main work(?).
