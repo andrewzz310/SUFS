@@ -1,2 +1,2 @@
-# SUFS - Shitty Useless File System
+# SUFS - Seattle University File System
 
