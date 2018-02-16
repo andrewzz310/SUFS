@@ -27,6 +27,9 @@ from io import BytesIO
 from json import dumps as json_encode
 import os
 import sys
+import boto3
+import boto3.utils
+from boto3.exceptions import ResourceNotExistsError, UnknownAPIVersionError
 
 if sys.version_info >= (3, 0):
     from http.server import BaseHTTPRequestHandler, HTTPServer
