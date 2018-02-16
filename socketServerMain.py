@@ -1,5 +1,5 @@
 '''
-    Simple socket server using threads
+    Simple socket server using multiple threads
 '''
 
 import socket
