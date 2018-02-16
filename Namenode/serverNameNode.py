@@ -5,7 +5,10 @@
 import socket
 import sys
 import boto3
+from main import *
 from thread import *
+
+
 
 HOST = ''   # Symbolic name meaning all available interfaces
 PORT = 8888 # Arbitrary non-privileged port
@@ -25,12 +28,12 @@ print 'Socket bind complete'
 #Start listening on socket
 s.listen(10)
 print 'Socket now listening'
+displayNamenodeWelcomeMessage()
 
 #Function for handling connections. This will be used to create threads
 def clientthread(conn):
     #Sending message to connected client
-    conn.send('Welcome to the HDFS. Type something and hit enter and i will return it as a test\n') #send only takes string
-
+    conn.send('Welcome to the NAMENODE. Type something and hit enter and i will return it as a test\n') #send only takes string
     #infinite loop so that function do not terminate and thread do not end.
     while True:
 
