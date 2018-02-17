@@ -46,6 +46,7 @@ class DataNodeManager():
             sys.exit()
 
         print 'Socket bind complete'
+        s.listen(10)
         while 1:
             #wait to accept a connection - blocking call
             conn, addr = s.accept()
@@ -53,6 +54,4 @@ class DataNodeManager():
 
             #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
             start_new_thread(self.heartBeat ,(conn,))
-
-
         s.close()
