@@ -1,33 +1,42 @@
 import boto3
 import socket
 import sys
-import datetime
+import time
+from thread import *
 
 
 class DataNodeManager():
     def __init__(self):
-        self.map = []
-        self.nodeHeartBeat()
+        self.map = {}
+        start_new_thread(self.nodeHeartBeat, ())
 
     def addNode(self, node):
-        self.map[node] = datetime.datetime.now()
+        self.map[node] = time.time()
 
     def removeNode(self, node):
         del self.map[node]
 
-    def heartBeat(self, conn):
-        while True:
-            #Receiving from client
-            data = conn.recv(1024)
-            reply = 'OK...' + data
-            if not data:
-                break
+    def getDataNodes(self):
+        return self.map
 
-            conn.sendall(reply)
-            if (node in map):
-                self.map[data] = datetime.datetime.now()
-            else:
-                self.addNode(data)
+    def checkTimes(self):
+        for key in self.map:
+            diff = time.time() - self.map[key]
+            if (diff > 10):
+                removeNode(key)
+
+    def heartBeat(self, conn):
+        #Receiving from client
+        data = conn.recv(1024)
+        reply = 'OK... ' + data
+        #if not data:
+            #break
+
+        conn.sendall(reply)
+        if (data in self.map):
+            self.map[data] = time.time()
+        else:
+            self.addNode(data)
         #came out of loop
         conn.close()
 
@@ -54,4 +63,5 @@ class DataNodeManager():
 
             #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
             start_new_thread(self.heartBeat ,(conn,))
+            self.checkTimes()
         s.close()
