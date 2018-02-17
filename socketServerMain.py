@@ -68,6 +68,12 @@ def clientthread(conn):
 
         elif cliInput[i] == 'lsdir':
             reply = 'access list contents of directory s3| next cmd: '
+            s3 = boto3.resource('s3')
+            while True:
+                for bucket in s3.buckets.all():
+                    print(bucket.name)
+
+                break
 
         elif cliInput[i] == 'lsdnode':
             reply = 'access list datanotes that store replicas of each block of file s3| next cmd: '
@@ -77,19 +83,10 @@ def clientthread(conn):
         else:
             reply = 'please type a correct command to the portal or 0 to exit: '
 
-
-
-
         conn.sendall(reply)
         i+=1
 
-        '''
-        #Receiving from client
-        data = conn.recv(1024)
-        reply = 'OK...' + data
-        if not data:
-            break
-        '''
+
 
     #came out of loop
     conn.close()
