@@ -5,7 +5,7 @@ def main():
     'Delete directory?\n' 'List contents of directory?\n'
     'List datanodes that store replicas of each block of a file?\n')
 
-#connect to namenode server and pass arguments for these commands
+
 """
     Some weird python thing to make main work(?).
     Look into this.
