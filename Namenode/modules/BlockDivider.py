@@ -6,24 +6,23 @@ import os
 
 def splitFile(filename):
     """
-
-    :param filename:
-    :param parts: number of file splits
-    :return:
+    Splits a file into blocks and returns this location or newly created block files.
+    :param filename: absolute path to file (ie:"/Users/justin/cs/cloud/input/testfile.txt")
+    :return: a list of all block files created
     """
     BLOCKSIZE = 256
 
     output_list = []
-    outputBase = ""
+    output_base = ""
     path = ""
     filesize = 0
 
     split_paths = os.path.split(filename)
 
-    outputBase = split_paths[1]
+    output_base = split_paths[1]
     path = split_paths[0]
 
-    print "file name: " + outputBase
+    print "file name: " + output_base
 
     # open file
     file = open(filename)
@@ -38,7 +37,7 @@ def splitFile(filename):
     currentsize = 0
     while currentsize < filesize:
         outputData = file.read(BLOCKSIZE)
-        outputName = path + "/" + outputBase + '.part' + str(at)
+        outputName = path + "/" + output_base + '.part' + str(at)
         output = open(outputName, 'w')
         output.write(outputData)
         output.close()
@@ -51,8 +50,9 @@ def splitFile(filename):
     # close file
     file.close()
 
+    return output_list
 
 """
 for testing...
 """
-#splitFile("/Users/justin/cs/cloud/input/testfile.txt")
+#print splitFile("/Users/justin/cs/cloud/input/testfile.txt")
