@@ -56,4 +56,4 @@ def splitFile(filename, outpath):
 """
 for testing...
 """
-print splitFile("/Users/justin/cs/cloud/input/testfile.txt", "/Users/justin/cs/cloud/output/")
+#print splitFile("/Users/justin/cs/cloud/input/testfile.txt", "/Users/justin/cs/cloud/output/")
