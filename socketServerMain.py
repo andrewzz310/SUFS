@@ -38,7 +38,7 @@ def clientthread(conn):
     conn.send('Welcome to the SUFS MAIN Portal. Type command and hit enter and i will return it as a test\n') #send only takes string
     conn.send('Create File? type: cf \n' 'Read File? type: rf \n' 'Delete a file? type: df  \n' 'Create directory? type: cdir \n'
               'Delete directory? type: deldir \n' 'List contents of directory? type: lsdir \n'
-              'List datanodes that store replicas of each block of a file? type: lsdnode \n')
+              'List datanodes that store replicas of each block of a file? type: lsdnode \n' 'Press 0 to exit \n')
     #infinite loop so that function do not terminate and thread do not end.
     while True:
 
@@ -52,28 +52,31 @@ def clientthread(conn):
         print(cliInput[i])
 
         if cliInput[i] == 'cf':
-            reply = 'access create file S3 ' + cliInput[0]
+            reply = 'access create file S3| next cmd: '
 
         elif cliInput[i] == 'rf':
-            reply = 'access read file s3 ' + cliInput[0]
+            reply = 'access read file s3| next cmd: '
 
         elif cliInput[i] == 'df':
-            reply = 'access delete file s3 ' + cliInput[0]
+            reply = 'access delete file s3| next cmd: '
 
         elif cliInput[i] == 'cdir':
-            reply = 'access create directory s3 ' + cliInput[0]
+            reply = 'access create directory s3| next cmd: '
 
         elif cliInput[i] == 'deldir':
-            reply = 'access delete directory s3 ' + cliInput[0]
+            reply = 'access delete directory s3| next cmd: '
 
         elif cliInput[i] == 'lsdir':
-            reply = 'access list contents of directory s3 ' + cliInput[0]
+            reply = 'access list contents of directory s3| next cmd: '
 
         elif cliInput[i] == 'lsdnode':
-            reply = 'access list datanotes that store replicas of each block of file s3 ' + cliInput[0]
+            reply = 'access list datanotes that store replicas of each block of file s3| next cmd: '
 
+        elif cliInput[i] == '0':
+            break
         else:
-            reply = 'please type a correct command to the portal'
+            reply = 'please type a correct command to the portal or 0 to exit: '
+
 
 
 
@@ -92,7 +95,7 @@ def clientthread(conn):
     conn.close()
 
     #for debug
-    print 'out of loop'
+    print 'Thank you for using the SUFS'
 
 #now keep talking with the client
 while 1:
