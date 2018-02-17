@@ -1,7 +1,8 @@
 '''
     Simple socket server using multiple threads
 '''
-
+from __future__ import print_function
+import os
 import socket
 import sys
 import boto3
@@ -10,24 +11,25 @@ from main import *
 
 
 
+
 HOST = ''   # Symbolic name meaning all available interfaces
 PORT = 8888 # Arbitrary non-privileged port
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-print 'Socket created'
+print('Socket created')
 
 #Bind socket to local host and port
 try:
     s.bind((HOST, PORT))
 except socket.error as msg:
-    print 'Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1]
+    print('Bind failed. Error Code : ' + str(msg[0]) + ' Message ' + msg[1])
     sys.exit()
 
-print 'Socket bind complete'
+print('Socket bind complete')
 
 #Start listening on socket
 s.listen(10)
-print 'Server now listening'
+print('Server now listening')
 
 
 
@@ -52,9 +54,22 @@ def clientthread(conn):
         print(cliInput[i])
 
         if cliInput[i] == 'cf':
-            reply = 'access create file S3| next cmd: '
+            '''
+            #If we want to create bucket
+            myS3 = boto3.resource('s3')
+            myS3.create_bucket(Bucket='sufs-project', CreateBucketConfiguration={
+            'LocationConstraint': 'us-west-2'})
+            '''
+
+
+
+            ##call splitFile() from blockdivider to create file for our SUFS##
+
+            reply = 'Created new file in SUFS | next cmd: '
+
 
         elif cliInput[i] == 'rf':
+
             reply = 'access read file s3| next cmd: '
 
         elif cliInput[i] == 'df':
@@ -68,12 +83,12 @@ def clientthread(conn):
 
         elif cliInput[i] == 'lsdir':
             reply = 'access list contents of directory s3| next cmd: '
-            s3 = boto3.resource('s3')
-            while True:
-                for bucket in s3.buckets.all():
-                    print(bucket.name)
 
-                break
+            #need to figure out how to pass to client
+            s3 = boto3.resource('s3')
+            for bucket in s3.buckets.all():
+                print(bucket.name)
+
 
         elif cliInput[i] == 'lsdnode':
             reply = 'access list datanotes that store replicas of each block of file s3| next cmd: '
@@ -92,13 +107,13 @@ def clientthread(conn):
     conn.close()
 
     #for debug
-    print 'Thank you for using the SUFS'
+    print('Thank you for using the SUFS')
 
 #now keep talking with the client
 while 1:
     #wait to accept a connection - blocking call
     conn, addr = s.accept()
-    print 'Connected with ' + addr[0] + ':' + str(addr[1])
+    print('Connected with ' + addr[0] + ':' + str(addr[1]))
 
     #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
     start_new_thread(clientthread ,(conn,))
