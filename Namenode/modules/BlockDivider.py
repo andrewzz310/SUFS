@@ -4,10 +4,11 @@ Block Divider
 import os
 
 
-def splitFile(filename):
+def splitFile(filename, outpath):
     """
     Splits a file into blocks and returns this location or newly created block files.
     :param filename: absolute path to file (ie:"/Users/justin/cs/cloud/input/testfile.txt")
+    :param outpath: absolute path to file destination (ie:"/Users/justin/cs/cloud/output/")
     :return: a list of all block files created
     """
     BLOCKSIZE = 256
@@ -37,7 +38,7 @@ def splitFile(filename):
     currentsize = 0
     while currentsize < filesize:
         outputData = file.read(BLOCKSIZE)
-        outputName = path + "/" + output_base + '.part' + str(at)
+        outputName = outpath + output_base + '.part' + str(at)
         output = open(outputName, 'w')
         output.write(outputData)
         output.close()
@@ -55,4 +56,4 @@ def splitFile(filename):
 """
 for testing...
 """
-#print splitFile("/Users/justin/cs/cloud/input/testfile.txt")
+#print splitFile("/Users/justin/cs/cloud/input/testfile.txt", "/Users/justin/cs/cloud/output/")
