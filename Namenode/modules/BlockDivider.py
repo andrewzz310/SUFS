@@ -4,56 +4,55 @@ Block Divider
 import os
 
 
-def splitFile(filename, outpath):
-    """
-    Splits a file into blocks and returns this location or newly created block files.
-    :param filename: absolute path to file (ie:"/Users/justin/cs/cloud/input/testfile.txt")
-    :param outpath: absolute path to file destination (ie:"/Users/justin/cs/cloud/output/")
-    :return: a list of all block files created
-    """
-    BLOCKSIZE = 256
+class BlockDivider:
 
-    output_list = []
-    output_base = ""
-    path = ""
-    filesize = 0
+    def __init__(self):
+        self.BLOCKSIZE = 256
 
-    split_paths = os.path.split(filename)
+    def split_file(self, filename, out_path):
+        """
+        Splits a file into blocks and returns this location or newly created block files.
+        :param filename: absolute path to file (ex:"/Users/justin/cs/cloud/input/testfile.txt")
+        :param out_path: absolute path to file destination (ex:"/Users/justin/cs/cloud/output/")
+        :return: a list of all block files created (ex: input='foo.txt', output=['foo.txt.part1', 'foo.txt.part2', ...]
+        """
 
-    output_base = split_paths[1]
-    path = split_paths[0]
+        output_list = []
+        split_paths = os.path.split(filename)
+        input_file_name = split_paths[1]
+        print "file name: " + input_file_name
 
-    print "file name: " + output_base
+        # open file
+        input_file = open(filename)
 
-    # open file
-    file = open(filename)
+        # get file size in bytes
+        input_file_size = os.path.getsize(filename)
+        print "file size: " + str(input_file_size)
+        print "block size: " + str(self.BLOCKSIZE)
 
-    # get file size in bytes
-    filesize = os.path.getsize(filename)
+        # split file
+        block_number = 1
+        current_size = 0
+        while current_size < input_file_size:
+            output_data = input_file.read(self.BLOCKSIZE)
+            output_file_name = out_path + input_file_name + '.part' + str(block_number)
+            output = open(output_file_name, 'w')
+            output.write(output_data)
+            output.close()
 
-    print "file size: " + str(filesize)
-    print "block size: " + str(BLOCKSIZE)
+            output_list.append(output_file_name)
+            block_number += 1
+            current_size += self.BLOCKSIZE
+            print "created file " + output_file_name
 
-    at = 1
-    currentsize = 0
-    while currentsize < filesize:
-        outputData = file.read(BLOCKSIZE)
-        outputName = outpath + output_base + '.part' + str(at)
-        output = open(outputName, 'w')
-        output.write(outputData)
-        output.close()
+        # close file
+        input_file.close()
 
-        output_list.append(outputName)
-        at += 1
-        currentsize += BLOCKSIZE
-        print "created file " + outputName
+        return output_list
 
-    # close file
-    file.close()
-
-    return output_list
 
 """
-for testing...
+example of usage...
 """
-#print splitFile("/Users/justin/cs/cloud/input/testfile.txt", "/Users/justin/cs/cloud/output/")
+#bd = BlockDivider()
+#print bd.split_file("/Users/justin/cs/cloud/input/testfile.txt", "/Users/justin/cs/cloud/output/")
