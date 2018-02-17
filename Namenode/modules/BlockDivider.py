@@ -4,19 +4,19 @@ Block Divider
 import os
 
 
-def splitFile(filename, parts):
+def splitFile(filename):
     """
 
     :param filename:
     :param parts: number of file splits
     :return:
     """
+    BLOCKSIZE = 256
 
     output_list = []
     outputBase = ""
     path = ""
     filesize = 0
-    blocksize = 0
 
     split_paths = os.path.split(filename)
 
@@ -28,15 +28,16 @@ def splitFile(filename, parts):
     # open file
     file = open(filename)
 
+    # get file size in bytes
     filesize = os.path.getsize(filename)
-    blocksize = int(filesize / parts)
 
     print "file size: " + str(filesize)
-    print "block size: " + str(blocksize)
+    print "block size: " + str(BLOCKSIZE)
 
     at = 1
-    for lines in range(0, parts):
-        outputData = file.read(blocksize)
+    currentsize = 0
+    while currentsize < filesize:
+        outputData = file.read(BLOCKSIZE)
         outputName = path + "/" + outputBase + '.part' + str(at)
         output = open(outputName, 'w')
         output.write(outputData)
@@ -44,6 +45,7 @@ def splitFile(filename, parts):
 
         output_list.append(outputName)
         at += 1
+        currentsize += BLOCKSIZE
         print "created file " + outputName
 
     # close file
@@ -53,4 +55,4 @@ def splitFile(filename, parts):
 """
 for testing...
 """
-splitFile("/Users/justin/cs/cloud/input/testfile.txt", 3)
+#splitFile("/Users/justin/cs/cloud/input/testfile.txt")
