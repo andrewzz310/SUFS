@@ -6,6 +6,7 @@ import os
 import socket
 import sys
 import boto3
+import botocore
 from thread import *
 from main import *
 
@@ -61,9 +62,22 @@ def clientthread(conn):
             'LocationConstraint': 'us-west-2'})
             '''
 
+            #downloading file to local from s3
+            BUCKET_NAME = 'sufs-project'
+            KEY= 'part-r-00000'
 
+            s3 = boto3.resource('s3')
 
-            ##call splitFile() from blockdivider to create file for our SUFS##
+            try:
+                s3.Bucket(BUCKET_NAME).download_file(KEY, 'part-r-00000')
+            except botocore.exceptions.ClientError as e:
+                if e.response['Error']['Code'] == "404":
+                    print("The object does not exist.")
+                else:
+                    raise
+
+            ##call splitFile() from blockdivider to divide blocks to pass to namenode to decide n datanodes to store blocks
+
 
             reply = 'Created new file in SUFS | next cmd: '
 
