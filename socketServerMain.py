@@ -83,8 +83,8 @@ def clientthread(conn):
             #splitFile() needs to be modified errno22 invalid mode ('w') line 39 in blockdivider.py
 
             '''
-            1) send blocks over to namenode
-            2) wait for namenode to put file in to directory structure and picks N different data nodes to store each block
+            1) send blocks and filename over to namenode
+            2) wait for namenode to put file in to directory structure and picks N (replication factor) different data nodes to store each block
             3) wait for amenode to return list of blocks and datanodes and then pass the blocks to datanode to store
             '''
             reply = 'Completed task of creating new file in SUFS | next cmd: '
@@ -95,8 +95,8 @@ def clientthread(conn):
             '''
             1) get info on where list of blocks are stored on which datanodes from the nameNode
             2) contact datanodes for the blocks
-            3) read file based on blocks returned
-            '''
+            '''            3) read file based on blocks returned
+
 
             reply = 'access read file completed| next cmd: '
 
