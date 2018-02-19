@@ -9,7 +9,7 @@ import boto3
 import botocore
 from thread import *
 from main import *
-
+from BlockDivider import *
 
 
 
@@ -39,7 +39,7 @@ print('Server now listening')
 def clientthread(conn):
     #Sending message to connected client
     conn.send('Welcome to the SUFS MAIN Portal. Type command and hit enter and i will return it as a test\n') #send only takes string
-    conn.send('Create File? type: cf \n' 'Read File? type: rf \n' 'Delete a file? type: df  \n' 'Create directory? type: cdir \n'
+    conn.send('Create File? type: cf \n' 'Read File? type: rf filename \n' 'Delete a file? type: df filename \n' 'Create directory? type: cdir \n'
               'Delete directory? type: deldir \n' 'List contents of directory? type: lsdir \n'
               'List datanodes that store replicas of each block of a file? type: lsdnode \n' 'Press 0 to exit \n')
     #infinite loop so that function do not terminate and thread do not end.
@@ -73,19 +73,40 @@ def clientthread(conn):
                     print("The object does not exist.")
                 else:
                     raise
+
+            #for debug
+            conn.send('file generated locally\n')
             ##call splitFile() from block divider to divide blocks to pass to namenode to decide n datanodes to store blocks
+            bd= BlockDivider()
+            bd.split_file("part-r-00000","C:\workspace\SUFS1.0\SUFS")
+            print (bd)
+            #splitFile() needs to be modified errno22 invalid mode ('w') line 39 in blockdivider.py
+
+            '''
+            1) send blocks over to namenode
+            2) wait for namenode to put file in to directory structure and picks N different data nodes to store each block
+            3) wait for amenode to return list of blocks and datanodes and then pass the blocks to datanode to store
+            '''
+            reply = 'Completed task of creating new file in SUFS | next cmd: '
 
 
+        elif cliInput[i] == 'rf filename':
 
-            reply = 'Created new file in SUFS | next cmd: '
+            '''
+            1) get info on where list of blocks are stored on which datanodes from the nameNode
+            2) contact datanodes for the blocks
+            3) read file based on blocks returned
+            '''
 
+            reply = 'access read file completed| next cmd: '
 
-        elif cliInput[i] == 'rf':
-
-            reply = 'access read file s3| next cmd: '
-
-        elif cliInput[i] == 'df':
-            reply = 'access delete file s3| next cmd: '
+        elif cliInput[i] == 'df filename':
+            '''
+            1) get info on where list of blocks are stored on which datanodes from the nameNode
+            2) contact datanodes for the blocks
+            3) tell datanode to remove blocks and tell namenode to remove file in the directory and list of datanodes that holds the block
+            '''
+            reply = 'access delete file completed| next cmd: '
 
         elif cliInput[i] == 'cdir':
             reply = 'access create directory s3| next cmd: '
