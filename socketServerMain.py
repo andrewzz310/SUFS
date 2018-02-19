@@ -62,12 +62,10 @@ def clientthread(conn):
             'LocationConstraint': 'us-west-2'})
             '''
 
-            #downloading file to local from s3
+            #downloading file to current local directory from s3
             BUCKET_NAME = 'sufs-project'
             KEY= 'part-r-00000'
-
             s3 = boto3.resource('s3')
-
             try:
                 s3.Bucket(BUCKET_NAME).download_file(KEY, 'part-r-00000')
             except botocore.exceptions.ClientError as e:
@@ -75,8 +73,8 @@ def clientthread(conn):
                     print("The object does not exist.")
                 else:
                     raise
+            ##call splitFile() from block divider to divide blocks to pass to namenode to decide n datanodes to store blocks
 
-            ##call splitFile() from blockdivider to divide blocks to pass to namenode to decide n datanodes to store blocks
 
 
             reply = 'Created new file in SUFS | next cmd: '
