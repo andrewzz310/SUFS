@@ -5,41 +5,26 @@ import time
 from thread import *
 
 
-class DataNodeManager():
+class BlockManager():
     def __init__(self):
-        self.alive = {}
+        self.blocks = {}
         start_new_thread(self.nodeHeartBeat, ())
-
-    def addNode(self, node):
-        self.alive[node] = time.time()
-
-    def removeNode(self, node):
-        del self.alive[node]
-
-    def getDataNodes(self):
-        return self.alive
-
-    def checkTimes(self):
-        for key in self.alive:
-            diff = time.time() - self.alive[key]
-            if (diff > 10):
-                removeNode(key)
 
     def heartBeat(self, conn, server):
         #Receiving from client
+        #does this actually receive all data?
         data = conn.recv(1024)
         reply = 'OK... ' + data
         #if not data:
             #break
-
         conn.sendall(reply)
-        self.alive[server] = time.time()
+        self.blocks[server] = data
         #came out of loop
         conn.close()
 
-    def nodeHeartBeat(self):
+    def blockReportHeartBeat(self):
         HOST = ''   # Symbolic name meaning all available interfaces
-        PORT = 1234 # Arbitrary non-privileged port
+        PORT = 3333 # Arbitrary non-privileged port
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         print 'Socket created'
@@ -59,6 +44,5 @@ class DataNodeManager():
             print 'Connected with ' + addr[0] + ':' + str(addr[1])
 
             #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
-            start_new_thread(self.heartBeat ,(conn, str(addr[1])))
-            self.checkTimes()
+            start_new_thread(self.heartBeat , (conn, str(addr[1])))
         s.close()
