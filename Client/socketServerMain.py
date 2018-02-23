@@ -2,16 +2,17 @@
     Simple socket server using multiple threads
 '''
 from __future__ import print_function
-import os
 import socket
 import sys
 import boto3
 import botocore
 from thread import *
-from main import *
-from BlockDivider import *
+import modules.BlockDivider as BlockDivider
+import modules.RPCClient as RPCClient
 
 
+# For RPC client interactions
+rpc = RPCClient.RPCClient('http://localhost', 8000)
 
 HOST = ''   # Symbolic name meaning all available interfaces
 PORT = 8888 # Arbitrary non-privileged port
@@ -77,7 +78,7 @@ def clientthread(conn):
             #for debug
             conn.send('file generated locally\n')
             ##call splitFile() from block divider to divide blocks to pass to namenode to decide n datanodes to store blocks
-            bd= BlockDivider()
+            bd = BlockDivider.BlockDivider()
             bd.split_file("part-r-00000","C:\workspace\SUFS1.0\SUFS")
             print (bd)
             #splitFile() needs to be modified errno22 invalid mode ('w') line 39 in blockdivider.py
@@ -95,7 +96,8 @@ def clientthread(conn):
             '''
             1) get info on where list of blocks are stored on which datanodes from the nameNode
             2) contact datanodes for the blocks
-            '''            3) read file based on blocks returned
+            3) read file based on blocks returned
+            '''
 
 
             reply = 'access read file completed| next cmd: '
@@ -125,6 +127,9 @@ def clientthread(conn):
 
         elif cliInput[i] == 'lsdnode':
             reply = 'access list datanotes that store replicas of each block of file s3| next cmd: '
+
+        elif cliInput[i] == 'hello':
+            reply = rpc.hello_world()
 
         elif cliInput[i] == '0':
             break
