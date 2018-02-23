@@ -8,7 +8,7 @@ from thread import *
 class DataNodeManager():
     def __init__(self):
         self.alive = {}
-        self.
+        self.files = {} # key = filename, value = [(part1, datanode1), (part2, datanode2), ...]
         start_new_thread(self.nodeHeartBeat, ())
 
     def addNode(self, node):
