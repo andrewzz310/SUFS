@@ -34,8 +34,8 @@ class Namenode:
         For each block from file, we need to apply replication factor 
         '''
         # For every element in blocks, part of key<uniqueFile>, Value<blocks>
-                #place the block into N different datanodes either by default or updated REPLICATION
-                 blockD = {blockName, datanodes}
+        #place the block into N different datanodes either by default or updated REPLICATION
+        #blockD = {blockName, datanodes}
 
         #return list of blocks and datanodes back to client
 

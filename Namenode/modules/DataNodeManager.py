@@ -8,6 +8,7 @@ from thread import *
 class DataNodeManager():
     def __init__(self):
         self.alive = {}
+        self.
         start_new_thread(self.nodeHeartBeat, ())
 
     def addNode(self, node):

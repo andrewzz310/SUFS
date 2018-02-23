@@ -78,7 +78,8 @@ def clientthread(conn):
             conn.send('file generated locally\n')
             ##call splitFile() from block divider to divide blocks to pass to namenode to decide n datanodes to store blocks
             bd= BlockDivider()
-            bd.split_file("part-r-00000","C:\workspace\SUFS1.0\SUFS")
+            #bd.split_file("part-r-00000","C:\workspace\SUFS1.0\SUFS")
+            bd.split_file("/Users/justin/cs/cloud/input/testfile.txt", "/Users/justin/cs/cloud/output/")
             print (bd)
             #splitFile() needs to be modified errno22 invalid mode ('w') line 39 in blockdivider.py
 
@@ -95,7 +96,8 @@ def clientthread(conn):
             '''
             1) get info on where list of blocks are stored on which datanodes from the nameNode
             2) contact datanodes for the blocks
-            '''            3) read file based on blocks returned
+            3) read file based on blocks returned
+            '''
 
 
             reply = 'access read file completed| next cmd: '
