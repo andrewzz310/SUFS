@@ -39,3 +39,12 @@ python Client/socketServerMain.py
 ```
 telnet localhost 8888
 ```
+
+Testing Namenode connection from telnet connection
+```
+hello
+```
+Testing Datanode connection from telnet connection
+```
+datanode
+```
