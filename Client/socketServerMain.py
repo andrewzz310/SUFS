@@ -13,6 +13,7 @@ import modules.RPCClient as RPCClient
 
 # For RPC client interactions
 rpc = RPCClient.RPCClient('http://localhost', 8000)
+rpc_datanode = RPCClient.RPCClient('http://localhost', 8880)
 
 HOST = ''   # Symbolic name meaning all available interfaces
 PORT = 8888 # Arbitrary non-privileged port
@@ -129,7 +130,12 @@ def clientthread(conn):
             reply = 'access list datanotes that store replicas of each block of file s3| next cmd: '
 
         elif cliInput[i] == 'hello':
+            print("Connecting to Namenode...")
             reply = rpc.hello_world()
+
+        elif cliInput[i] == 'datanode':
+            print("Connecting to Datanode...")
+            reply = rpc_datanode.hello_world()
 
         elif cliInput[i] == '0':
             break

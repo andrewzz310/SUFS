@@ -18,5 +18,5 @@ class RPCClient:
 """
 Example of us
 """
-#rc = RPCCLIENT("http://localhost", 8000)
+#rc = RPCClient("http://localhost", 8000)
 #print rc.get_hello_world()
