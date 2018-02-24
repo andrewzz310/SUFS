@@ -9,8 +9,10 @@ from the client.
 
 
 ## Upload a new file
+```
 data = open('test.jpg', 'rb')
 s3.Bucket('my-bucket').put_object(Key='test.jpg', Body=data)
+```
 
 2) http://boto.readthedocs.io/en/latest/ref/ec2.html ---> This one explains how to directly connect to EC2 inside of our nodes....
 (boto.ec2.connection)
