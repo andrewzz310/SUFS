@@ -40,11 +40,11 @@ python Client/socketServerMain.py
 telnet localhost 8888
 ```
 
-Testing Namenode connection from telnet connection
+Testing Namenode connection from telnet
 ```
 hello
 ```
-Testing Datanode connection from telnet connection
+Testing Datanode connection from telnet
 ```
 datanode
 ```
