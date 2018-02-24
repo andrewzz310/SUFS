@@ -17,25 +17,27 @@ s3.Bucket('my-bucket').put_object(Key='test.jpg', Body=data)
 2) http://boto.readthedocs.io/en/latest/ref/ec2.html ---> This one explains how to directly connect to EC2 inside of our nodes....
 (boto.ec2.connection)
 
-### Launching Namenode Server
+## Useful Commands
+
+#### Launching Namenode Server
 From project root director
 ```
 python Namenode/NamenodeServer.py
 ```
 
-### Launching Datanode Server
+#### Launching Datanode Server
 From project root director
 ```
 python Datanode/DatanodeServer.py
 ```
 
-### Launching Client Server
+#### Launching Client Server
 From project root director
 ```
 python Client/socketServerMain.py
 ```
 
-### Connecting to Client Server
+#### Connecting to Client Server
 ```
 telnet localhost 8888
 ```
