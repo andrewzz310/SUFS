@@ -50,3 +50,24 @@ Testing Datanode connection from telnet
 ```
 datanode
 ```
+
+#### Create ec2 instance
+```
+#!/usr/bin/env python
+import boto3
+ec2 = boto3.resource('ec2')
+instance = ec2.create_instances(
+    ImageId='ami-9dd860e5',
+    MinCount=1,
+    MaxCount=1,
+    InstanceType='t2.micro')
+print instance[0].id, instance[0].public_ip_address
+````
+
+#### List ec2 instance
+````
+import boto3
+ec2 = boto3.resource('ec2')
+for instance in ec2.instances.all():
+    print instance.id, instance.state, instance.public_ip_address
+````
