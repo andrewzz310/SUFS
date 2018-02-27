@@ -7,7 +7,7 @@ import DataNodeRPCClient as RPCClient
 import xmlrpclib
 
 
-class DataNodeManager():
+class DataNodeManager:
     def __init__(self):
         self.alive = {}
         self.files = {} # key = filename, value = [(part1, datanode1), (part2, datanode2), ...]
@@ -27,14 +27,14 @@ class DataNodeManager():
         for key in self.alive:
             diff = time.time() - self.alive[key]
             if (diff > 10):
-                removeNode(key)
+                self.removeNode(key)
 
     def heartBeat(self):
         for ip in self.alive.keys():
             self.rpc = RPCClient.RPCClient(ip, 8000)
             #if rpc server no response what happens
             try:
-                reply = rpc.ekg()
+                reply = self.rpc.ekg()
                 if (reply):
                     self.alive[ip] = time.time()
             except xmlrpclib.ProtocolError as err:
@@ -47,5 +47,5 @@ class DataNodeManager():
     def nodeHeartBeat(self):
         while 1:
             time.sleep(30) #sleep for 30 seconds
-            heartBeat(self)
-            checkTimes(self)
+            self.heartBeat(self)
+            self.checkTimes(self)

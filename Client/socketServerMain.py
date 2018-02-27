@@ -12,6 +12,7 @@ import modules.RPCClient as RPCClient
 
 
 # For RPC client interactions
+# TODO: make these dictionaries
 rpc = RPCClient.RPCClient('http://localhost', 8000)
 rpc_datanode = RPCClient.RPCClient('http://localhost', 8880)
 
