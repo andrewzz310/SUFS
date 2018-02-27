@@ -23,9 +23,12 @@ def hello_world():
     return "Hello, Datanode!\n"
 
 
+def ekg():
+    return True
+
 # Register hello world function
 server.register_function(hello_world)
-
+server.register_function(ekg)
 # Run the server's main loop
 print("Staring Datanode Server on port " + str(PORT) + "...")
 server.serve_forever()
