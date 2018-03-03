@@ -6,7 +6,7 @@ import os
 import xmlrpclib
 from threading import Thread, Lock
 
-class Namenode:
+class NameNode:
     """
     Namenode needs to do two things
     1) Which blocks are part of which files
@@ -17,6 +17,7 @@ class Namenode:
         self.REPLICATION = 3 # pick 3 different datanodes to store each block by default
         self.fileD = {} # Dictionary for which blocks are part of which file
         self.blockD = {} # Dictionary for which datanodes are storing each block
+        self.alive = {} # Dict for alive datanodes
         self.mutex = Lock()
 
     def writeFile(self, filename, blocks):  #pass in array of blocks as arguments
@@ -46,7 +47,11 @@ class Namenode:
         print blockManager.get_blockID()
         print blockManager.get_DataNodeNumber()
 
-
+    def checkTimes(self):
+        for key in self.alive.keys():
+            diff = time.time() - self.alive[key]
+            if (diff > 10):
+                del self.alive[key]
 
 # for testing
 s = Namenode()
