@@ -3,6 +3,7 @@ import socket
 import sys
 import time
 import os
+import xmlrpclib
 from threading import Thread, Lock
 
 class Namenode:
@@ -41,8 +42,12 @@ class Namenode:
         :param blocks:
         :return:
         """
+        blockManager = xmlrpclib.ServerProxy('http://localhost:5000')
+        print blockManager.get_blockID()
+        print blockManager.get_DataNodeNumber()
 
 
 
-
-
+# for testing
+s = Namenode()
+s.blockReport( 1, 2)
