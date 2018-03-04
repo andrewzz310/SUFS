@@ -6,6 +6,7 @@ import socket
 import sys
 import boto3
 import botocore
+import subprocess
 import os
 from thread import *
 import modules.BlockDivider as BlockDivider
@@ -67,7 +68,7 @@ def clientthread(conn):
             '''
 
             #downloading file to current local directory from s3
-            BUCKET_NAME = 'sufs-project'
+            """BUCKET_NAME = 'sufs-project'
             KEY= 'part-r-00000'
             s3 = boto3.resource('s3')
             try:
@@ -77,10 +78,14 @@ def clientthread(conn):
                     print("The object does not exist.")
                 else:
                     raise
-            filename = open('/mnt/c/workspace/SUFS/Client/testfile1.txt')
-            input_file_size = os.path.getsize(filename)
+            """
+
+            file_name = '/Users/justin/cs/cloud/input/testfile.txt'
+            input_file = open(file_name)
+            output_dir = "/Users/justin/cs/cloud/output"
+            input_file_size = os.path.getsize(file_name)
             print("Getting filenameSize from Namenode...")
-            reply = rpc.write1(filename, input_file_size)
+            reply = rpc.write1(file_name, input_file_size)
 
             print("it worked!!!!!!!")
 
@@ -88,7 +93,7 @@ def clientthread(conn):
             conn.send('file generated locally\n')
             ##call splitFile() from block divider to divide blocks to pass to namenode to decide n datanodes to store blocks
             bd = BlockDivider.BlockDivider()
-            bd.split_file("testfile1.txt", "/mnt/c/workspace/SUFS/Client")
+            bd.split_file(file_name, output_dir)
             print (bd)
             #splitFile() needs to be modified errno22 invalid mode ('w') line 39 in blockdivider.py
 
@@ -148,6 +153,24 @@ def clientthread(conn):
         elif cliInput[i] == 'getfilesize':
             print("Getting filenameSize from Namenode...")
             reply = rpc.write1("testfile1.txt", 256)
+
+        elif cliInput[i] == 'runnamenode':
+            print("Running Namenode")
+            subprocess.call('ls', shell=True, cwd='/mnt/c/workspace/SUFS/Namenode')
+            subprocess.call('python NamenodeServer.py', shell=True, cwd='/mnt/c/workspace/SUFS/Namenode')
+
+            # subprocess.call('cd Namenode', shell=True)
+            # subprocess.call('ls', shell=True)
+            reply = 'namenode started| next cmd: '
+
+        elif cliInput[i] == 'rundatanode':
+            print("Running datanode")
+            subprocess.call('ls', shell=True, cwd='/mnt/c/workspace/SUFS/Namenode')
+            subprocess.call('python DatanodeServer.py', shell=True, cwd='/mnt/c/workspace/SUFS/Datanode')
+
+            # subprocess.call('cd Namenode', shell=True)
+            # subprocess.call('ls', shell=True)
+            reply = 'namenode started| next cmd: '
 
         elif cliInput[i] == '0':
             break

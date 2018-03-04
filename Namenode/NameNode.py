@@ -1,6 +1,7 @@
 import boto3
 import socket
 import sys
+import math
 import time
 import os
 import xmlrpclib
@@ -17,6 +18,7 @@ class NameNode:
     """
     def __init__(self):
         self.REPLICATION = 3 # pick 3 different datanodes to store each block by default
+        self.BLOCK_SIZE = 256 # size of blocks for splitting
         self.fileD = {} # Dictionary for which blocks are part of which file
         self.blockD = {} # Dictionary for which datanodes are storing each block
         self.alive = {} # Dict for alive datanodes
@@ -64,6 +66,15 @@ class NameNode:
             if (len(self.dnToBlock[blockID]) != self.REPLICATION):
                 notRep.append(blockID)
         return notRep
+
+    def addFile(self, file_name, file_size):
+        total_blocks = math.floor(file_size / self.BLOCK_SIZE)
+        print("File Size: " + str(file_size))
+        print("Number of Blocks: " + str(total_blocks))
+        return total_blocks
+
+
+
 
 # for testing
 # s = Namenode()

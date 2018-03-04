@@ -25,11 +25,11 @@ server.register_introspection_functions()
 def hello_world():
     return "Hello, Namenode!\n"
 
+
 def write1(filename, size):
     print (filename, " ", size)
-    #return "something!!!!!!!!!!!!!!!!!!"
-    result = ['filename', 'size']
-    return "{}, {}".format(result[0], result[1])
+    blocks = nn.addFile(filename, size)
+    return str(blocks)
 
 
 def receiveHeartBeat(myIp):
