@@ -58,7 +58,7 @@ server.register_function(putFile)
 # Register hello world function
 server.register_function(hello_world)
 server.register_function(receiveHeartBeat) #datanode calls this
->>>>>>> df8c24afd728d1669d11c2628a158a388ce78cfc
+
 # Run the server's main loop
 print("Staring Namenode Server on port " + str(PORT) + "...")
 server.serve_forever()

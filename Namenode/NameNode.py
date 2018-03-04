@@ -20,6 +20,7 @@ class NameNode:
         self.fileD = {} # Dictionary for which blocks are part of which file
         self.blockD = {} # Dictionary for which datanodes are storing each block
         self.alive = {} # Dict for alive datanodes
+        self.dnToBlock = {}
         self.mutex = Lock()
 
 
@@ -39,7 +40,6 @@ class NameNode:
 
         #return list of blocks and datanodes back to client
 
-<<<<<<< HEAD
     # def blockReport(self, datanodeNum, blocks ):
     #     """
     #     The block report given from the data node
@@ -52,19 +52,6 @@ class NameNode:
     #     print blockManager.get_blockID()
     #     print blockManager.get_DataNodeNumber()
 
-=======
-    def blockReport(self, datanodeNum, blocks ):
-        """
-        The block report given from the data node
-        Pass in all blocks as array assigned to the specific datanodeNumber e.g. datanode1,datanode2,etc
-        :param datanodeNum:
-        :param blocks:
-        :return:
-        """
-        #blockManager = xmlrpclib.ServerProxy('http://localhost:5000')
-        #print blockManager.get_blockID()
-        #print blockManager.get_DataNodeNumber()
->>>>>>> df8c24afd728d1669d11c2628a158a388ce78cfc
 
     def checkTimes(self):
         for key in self.alive.keys():
@@ -72,11 +59,13 @@ class NameNode:
             if (diff > 10):
                 del self.alive[key]
 
+    def checkReplicas(self):
+        notRep = [] #structure that holds 
+        for blockID in self.dnToBlock.keys():
+            if (len(self.dnToBlock[blockID]) != self.REPLICATION):
+                notRep.append(blockID)
+        return notRep
+
 # for testing
-<<<<<<< HEAD
 # s = Namenode()
 # s.blockReport( 1, 2)
-=======
-#s = Namenode()
-#s.blockReport( 1, 2)
->>>>>>> df8c24afd728d1669d11c2628a158a388ce78cfc
