@@ -1,13 +1,16 @@
 import xmlrpclib
+from modules import nnRPCClient
 
 
 class DataNode:
-    def __init__(self):
+    def __init__(self, ip, nnIp, nnPort):
         self.listBlockID = []
-        self.ip = ""
-        self.namenode = xmlrpclib.ServerProxy(self.ip)
+        self.ip = ip
+        self.nnRPC = nnRPCClient.nnRPCClient(nnIp, nnPort)
 
     # server to another DataNode
+    # probably won't be used
+    # definitely don't use this
     def giveBlock(self, blockID, DataNodeID):
         otherdn = xmlrpclib.ServerProxy(DataNodeID)
         # string in the current blockID
@@ -16,6 +19,8 @@ class DataNode:
 
 
     # client to another DataNode
+    # probably won't be used
+    # definitely don't use this
     def receiveBlock(self, blockID, blockData):
         return ""
         # save new block & update report
