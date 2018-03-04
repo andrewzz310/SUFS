@@ -3,10 +3,13 @@ NamenodeServer.py
 """
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
+from NameNode import NameNode
+import time
 
 PORT = 8000
 HOST = "localhost"
 
+nn = NameNode()
 
 # Restrict to a particular path.
 class RequestHandler(SimpleXMLRPCRequestHandler):
@@ -41,7 +44,6 @@ def receiveBlockReport(myIp, blocks):
         nn.dnToBlock[blockID].add(myIp)
      return True
 
-
 def putFile(filename, size):
     print (filename)
     print (size)
@@ -52,6 +54,11 @@ server.register_function(hello_world)
 server.register_function(write1)
 server.register_function(putFile)
 
+
+# Register hello world function
+server.register_function(hello_world)
+server.register_function(receiveHeartBeat) #datanode calls this
+>>>>>>> df8c24afd728d1669d11c2628a158a388ce78cfc
 # Run the server's main loop
 print("Staring Namenode Server on port " + str(PORT) + "...")
 server.serve_forever()
