@@ -6,6 +6,7 @@ import socket
 import sys
 import boto3
 import botocore
+import os
 from thread import *
 import modules.BlockDivider as BlockDivider
 import modules.RPCClient as RPCClient
@@ -76,12 +77,18 @@ def clientthread(conn):
                     print("The object does not exist.")
                 else:
                     raise
+            filename = open('/mnt/c/workspace/SUFS/Client/testfile1.txt')
+            input_file_size = os.path.getsize(filename)
+            print("Getting filenameSize from Namenode...")
+            reply = rpc.write1(filename, input_file_size)
+
+            print("it worked!!!!!!!")
 
             #for debug
             conn.send('file generated locally\n')
             ##call splitFile() from block divider to divide blocks to pass to namenode to decide n datanodes to store blocks
             bd = BlockDivider.BlockDivider()
-            bd.split_file("part-r-00000","C:\workspace\SUFS1.0\SUFS")
+            bd.split_file("testfile1.txt", "/mnt/c/workspace/SUFS/Client")
             print (bd)
             #splitFile() needs to be modified errno22 invalid mode ('w') line 39 in blockdivider.py
 
@@ -138,6 +145,10 @@ def clientthread(conn):
             print("Connecting to Datanode...")
             reply = rpc_datanode.hello_world()
 
+        elif cliInput[i] == 'getfilesize':
+            print("Getting filenameSize from Namenode...")
+            reply = rpc.write1("testfile1.txt", 256)
+
         elif cliInput[i] == '0':
             break
         else:
@@ -145,7 +156,6 @@ def clientthread(conn):
 
         conn.sendall(reply)
         i+=1
-
 
 
     #came out of loop
