@@ -3,7 +3,7 @@ DatanodeServer.py
 """
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
-import DataNode
+from DataNode import DataNode
 
 PORT = 8880
 HOST = "localhost"
@@ -31,12 +31,8 @@ def receiveBlock(blockID, blockData):
     return "something"
 
 
-def ekg():
-    return True
-
 # Register hello world function
 server.register_function(hello_world)
-server.register_function(ekg)
 server.register_function(receiveBlock)
 # Run the server's main loop
 print("Staring Datanode Server on port " + str(PORT) + "...")

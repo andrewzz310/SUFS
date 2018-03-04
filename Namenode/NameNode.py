@@ -24,7 +24,6 @@ class NameNode:
         self.mutex = Lock()
 
 
-
     def writeFile(self, filename, blocks):  #pass in array of blocks as arguments
 
         uniqueFile = filename

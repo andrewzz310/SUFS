@@ -17,6 +17,7 @@ class DataNode:
 
     # client to another DataNode
     def receiveBlock(self, blockID, blockData):
+        return ""
         # save new block & update report
         # 1) create a file
         # 2) write blockData to that file
@@ -32,5 +33,5 @@ class DataNode:
 
 
     def sendHeartBeat(self):
-
+        return ""
 
