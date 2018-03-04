@@ -39,7 +39,7 @@ class NameNode:
 
         #return list of blocks and datanodes back to client
 
-<<<<<<< HEAD
+
     # def blockReport(self, datanodeNum, blocks ):
     #     """
     #     The block report given from the data node
@@ -52,7 +52,7 @@ class NameNode:
     #     print blockManager.get_blockID()
     #     print blockManager.get_DataNodeNumber()
 
-=======
+
     def blockReport(self, datanodeNum, blocks ):
         """
         The block report given from the data node
@@ -64,7 +64,7 @@ class NameNode:
         #blockManager = xmlrpclib.ServerProxy('http://localhost:5000')
         #print blockManager.get_blockID()
         #print blockManager.get_DataNodeNumber()
->>>>>>> df8c24afd728d1669d11c2628a158a388ce78cfc
+
 
     def checkTimes(self):
         for key in self.alive.keys():
@@ -73,10 +73,10 @@ class NameNode:
                 del self.alive[key]
 
 # for testing
-<<<<<<< HEAD
+
 # s = Namenode()
 # s.blockReport( 1, 2)
-=======
+
 #s = Namenode()
 #s.blockReport( 1, 2)
->>>>>>> df8c24afd728d1669d11c2628a158a388ce78cfc
+

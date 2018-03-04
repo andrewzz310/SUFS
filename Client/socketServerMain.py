@@ -7,6 +7,7 @@ import sys
 import boto3
 import botocore
 import os
+import subprocess
 from thread import *
 import modules.BlockDivider as BlockDivider
 import modules.RPCClient as RPCClient
@@ -66,6 +67,7 @@ def clientthread(conn):
             'LocationConstraint': 'us-west-2'})
             '''
 
+            '''
             #downloading file to current local directory from s3
             BUCKET_NAME = 'sufs-project'
             KEY= 'part-r-00000'
@@ -77,7 +79,10 @@ def clientthread(conn):
                     print("The object does not exist.")
                 else:
                     raise
-            filename = open('/mnt/c/workspace/SUFS/Client/testfile1.txt')
+            '''
+
+
+            filename = '/mnt/c/workspace/SUFS/Client/testfile1.txt'
             input_file_size = os.path.getsize(filename)
             print("Getting filenameSize from Namenode...")
             reply = rpc.write1(filename, input_file_size)
@@ -148,6 +153,24 @@ def clientthread(conn):
         elif cliInput[i] == 'getfilesize':
             print("Getting filenameSize from Namenode...")
             reply = rpc.write1("testfile1.txt", 256)
+
+        elif cliInput[i] == 'runnamenode':
+            print("Running Namenode")
+            subprocess.call('ls',shell=True,cwd='/mnt/c/workspace/SUFS/Namenode')
+            subprocess.call('python NamenodeServer.py',shell=True,cwd='/mnt/c/workspace/SUFS/Namenode')
+
+            #subprocess.call('cd Namenode', shell=True)
+            #subprocess.call('ls', shell=True)
+            reply = 'namenode started| next cmd: '
+
+        elif cliInput[i] == 'rundatanode':
+            print("Running datanode")
+            subprocess.call('ls',shell=True,cwd='/mnt/c/workspace/SUFS/Namenode')
+            subprocess.call('python DatanodeServer.py',shell=True,cwd='/mnt/c/workspace/SUFS/Datanode')
+
+            #subprocess.call('cd Namenode', shell=True)
+            #subprocess.call('ls', shell=True)
+            reply = 'namenode started| next cmd: '
 
         elif cliInput[i] == '0':
             break
