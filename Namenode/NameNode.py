@@ -7,6 +7,8 @@ import xmlrpclib
 from threading import Thread, Lock
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
+from anytree import Node, RenderTree
+
 
 class NameNode:
     """
@@ -22,6 +24,15 @@ class NameNode:
         self.alive = {} # Dict for alive datanodes
         self.dnToBlock = {}
         self.mutex = Lock()
+        self.home = Node("home") # a directory tree
+
+
+
+    def createDirectory(self, path, dir):
+        pathList = path.split("/")
+        parent = pathList[len(pathList)]
+
+
 
 
     def writeFile(self, filename, blocks):  #pass in array of blocks as arguments
