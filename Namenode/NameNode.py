@@ -18,6 +18,7 @@ class NameNode:
         self.fileD = {} # Dictionary for which blocks are part of which file
         self.blockD = {} # Dictionary for which datanodes are storing each block
         self.alive = {} # Dict for alive datanodes
+        self.dnToBlock = {} #Dict <blockID, [Datanodes]>
         self.mutex = Lock()
 
     def writeFile(self, filename, blocks):  #pass in array of blocks as arguments
@@ -35,7 +36,9 @@ class NameNode:
 
         #return list of blocks and datanodes back to client
 
-    def blockReport(self, datanodeNum, blocks ):
+
+    #this function is unused
+    def getBlockReport(self, datanodeNum, blocks ):
         """
         The block report given from the data node
         Pass in all blocks as array assigned to the specific datanodeNumber e.g. datanode1,datanode2,etc
@@ -43,15 +46,29 @@ class NameNode:
         :param blocks:
         :return:
         """
-        blockManager = xmlrpclib.ServerProxy('http://localhost:5000')
-        print blockManager.get_blockID()
-        print blockManager.get_DataNodeNumber()
+        for ip in self.alive.keys(): #for each ip in the alive membership...
+            blockManager = xmlrpclib.ServerProxy(ip)
+            nodeIp = blockManager.get_DataNodeNumber() #does this return IP?
+            blocks = blockManager.get_blocks() #implement this function
+            self.blockD[ip] = blocks
+            for blockID in blocks: #do the translation the other way as well.
+                self.dnToBlock[blockID].add(nodeIp)
 
-    def checkTimes(self):
+
+    #just checks the current time with the time last posted by a member
+    def checkHeartBeat(self):
         for key in self.alive.keys():
             diff = time.time() - self.alive[key]
             if (diff > 10):
                 del self.alive[key]
+
+    #returns a list of blocks not @ replication factor
+    def checkReplicas(self):
+        notRep = [] #structure that holds 
+        for blockID in self.dnToBlock.keys():
+            if (len(self.dnToBlockID[blockID]) != self.REPLICATION):
+                notRep.append(blockID)
+        return notRep
 
 # for testing
 s = Namenode()
