@@ -27,6 +27,7 @@ class NameNode:
 
 
     # Create a directory
+    # Example of how to call the function:   mkdir("/home/", "st")
     def mkdir(self, path, dir):
         if path in self.contentsInDir:
             self.contentsInDir[path + dir + "/"] = []
@@ -37,6 +38,7 @@ class NameNode:
 
 
 
+    # Example of how to call the function:     deleteDirectory("/home/st/")
     def deleteDirectory(self, path):
         if path in self.contentsInDir:
             # 1. look at the list and delete all the files_________________________________
@@ -55,6 +57,7 @@ class NameNode:
 
 
     # List the contents of a directory
+    # Example of how to call the function:     ls("/home/")
     def ls(self, path):
         for key in self.contentsInDir:
             for content in self.contentsInDir[key]:
