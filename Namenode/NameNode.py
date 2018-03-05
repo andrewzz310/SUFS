@@ -1,14 +1,12 @@
 import boto3
 import socket
 import sys
-import math
 import time
 import os
 import xmlrpclib
 from threading import Thread, Lock
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
-from anytree import Node, RenderTree
 
 
 class NameNode:
@@ -20,21 +18,61 @@ class NameNode:
     """
     def __init__(self):
         self.REPLICATION = 3 # pick 3 different datanodes to store each block by default
-        self.BLOCK_SIZE = 256 # size of blocks for splitting
         self.fileD = {} # Dictionary for which blocks are part of which file
         self.blockD = {} # Dictionary for which datanodes are storing each block
         self.alive = {} # Dict for alive datanodes
         self.dnToBlock = {}
         self.mutex = Lock()
-        self.home = Node("home") # a directory tree
+        self.contentsInDir = {"/home/": []}
+
+
+    # Create a directory
+    def mkdir(self, path, dir):
+        if path in self.contentsInDir:
+            self.contentsInDir[path + dir + "/"] = []
+            self.contentsInDir[path].append(dir)
+            return "Successfully created a directory"
+        else:
+            return "Fail to create a directory"
 
 
 
-    def createDirectory(self, path, dir):
-        pathList = path.split("/")
-        parent = pathList[len(pathList)]
+    def deleteDirectory(self, path):
+        if path in self.contentsInDir:
+            # 1. look at the list and delete all the files_________________________________
+            #    Note: Ignore if there is a sub-directory, it will be delete in the for loop
+            print("List of files need to delete: ", self.contentsInDir[path])
+            del self.contentsInDir[path]
+
+            # 2. check if there is a directory under this current path
+            #    If there is, delete that to
+            for key in self.contentsInDir.keys():
+                if path in key:
+                    # 3. look at the list and delete all the files__________________________
+                    print("List of files need to delete: ", self.contentsInDir[key])
+                    del self.contentsInDir[key]
 
 
+
+    # List the contents of a directory
+    def ls(self, path):
+        for key in self.contentsInDir:
+            for content in self.contentsInDir[key]:
+                print(content)
+
+# mkdir("/home/", "hang")
+# printDic()
+# print("")
+#
+# mkdir("/home/hang/", "nguyen")
+# printDic()
+# print("")
+#
+# deleteDirectory("/home/hang/")
+# printDic()
+# print("")
+#
+# ls("/home/")
 
 
     def writeFile(self, filename, blocks):  #pass in array of blocks as arguments
@@ -72,20 +110,11 @@ class NameNode:
                 del self.alive[key]
 
     def checkReplicas(self):
-        notRep = [] #structure that holds 
+        notRep = [] #structure that holds
         for blockID in self.dnToBlock.keys():
             if (len(self.dnToBlock[blockID]) != self.REPLICATION):
                 notRep.append(blockID)
         return notRep
-
-    def addFile(self, file_name, file_size):
-        total_blocks = math.floor(file_size / self.BLOCK_SIZE)
-        print("File Size: " + str(file_size))
-        print("Number of Blocks: " + str(total_blocks))
-        return total_blocks
-
-
-
 
 # for testing
 # s = Namenode()
