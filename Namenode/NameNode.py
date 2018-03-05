@@ -46,8 +46,8 @@ class NameNode:
             print("List of files need to delete: ", self.contentsInDir[path])
             del self.contentsInDir[path]
 
-            # 2. check if there is a directory under this current path
-            #    If there is, delete that to
+            # 2. check if there is sub-directory in the current "path"
+            #    If there is, delete it.
             for key in self.contentsInDir.keys():
                 if path in key:
                     # 3. look at the list and delete all the files__________________________
