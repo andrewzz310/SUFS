@@ -8,6 +8,7 @@ class DataNode:
         self.ip = ip
         self.nnRPC = nnRPCClient.nnRPCClient(nnIp, nnPort)
 
+
     # server to another DataNode
     # probably won't be used
     # definitely don't use this
