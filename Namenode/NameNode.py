@@ -29,17 +29,23 @@ class NameNode:
     # Create a directory
     # Example of how to call the function:   mkdir("/home/", "st")
     def mkdir(self, path, dir):
+        if "/" in dir:
+            print("Name of directory cannot have '/'")
+            return
         if path in self.contentsInDir:
             self.contentsInDir[path + dir + "/"] = []
             self.contentsInDir[path].append(dir)
-            return "Successfully created a directory"
+            print("Successfully created a directory")
         else:
-            return "Fail to create a directory"
+            print("Fail to create a directory")
 
 
 
     # Example of how to call the function:     deleteDirectory("/home/st/")
     def deleteDirectory(self, path):
+        if path == "/home/":
+            print("You can't delete the root folder")
+            return
         if path in self.contentsInDir:
             # 1. look at the list and delete all the files_________________________________
             #    Note: Ignore if there is a sub-directory, it will be delete in the for loop
@@ -54,14 +60,27 @@ class NameNode:
                     print("List of files need to delete: ", self.contentsInDir[key])
                     del self.contentsInDir[key]
 
+            # 3. Remove the directory from parent directory
+            index = 0
+            # Find the parent path
+            for i, val in enumerate(path[:-1]):  # exclude the last "/"
+                if val == "/":
+                    index = i
+
+            parentDir = path[: index+1]
+            delDirName = path[index+1 : len(path)-1]
+            self.contentsInDir[parentDir].remove(delDirName)
+
+
 
 
     # List the contents of a directory
     # Example of how to call the function:     ls("/home/")
     def ls(self, path):
         for key in self.contentsInDir:
-            for content in self.contentsInDir[key]:
-                print(content)
+            if key == path:
+                for content in self.contentsInDir[key]:
+                    print(content)
 
 # mkdir("/home/", "hang")
 # printDic()
