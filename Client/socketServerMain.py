@@ -1,6 +1,7 @@
-'''
-    Simple socket server using multiple threads
-'''
+"""
+Simple socket server using multiple threads
+"""
+
 from __future__ import print_function
 import socket
 import sys
@@ -20,13 +21,13 @@ import modules.RPCClient as RPCClient
 rpc_namenode = xmlrpclib.ServerProxy('http://localhost:8000')
 rpc_datanode = RPCClient.RPCClient('http://localhost', 8880)
 
-HOST = ''   # Symbolic name meaning all available interfaces
-PORT = 8888 # Arbitrary non-privileged port
+HOST = ''    # Symbolic name meaning all available interfaces
+PORT = 8888  # Arbitrary non-privileged port
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print('Socket created')
 
-#Bind socket to local host and port
+# Bind socket to local host and port
 try:
     s.bind((HOST, PORT))
 except socket.error as msg:
@@ -35,31 +36,29 @@ except socket.error as msg:
 
 print('Socket bind complete')
 
-#Start listening on socket
+# Start listening on socket
 s.listen(10)
 print('Server now listening')
 
 
-
-
-#Function for handling connections. This will be used to create threads
+# Function for handling connections. This will be used to create threads
 def clientthread(conn):
-    #Sending message to connected client
+
+    # Sending message to connected client
     conn.send('Welcome to the SUFS MAIN Portal. Type command and hit enter and i will return it as a test\n') #send only takes string
     conn.send('Create File? type: cf \n' 'Read File? type: rf filename \n' 'Delete a file? type: df filename \n' 'Create directory? type: cdir \n'
               'Delete directory? type: deldir \n' 'List contents of directory? type: lsdir \n'
               'List datanodes that store replicas of each block of a file? type: lsdnode \n' 'Press 0 to exit \n\n> ')
-    #infinite loop so that function do not terminate and thread do not end.
+
+    # infinite loop so that function do not terminate and thread do not end.
     while True:
 
-
-        #we need to parse data from the client, e.g. add a file
+        # we need to parse data from the client, e.g. add a file
         data = conn.recv(1024)
         r = conn.recv(1024).decode()
         r = data
         cliInput = r.split()
         i = 0
-        #print(cliInput[i])
 
         if cliInput[i] == 'cf':
             '''
@@ -69,7 +68,7 @@ def clientthread(conn):
             'LocationConstraint': 'us-west-2'})
             '''
 
-            #downloading file to current local directory from s3
+            # downloading file to current local directory from s3
             """BUCKET_NAME = 'sufs-project'
             KEY= 'part-r-00000'
             s3 = boto3.resource('s3')
@@ -91,13 +90,14 @@ def clientthread(conn):
 
             print("it worked!!!!!!!")
 
-            #for debug
+            # for debug
             conn.send('file generated locally\n')
-            ##call splitFile() from block divider to divide blocks to pass to namenode to decide n datanodes to store blocks
+
+            # call splitFile() from block divider to divide blocks to pass to namenode to decide n datanodes to store blocks
             bd = BlockDivider.BlockDivider()
             bd.split_file(file_name, output_dir)
             print (bd)
-            #splitFile() needs to be modified errno22 invalid mode ('w') line 39 in blockdivider.py
+            # splitFile() needs to be modified errno22 invalid mode ('w') line 39 in blockdivider.py
 
             '''
             1) send blocks and filename over to namenode
@@ -106,7 +106,6 @@ def clientthread(conn):
             '''
             reply = 'Completed task of creating new file in SUFS | next cmd: '
 
-
         elif cliInput[i] == 'rf filename':
 
             '''
@@ -114,7 +113,6 @@ def clientthread(conn):
             2) contact datanodes for the blocks
             3) read file based on blocks returned
             '''
-
 
             reply = 'access read file completed| next cmd: '
 
@@ -135,7 +133,7 @@ def clientthread(conn):
         elif cliInput[i] == 'lsdir':
             reply = 'access list contents of directory s3| next cmd: '
 
-            #need to figure out how to pass to client
+            # need to figure out how to pass to client
             s3 = boto3.resource('s3')
             for bucket in s3.buckets.all():
                 print(bucket.name)
@@ -204,29 +202,29 @@ def clientthread(conn):
             except:
                 reply = 'failed list directory\n'
 
-
         elif cliInput[i] == '0':
             break
         else:
             reply = 'please type a correct command to the portal or 0 to exit: '
 
         conn.send(reply + '\n> ')
-        i+=1
+        i += 1
 
 
-    #came out of loop
+    # came out of loop
     conn.close()
 
-    #for debug
+    # for debug
     print('Thank you for using the SUFS')
 
-#now keep talking with the client
+
+# now keep talking with the client
 while 1:
-    #wait to accept a connection - blocking call
+    # wait to accept a connection - blocking call
     conn, addr = s.accept()
     print('Connected with ' + addr[0] + ':' + str(addr[1]))
 
-    #start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
+    # start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
     start_new_thread(clientthread ,(conn,))
 
 s.close()
