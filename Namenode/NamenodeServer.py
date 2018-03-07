@@ -7,7 +7,7 @@ from NameNode import NameNode
 import time
 
 PORT = 8000
-HOST = "localhost"
+HOST = ""
 
 nn = NameNode()
 

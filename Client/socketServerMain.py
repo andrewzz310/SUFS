@@ -93,13 +93,13 @@ def start_nodes():
     RPC_NAMENODE_SERVER_URL = 'http://' + new_namenode.public_ip_address + ':8000'
 
     #while x:
-    try:
-        rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
-        print('Namenode Connected!', RPC_NAMENODE_SERVER_URL)
-        print(rpc_namenode.ls('/home/'))
-        x = False
-    except:
-        x = True
+    #try:
+    rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
+    print('Namenode Connected!', RPC_NAMENODE_SERVER_URL)
+    print(rpc_namenode.hello_world())
+    #     x = False
+    # except:
+    #     x = True
 
     terminate_ec2(new_namenode.id)
 
