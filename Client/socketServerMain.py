@@ -54,7 +54,7 @@ def create_ec2():
         MaxCount=1,
         InstanceType='t2.micro',
         # userdata to start namenode server
-        UserData='python ~/SUFS/Namenode/NamenodeServer.py'
+        UserData='#!/bin/bash\r\npython ~/SUFS/Namenode/NamenodeServer.py'
     )
     instance_id = instance[0].id
     print('Created Namenode Server:', instance[0].id, instance[0].public_ip_address)
@@ -82,6 +82,7 @@ def terminate_ec2(instance_id):
 
 def start_nodes():
     new_namenode = create_ec2()
+    global rpc_namenode
 
     ec2 = boto3.resource('ec2')
     for instance in ec2.instances.all():
@@ -89,15 +90,17 @@ def start_nodes():
 
     x = True
 
-    # while x:
-    #     try:
-    #         rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
-    #         x = False
-    #     except:
-    #         x = True
+    RPC_NAMENODE_SERVER_URL = 'http://' + new_namenode.public_ip_address + ':8000'
 
-    print('Namenode URL:', RPC_NAMENODE_SERVER_URL)
-    rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
+    #while x:
+    try:
+        rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
+        print('Namenode Connected!', RPC_NAMENODE_SERVER_URL)
+        print(rpc_namenode.ls('/home/'))
+        x = False
+    except:
+        x = True
+
     terminate_ec2(new_namenode.id)
 
 
@@ -107,6 +110,7 @@ start_nodes()
 
 # Function for handling connections. This will be used to create threads
 def clientthread(conn):
+    global rpc_namenode
 
     # Sending message to connected client
     conn.send('Welcome to the SUFS MAIN Portal. Type command and hit enter and i will return it as a test\n') #send only takes string
