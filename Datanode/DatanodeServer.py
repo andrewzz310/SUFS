@@ -10,8 +10,8 @@ from modules import nnRPCClient as nnRPCClient
 PORT = 8880
 HOST = "localhost"
 
-NAMENODE_HOST = "something"
-NAMENODE_PORT = "1234"
+NAMENODE_HOST = "http://localhost"
+NAMENODE_PORT = "8000"
 
 # Restrict to a particular path.
 class RequestHandler(SimpleXMLRPCRequestHandler):

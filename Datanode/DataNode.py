@@ -35,7 +35,7 @@ class DataNode:
     # server to NameNode
     def sendBlockReport(self, NameNodeID):
         # receiveBlockReport ~ whatever the name of the func in NameNode
-        return self.namenode.receiveBlockReport(self.ip, self.listBlockID)
+        return self.nnRPC.receiveBlockReport(self.ip, self.listBlockID)
 
 
     def sendHeartBeat(self):

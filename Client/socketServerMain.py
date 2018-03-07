@@ -138,7 +138,6 @@ def clientthread(conn):
             for bucket in s3.buckets.all():
                 print(bucket.name)
 
-
         elif cliInput[i] == 'lsdnode':
             reply = 'access list datanotes that store replicas of each block of file s3| next cmd: '
 
@@ -171,6 +170,19 @@ def clientthread(conn):
             # subprocess.call('cd Namenode', shell=True)
             # subprocess.call('ls', shell=True)
             reply = 'namenode started| next cmd: '
+
+        elif cliInput[i] == 'createdir':
+            dir = ''
+            try:
+                dir = cliInput[i+1]
+            except:
+                dir = ''
+            # create a directory
+            reply = 'create directory ' + dir
+
+        elif cliInput[i] == 'deletedir':
+            # remove a directory
+            reply = 'remove directory'
 
         elif cliInput[i] == '0':
             break
