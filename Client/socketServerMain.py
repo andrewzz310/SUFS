@@ -18,7 +18,9 @@ import modules.RPCClient as RPCClient
 # For RPC client interactions
 # TODO: make these dictionaries
 #rpc_namenode = RPCClient.RPCClient('http://localhost', 8000)
-rpc_namenode = xmlrpclib.ServerProxy('http://localhost:8000')
+RPC_NAMENODE_SERVER_URL = ''
+#rpc_namenode = xmlrpclib.ServerProxy('http://localhost:8000')
+rpc_namenode = None
 rpc_datanode = RPCClient.RPCClient('http://localhost', 8880)
 
 HOST = ''    # Symbolic name meaning all available interfaces
@@ -39,6 +41,68 @@ print('Socket bind complete')
 # Start listening on socket
 s.listen(10)
 print('Server now listening')
+
+
+# TODO: Start Namenode and Datanodes here
+def create_ec2():
+    ec2 = boto3.resource('ec2')
+    instance_id = ''
+    instance_check = None
+    instance = ec2.create_instances(
+        ImageId='ami-765ace0e',
+        MinCount=1,
+        MaxCount=1,
+        InstanceType='t2.micro',
+        # userdata to start namenode server
+        UserData='python ~/SUFS/Namenode/NamenodeServer.py'
+    )
+    instance_id = instance[0].id
+    print('Created Namenode Server:', instance[0].id, instance[0].public_ip_address)
+
+    instance_check = instance[0]
+
+    print('Getting Public IP...')
+
+    # Wait for server to
+    while instance_check.public_ip_address == None:
+        instance_check = ec2.Instance(instance_id)
+
+    RPC_NAMENODE_SERVER_URL = 'http://' + str(instance_check.public_ip_address) + ':8000'
+
+    print('New Node running at:', RPC_NAMENODE_SERVER_URL)
+    return instance_check
+
+
+def terminate_ec2(instance_id):
+    ec2 = boto3.resource('ec2')
+    instance = ec2.Instance(instance_id)
+    response = instance.terminate()
+    print(response)
+
+
+def start_nodes():
+    new_namenode = create_ec2()
+
+    ec2 = boto3.resource('ec2')
+    for instance in ec2.instances.all():
+        print('EC2:', instance.id, instance.state, instance.public_ip_address)
+
+    x = True
+
+    # while x:
+    #     try:
+    #         rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
+    #         x = False
+    #     except:
+    #         x = True
+
+    print('Namenode URL:', RPC_NAMENODE_SERVER_URL)
+    rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
+    terminate_ec2(new_namenode.id)
+
+
+# Start Nodes
+start_nodes()
 
 
 # Function for handling connections. This will be used to create threads
@@ -209,7 +273,6 @@ def clientthread(conn):
 
         conn.send(reply + '\n> ')
         i += 1
-
 
     # came out of loop
     conn.close()
