@@ -6,6 +6,7 @@ import socket
 import sys
 import boto3
 import botocore
+import xmlrpclib
 import subprocess
 import os
 from thread import *
@@ -15,7 +16,8 @@ import modules.RPCClient as RPCClient
 
 # For RPC client interactions
 # TODO: make these dictionaries
-rpc = RPCClient.RPCClient('http://localhost', 8000)
+#rpc_namenode = RPCClient.RPCClient('http://localhost', 8000)
+rpc_namenode = xmlrpclib.ServerProxy('http://localhost:8000')
 rpc_datanode = RPCClient.RPCClient('http://localhost', 8880)
 
 HOST = ''   # Symbolic name meaning all available interfaces
@@ -46,7 +48,7 @@ def clientthread(conn):
     conn.send('Welcome to the SUFS MAIN Portal. Type command and hit enter and i will return it as a test\n') #send only takes string
     conn.send('Create File? type: cf \n' 'Read File? type: rf filename \n' 'Delete a file? type: df filename \n' 'Create directory? type: cdir \n'
               'Delete directory? type: deldir \n' 'List contents of directory? type: lsdir \n'
-              'List datanodes that store replicas of each block of a file? type: lsdnode \n' 'Press 0 to exit \n')
+              'List datanodes that store replicas of each block of a file? type: lsdnode \n' 'Press 0 to exit \n\n> ')
     #infinite loop so that function do not terminate and thread do not end.
     while True:
 
@@ -57,7 +59,7 @@ def clientthread(conn):
         r = data
         cliInput = r.split()
         i = 0
-        print(cliInput[i])
+        #print(cliInput[i])
 
         if cliInput[i] == 'cf':
             '''
@@ -85,7 +87,7 @@ def clientthread(conn):
             output_dir = "/Users/justin/cs/cloud/output"
             input_file_size = os.path.getsize(file_name)
             print("Getting filenameSize from Namenode...")
-            reply = rpc.write1(file_name, input_file_size)
+            reply = rpc_namenode.write1(file_name, input_file_size)
 
             print("it worked!!!!!!!")
 
@@ -143,7 +145,7 @@ def clientthread(conn):
 
         elif cliInput[i] == 'hello':
             print("Connecting to Namenode...")
-            reply = rpc.hello_world()
+            reply = rpc_namenode.hello_world()
 
         elif cliInput[i] == 'datanode':
             print("Connecting to Datanode...")
@@ -151,7 +153,7 @@ def clientthread(conn):
 
         elif cliInput[i] == 'getfilesize':
             print("Getting filenameSize from Namenode...")
-            reply = rpc.write1("testfile1.txt", 256)
+            reply = rpc_namenode.write1("testfile1.txt", 256)
 
         elif cliInput[i] == 'runnamenode':
             print("Running Namenode")
@@ -171,25 +173,44 @@ def clientthread(conn):
             # subprocess.call('ls', shell=True)
             reply = 'namenode started| next cmd: '
 
-        elif cliInput[i] == 'createdir':
+        elif cliInput[i] == 'mkdir':
+            path = ''
             dir = ''
             try:
-                dir = cliInput[i+1]
+                path = cliInput[i + 1]
+                dir = cliInput[i + 2]
+                rpc_namenode.mkdir(path, dir)
             except:
                 dir = ''
             # create a directory
-            reply = 'create directory ' + dir
+            reply = 'create directory ' + path + dir
 
         elif cliInput[i] == 'deletedir':
             # remove a directory
-            reply = 'remove directory'
+            try:
+                path = cliInput[i + 1]
+                reply = rpc_namenode.deletedir(path)
+            except:
+                reply = 'could not delete path'
+
+        elif cliInput[i] == 'ls':
+            dir = ''
+            try:
+                dir = cliInput[i + 1]
+                files = rpc_namenode.ls(dir)
+                reply = 'Contents of ' + dir + ':\n'
+                for f in files:
+                    reply += '|_ ' + f + '\n'
+            except:
+                reply = 'failed list directory\n'
+
 
         elif cliInput[i] == '0':
             break
         else:
             reply = 'please type a correct command to the portal or 0 to exit: '
 
-        conn.sendall(reply)
+        conn.send(reply + '\n> ')
         i+=1
 
 

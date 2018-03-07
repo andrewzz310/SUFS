@@ -39,20 +39,38 @@ def receiveHeartBeat(myIp):
 
 
 def receiveBlockReport(myIp, blocks):
-     nn.blockD[myIp] = blocks
-     for blockID in blocks: #do the translation the other way as well.
+    nn.blockD[myIp] = blocks
+    for blockID in blocks: #do the translation the other way as well.
         nn.dnToBlock[blockID].add(myIp)
-     return True
+    return True
+
 
 def putFile(filename, size):
     print (filename)
     print (size)
     return # results of namenode an
 
+
+# Directory functions
+def ls(path):
+    return nn.ls(path)
+
+
+def mkdir(path, dir):
+    nn.mkdir(path, dir)
+    return True
+
+
+def deletedir(path):
+    return nn.deleteDirectory(path)
+
+
 # Register hello world function
-server.register_function(hello_world)
 server.register_function(write1)
 server.register_function(putFile)
+server.register_function(ls)
+server.register_function(mkdir)
+server.register_function(deletedir)
 
 
 # Register hello world function

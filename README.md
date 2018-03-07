@@ -51,6 +51,22 @@ Testing Datanode connection from telnet
 datanode
 ```
 
+### Telnet Commands
+Create directory. example: mkdir /home/ foo
+```
+mkdir <path> <new dir>
+```
+
+Delete directory. example: deletedir /home/foo/
+```
+deletedir <path>
+```
+
+List contents in a directory. example: ls /home/foo/
+```
+ls <path>
+```
+
 #### Create ec2 instance
 ```
 #!/usr/bin/env python

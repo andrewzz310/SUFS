@@ -40,12 +40,11 @@ class NameNode:
             print("Fail to create a directory")
 
 
-
     # Example of how to call the function:     deleteDirectory("/home/st/")
     def deleteDirectory(self, path):
         if path == "/home/":
             print("You can't delete the root folder")
-            return
+            return "You can't delete the root folder"
         if path in self.contentsInDir:
             # 1. look at the list and delete all the files_________________________________
             #    Note: Ignore if there is a sub-directory, it will be delete in the for loop
@@ -71,16 +70,19 @@ class NameNode:
             delDirName = path[index+1 : len(path)-1]
             self.contentsInDir[parentDir].remove(delDirName)
 
-
+        return 'Removed ' + path
 
 
     # List the contents of a directory
     # Example of how to call the function:     ls("/home/")
     def ls(self, path):
+        result = list()
         for key in self.contentsInDir:
             if key == path:
                 for content in self.contentsInDir[key]:
                     print(content)
+                    result.append(content)
+        return result
 
 # mkdir("/home/", "hang")
 # printDic()
