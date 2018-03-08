@@ -80,6 +80,10 @@ instance = ec2.create_instances(
 print instance[0].id, instance[0].public_ip_address
 ````
 
+Namenode 
+sudo nano /etc/rc.local
+python /home/ec2-user/SUFS/Namenode/NamenodeServer.py
+
 #### List ec2 instance
 ````
 import boto3
