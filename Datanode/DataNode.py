@@ -10,8 +10,6 @@ class DataNode:
 
 
     # server to another DataNode
-    # probably won't be used
-    # definitely don't use this
     def giveBlock(self, blockID, DataNodeID):
         otherdn = xmlrpclib.ServerProxy(DataNodeID)
         # string in the current blockID
@@ -20,8 +18,6 @@ class DataNode:
 
 
     # client to another DataNode
-    # probably won't be used
-    # definitely don't use this
     def receiveBlock(self, blockID, blockData):
         return ""
         # save new block & update report

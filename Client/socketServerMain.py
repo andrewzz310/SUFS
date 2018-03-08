@@ -104,7 +104,20 @@ def createDataNodes(numDataNodes):
     i = 1
     while i < numDataNodes:
         #create datanodes
+        ec2 = boto3.resource('ec2')
+        instance_id = ''
+        instance_check = None
+        instance = ec2.create_instances(
+        ImageId = 'datanode image here',
+        MinCount = 1,
+        MaxCount = 1,
+        InstanceType='t2.micro',
+        #UserData='#!/bin/bash\r\npython /home/ec2-user/SUFS/Namenode/NamenodeServer.py'
+        )
+        instance_id = instance[0].id
+        print('Created Datanode:', instance[0].id, instance[0].public_ip_address)
         #store ips' in dnIps list
+        dnIps.append(instance[0].public_ip_address)
         i = i + 1
     #outside of loop
     #wait for instances to boot up
