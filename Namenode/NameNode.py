@@ -26,6 +26,23 @@ class NameNode:
         self.contentsInDir = {"/home/": []}
 
 
+    def createFile(self, path, filename):
+        if path in self.contentsInDir:
+            self.contentsInDir[path].append(filename)
+            # when the file is created, an S3 object should be specified
+            # and the data from S3 should be written into the file__________________________
+            print("Successfully created a file")
+        else:
+            print("Fail to create a file because the directory doesn't exist")
+
+
+    def deleteFile(self, path, filename):
+        if path in self.contentsInDir:
+            # delete the file (blocks) in DataNodes________________________________________
+            self.contentsInDir[path].remove(filename)
+            print("Successfully delete a file")
+
+
     # Create a directory
     # Example of how to call the function:   mkdir("/home/", "st")
     def mkdir(self, path, dir):
@@ -132,6 +149,7 @@ class NameNode:
             diff = time.time() - self.alive[key]
             if (diff > 10):
                 del self.alive[key]
+
 
     def checkReplicas(self):
         notRep = [] #structure that holds
