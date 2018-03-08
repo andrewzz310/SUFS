@@ -11,6 +11,7 @@ HOST = ""
 
 nn = NameNode()
 
+
 # Restrict to a particular path.
 class RequestHandler(SimpleXMLRPCRequestHandler):
     rpc_paths = ('/RPC2',)

@@ -10,6 +10,7 @@ import botocore
 import xmlrpclib
 import subprocess
 import os
+import time
 from thread import *
 import modules.BlockDivider as BlockDivider
 import modules.RPCClient as RPCClient
@@ -19,7 +20,7 @@ import modules.RPCClient as RPCClient
 # TODO: make these dictionaries
 #rpc_namenode = RPCClient.RPCClient('http://localhost', 8000)
 RPC_NAMENODE_SERVER_URL = ''
-#rpc_namenode = xmlrpclib.ServerProxy('http://localhost:8000')
+#rpc_namenode = xmlrpclib.ServerProxy('http://34.215.161.146:8000')
 rpc_namenode = None
 rpc_datanode = RPCClient.RPCClient('http://localhost', 8880)
 
@@ -49,12 +50,11 @@ def create_ec2():
     instance_id = ''
     instance_check = None
     instance = ec2.create_instances(
-        ImageId='ami-765ace0e',
+        ImageId='ami-7ede4906',
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
-        # userdata to start namenode server
-        UserData='#!/bin/bash\r\npython ~/SUFS/Namenode/NamenodeServer.py'
+        #UserData='#!/bin/bash\r\npython /home/ec2-user/SUFS/Namenode/NamenodeServer.py'
     )
     instance_id = instance[0].id
     print('Created Namenode Server:', instance[0].id, instance[0].public_ip_address)
@@ -69,7 +69,10 @@ def create_ec2():
 
     RPC_NAMENODE_SERVER_URL = 'http://' + str(instance_check.public_ip_address) + ':8000'
 
-    print('New Node running at:', RPC_NAMENODE_SERVER_URL)
+    print('Waiting for Namenode to start...')
+    time.sleep(120)
+
+    print('Running New Node at:', RPC_NAMENODE_SERVER_URL)
     return instance_check
 
 
@@ -88,20 +91,12 @@ def start_nodes():
     for instance in ec2.instances.all():
         print('EC2:', instance.id, instance.state, instance.public_ip_address)
 
-    x = True
-
     RPC_NAMENODE_SERVER_URL = 'http://' + new_namenode.public_ip_address + ':8000'
 
-    #while x:
-    #try:
     rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
     print('Namenode Connected!', RPC_NAMENODE_SERVER_URL)
-    print(rpc_namenode.hello_world())
-    #     x = False
-    # except:
-    #     x = True
 
-    terminate_ec2(new_namenode.id)
+    #terminate_ec2(new_namenode.id)
 
 
 # Start Nodes
