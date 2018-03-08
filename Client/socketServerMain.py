@@ -26,6 +26,7 @@ rpc_datanode = RPCClient.RPCClient('http://localhost', 8880)
 
 HOST = ''    # Symbolic name meaning all available interfaces
 PORT = 8888  # Arbitrary non-privileged port
+MY_IP = ''
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print('Socket created')
@@ -68,7 +69,7 @@ def create_ec2():
         instance_check = ec2.Instance(instance_id)
 
     RPC_NAMENODE_SERVER_URL = 'http://' + str(instance_check.public_ip_address) + ':8000'
-
+    MY_IP = str(instance_check.public_ip_address)
     print('Waiting for Namenode to start...')
     time.sleep(120)
 
@@ -97,6 +98,23 @@ def start_nodes():
     print('Namenode Connected!', RPC_NAMENODE_SERVER_URL)
 
     #terminate_ec2(new_namenode.id)
+
+def createDataNodes(numDataNodes):
+    dnIps = []
+    i = 1
+    while i < numDataNodes:
+        #create datanodes
+        #store ips' in dnIps list
+        i = i + 1
+    #outside of loop
+    #wait for instances to boot up
+    time.sleep(120)
+    # go thru and send namenode ip and datanode ip
+    for ip in dnIps:
+        #what is our datanode port?
+        datanode = xmlrpclib.ServerProxy(str(ip) + ':' + '8880')
+        #send namenode ip and the datanode ip
+        datanode.receiveNNIp(MY_IP, ip)
 
 
 # Start Nodes

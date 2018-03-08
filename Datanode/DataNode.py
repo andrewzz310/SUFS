@@ -4,7 +4,7 @@ from modules import nnRPCClient
 
 class DataNode:
     def __init__(self, ip, nnIp, nnPort):
-        self.listBlockID = []
+        self.blocks = []
         self.ip = ip
         self.nnRPC = nnRPCClient.nnRPCClient(nnIp, nnPort)
 
@@ -33,11 +33,7 @@ class DataNode:
 
 
     # server to NameNode
-    def sendBlockReport(self, NameNodeID):
+    def sendBlockReport(self):
         # receiveBlockReport ~ whatever the name of the func in NameNode
-        return self.nnRPC.receiveBlockReport(self.ip, self.listBlockID)
-
-
-    def sendHeartBeat(self):
-        return ""
+        return self.nnRPC.receiveBlockReport(self.ip, self.blocks)
 
