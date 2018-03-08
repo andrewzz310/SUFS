@@ -53,26 +53,30 @@ def putFile(filename, size):
 
 
 # Directory functions
-def ls(path):
-    return nn.ls(path)
+def createFile(path, filename):
+    return nn.createFile(path, filename)
 
+def deleteFile(path, filename):
+    return nn.deleteFile(path, filename)
 
 def mkdir(path, dir):
-    nn.mkdir(path, dir)
-    return True
-
+    return nn.mkdir(path, dir)
 
 def deletedir(path):
     return nn.deleteDirectory(path)
+
+def ls(path):
+    return nn.ls(path)
 
 
 # Register hello world function
 server.register_function(write1)
 server.register_function(putFile)
-server.register_function(ls)
+server.register_function(createFile)
+server.register_function(deleteFile)
 server.register_function(mkdir)
 server.register_function(deletedir)
-
+server.register_function(ls)
 
 # Register hello world function
 server.register_function(hello_world)
