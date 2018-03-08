@@ -27,9 +27,5 @@ class DataNode:
         # 4) update BlockReport (slef.listBlockID)
         # 5) send BlockReport to NameNode
 
-
-    # server to NameNode
-    def sendBlockReport(self):
-        # receiveBlockReport ~ whatever the name of the func in NameNode
-        return self.nnRPC.receiveBlockReport(self.ip, self.blocks)
-
+    def writeBlock(self, data, blockID):
+        

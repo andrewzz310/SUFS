@@ -295,7 +295,7 @@ def clientthread(conn):
                     reply += '|_ ' + f + '\n'
             except:
                 reply = 'failed list directory\n'
-        elif cliInput[i] == 'createDN'
+        elif cliInput[i] == 'createDN':
             createDataNodes(3)
         elif cliInput[i] == '0':
             break
