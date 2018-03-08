@@ -43,6 +43,7 @@ class NameNode:
             print("Successfully delete a file")
 
 
+
     # Create a directory
     # Example of how to call the function:   mkdir("/home/", "st")
     def mkdir(self, path, dir):
