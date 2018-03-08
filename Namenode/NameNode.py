@@ -26,21 +26,35 @@ class NameNode:
         self.contentsInDir = {"/home/": []}
 
 
+    # Create a file
+    # Example of how to call the function:      createFile("/home/st/", "text1.txt")
     def createFile(self, path, filename):
         if path in self.contentsInDir:
-            self.contentsInDir[path].append(filename)
-            # when the file is created, an S3 object should be specified
-            # and the data from S3 should be written into the file__________________________
-            print("Successfully created a file")
+            if file in self.contentsInDir[path]:
+                print("File exists")
+            else:
+                self.contentsInDir[path].append(filename)
+                # when the file is created, an S3 object should be specified
+                # and the data from S3 should be written into the file__________________________
+                print("Successfully created a file")
         else:
             print("Fail to create a file because the directory doesn't exist")
 
 
+
+    # Delete a file
+    # Example of how to call the function:      deleteFile("/home/st/", "text.txt")
     def deleteFile(self, path, filename):
         if path in self.contentsInDir:
-            # delete the file (blocks) in DataNodes________________________________________
-            self.contentsInDir[path].remove(filename)
-            print("Successfully delete a file")
+            if filename in self.contentsInDir[path]:
+                # delete the file (blocks) in DataNodes________________________________________
+                self.contentsInDir[path].remove(filename)
+                print("Successfully delete a file")
+            else:
+                print("File doesn't exist")
+        else:
+            print("No such directory")
+
 
 
 
