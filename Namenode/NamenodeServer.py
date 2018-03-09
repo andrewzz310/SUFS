@@ -8,8 +8,8 @@ import time
 
 PORT = 8000
 HOST = ""
-
-nn = NameNode()
+NAMENODE_IP = ""
+nn = None
 
 
 # Restrict to a particular path.
@@ -69,12 +69,19 @@ def deletedir(path):
 def ls(path):
     return nn.ls(path)
 
-
 def startHeartBeats():
     nn.startThreads()
 
 def printDataNodes():
     return str(nn.alive)
+
+def myIp(nnip):
+    global NAMENODE_IP
+    NAMENODE_IP = nnip
+    global nn
+    nn = NameNode(NAMENODE_IP)
+    return True
+
 
 # Register hello world function
 server.register_function(write1)
@@ -88,6 +95,7 @@ server.register_function(ls)
 #socketservermain calls this once dn's have been created
 #maybe not, right now set it up so threads start on instantiation
 server.register_function(startHeartBeats)
+server.register_function(myIp)
 
 
 # Register hello world function

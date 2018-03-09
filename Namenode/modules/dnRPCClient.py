@@ -4,7 +4,7 @@ RPCClient.py
 import xmlrpclib
 
 
-class DataNodeRPCClient:
+class dnRPCClient:
 
     def __init__(self, url, port):
         self.port = port
@@ -14,9 +14,11 @@ class DataNodeRPCClient:
     def hello_world(self):
         return self.server.hello_world()
 
-    def ekg(self):
-        return self.server.ekg()
-
+    def receiveBlock(self, blockID, blockData):
+        return self.server.receiveBlock(blockID, blockData)
+    
+    def targetBlock(self, blockID, targetDNip):
+        return self.server.targetBlock(blockID, targetDNip)
 """
 Example of us
 """
