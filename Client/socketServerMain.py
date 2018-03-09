@@ -302,8 +302,11 @@ def clientthread(conn):
             reply = createDataNodes(2)
 
         elif cliInput[i] == 'startNN':
-            start_nodes()
-            reply = 'Started Namenode!'
+            try:
+                start_nodes()
+                reply = 'Started Namenode!'
+            except:
+                reply = 'Could not create Namenode!'
 
         elif cliInput[i] == 'connectNN':
             try:
