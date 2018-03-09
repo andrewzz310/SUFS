@@ -10,7 +10,7 @@ import time
 from thread import *
 
 ######### GLOBAL VARIABLES #########
-PORT = 8880
+PORT = 8888
 HOST = "localhost"
 
 NAMENODE_HOST = ""
@@ -78,11 +78,14 @@ def targetBlock(blockID, dnIp, port):
 #instantiates the datanode structure
 def receiveNNIp(nnIp, myIp):
     print ("received namenode ip, starting heartbeats")
-    global NAMENODE_HOST = nnIp
-    global MY_IP = myIp
+    global NAMENODE_HOST 
+    NAMENODE_HOST = nnIp
+    global MY_IP 
+    MY_IP= myIp
 
     #instantiate datanode stuff here after we get ips
-    global datanode = DataNode(myIp, nnIp, 8000)
+    global datanode 
+    datanode = DataNode(myIp, nnIp, 8000)
 
     #begin heartbeating
     start_new_thread(heartBeat,())

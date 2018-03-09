@@ -1,7 +1,6 @@
 import xmlrpclib
 from modules import nnRPCClient
 
-
 class DataNode:
     def __init__(self, ip, nnIp, nnPort):
         self.blocks = []
@@ -28,4 +27,4 @@ class DataNode:
         # 5) send BlockReport to NameNode
 
     def writeBlock(self, data, blockID):
-        
+        return ""
