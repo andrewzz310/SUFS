@@ -33,14 +33,14 @@ class NameNode:
     def createFile(self, path, filename):
         if path in self.contentsInDir:
             if file in self.contentsInDir[path]:
-                print("File exists")
+                return "File exists"
             else:
                 self.contentsInDir[path].append(filename)
                 # when the file is created, an S3 object should be specified
                 # and the data from S3 should be written into the file__________________________
-                print("Successfully created a file")
+                return "Successfully created a file"
         else:
-            print("Fail to create a file because the directory doesn't exist")
+            return "Fail to create a file because the directory doesn't exist"
 
 
 
@@ -51,11 +51,11 @@ class NameNode:
             if filename in self.contentsInDir[path]:
                 # delete the file (blocks) in DataNodes________________________________________
                 self.contentsInDir[path].remove(filename)
-                print("Successfully delete a file")
+                return "Successfully delete a file"
             else:
-                print("File doesn't exist")
+                return "File doesn't exist"
         else:
-            print("No such directory")
+            return "No such directory"
 
 
 
@@ -64,20 +64,18 @@ class NameNode:
     # Example of how to call the function:   mkdir("/home/", "st")
     def mkdir(self, path, dir):
         if "/" in dir:
-            print("Name of directory cannot have '/'")
-            return
+            return "Name of directory cannot have '/'"
         if path in self.contentsInDir:
             self.contentsInDir[path + dir + "/"] = []
             self.contentsInDir[path].append(dir)
-            print("Successfully created a directory")
+            return "Successfully created a directory"
         else:
-            print("Fail to create a directory")
+            return "Fail to create a directory"
 
 
     # Example of how to call the function:     deleteDirectory("/home/st/")
     def deleteDirectory(self, path):
         if path == "/home/":
-            print("You can't delete the root folder")
             return "You can't delete the root folder"
         if path in self.contentsInDir:
             # 1. look at the list and delete all the files_________________________________
