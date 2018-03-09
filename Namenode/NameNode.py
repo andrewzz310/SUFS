@@ -31,6 +31,8 @@ class NameNode:
     # Create a file
     # Example of how to call the function:      createFile("/home/st/", "text1.txt")
     def createFile(self, path, filename):
+        # HAVE TO CHECK IF THE NAME IS VALID_______________________________________________________
+
         # The '#' is not allowed in filename
         if "#" not in filename:
             if path in self.contentsInDir:
@@ -65,6 +67,8 @@ class NameNode:
     # Create a directory
     # Example of how to call the function:   mkdir("/home/", "st")
     def mkdir(self, path, dir):
+        # HAVE TO CHECK IF THE NAME IS VALID_______________________________________________________
+
         # The '#' is not allowed in directory name
         if "#" not in dir:
             if "/" in dir:
