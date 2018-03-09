@@ -72,7 +72,7 @@ def create_ec2():
     global NAMENODE_IP
     NAMENODE_IP = str(instance_check.public_ip_address)
     print('Waiting for Namenode to start...')
-    time.sleep(120)
+    time.sleep(60)
 
     print('Running New Node at:', RPC_NAMENODE_SERVER_URL)
     return instance_check
@@ -116,11 +116,12 @@ def createDataNodes(numDataNodes):
         #UserData='#!/bin/bash\r\npython /home/ec2-user/SUFS/Namenode/NamenodeServer.py'
         )
         instance_id = instance[0].id
-        print('Created Namenode Server:', instance[0].id, instance[0].public_ip_address)
+        print('Created Datanode Server:', instance[0].id, instance[0].public_ip_address)
         instance_check = instance[0]
         print('Getting Public IP...')
         # Wait for server to
         while instance_check.public_ip_address == None:
+            time.sleep(10)
             instance_check = ec2.Instance(instance_id)
 
         #store ips' in dnIps list
@@ -130,7 +131,7 @@ def createDataNodes(numDataNodes):
     #outside of loop
     #wait for instances to boot up
     print ("waiting for datanodes to start")
-    time.sleep(120)
+    time.sleep(60)
     # go thru and send namenode ip and datanode ip
     for ip in dnIps:
         print (NAMENODE_IP)
