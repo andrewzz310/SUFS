@@ -26,5 +26,8 @@ class DataNode:
         # 4) update BlockReport (slef.listBlockID)
         # 5) send BlockReport to NameNode
 
-    def writeBlock(self, data, blockID):
-        return ""
+
+    def writeBlock(self, data, blockID, filename):
+        proxy = xmlrpclib.ServerProxy("http://localhost:5000/")
+        with open(filename, "wb") as handle:
+            handle.write(proxy.sendFileToDN().data)
