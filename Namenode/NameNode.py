@@ -10,6 +10,8 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 import re
 
+# NOTE:  The '#' is not allowed in filename because it's used for blockID stuff
+reservedChar = ["#", "<", ">", ":", "/", "\\", "|", "?", "*"]
 
 class NameNode:
     """
@@ -66,22 +68,18 @@ class NameNode:
 
 
 
-
     # Create a directory
     # Example of how to call the function:   mkdir("/home/", "st")
     def mkdir(self, path, dir):
-        # HAVE TO CHECK IF THE NAME IS VALID_______________________________________________________
+        if any(char in dir for char in reservedChar):
+            return "Name of directory cannot any of reserved characters"
+        if path in self.contentsInDir:
+            self.contentsInDir[path + dir + "/"] = []
+            self.contentsInDir[path].append(dir)
+            return "Successfully created a directory"
+        else:
+            return "Fail to create a directory"
 
-        # The '#' is not allowed in directory name
-        if "#" not in dir:
-            if "/" in dir:
-                return "Name of directory cannot have '/'"
-            if path in self.contentsInDir:
-                self.contentsInDir[path + dir + "/"] = []
-                self.contentsInDir[path].append(dir)
-                return "Successfully created a directory"
-            else:
-                return "Fail to create a directory"
 
 
     # Example of how to call the function:     deleteDirectory("/home/st/")
@@ -114,6 +112,7 @@ class NameNode:
             self.contentsInDir[parentDir].remove(delDirName)
 
         return 'Removed ' + path
+
 
 
     # List the contents of a directory
@@ -178,6 +177,8 @@ class NameNode:
         start_new_thread(self.checkTimes, ())
         start_new_thread(self.checkReplicas, ())
 
+
+
     def checkTimes(self):
         while 1:
             time.sleep(30)
@@ -185,6 +186,7 @@ class NameNode:
                 diff = time.time() - self.alive[key]
                 if (diff > 40):
                     del self.alive[key]
+
 
 
     def checkReplicas(self):
