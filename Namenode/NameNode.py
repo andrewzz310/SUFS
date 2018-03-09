@@ -29,6 +29,7 @@ class NameNode:
         self.startThreads()
 
 
+
     # Create a file
     # Example of how to call the function:      createFile("/home/st/", "text1.txt")
     def createFile(self, path, filename):
