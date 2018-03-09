@@ -10,6 +10,7 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 import re
 
+
 # NOTE:  The '#' is not allowed in filename because it's used for blockID stuff
 reservedChar = ["#", "<", ">", ":", "/", "\\", "|", "?", "*"]
 
