@@ -147,8 +147,8 @@ def clientthread(conn):
 
     # Sending message to connected client
     conn.send('Welcome to the SUFS MAIN Portal. Type command and hit enter and i will return it as a test\n') #send only takes string
-    conn.send('Create File? type: cf \n' 'Read File? type: rf filename \n' 'Delete a file? type: df filename \n' 'Create directory? type: cdir \n'
-              'Delete directory? type: deldir \n' 'List contents of directory? type: lsdir \n'
+    conn.send('Create File? type: cf \n' 'Read File? type: rf filename \n' 'Delete a file? type: df filename \n' 'Create directory? type: mkdir <path> <dir_name> \n'
+              'Delete directory? type: rmdir <dir> \n' 'List contents of directory? type: ls <dir> \n'
               'List datanodes that store replicas of each block of a file? type: lsdnode \n' 'Press 0 to exit \n\n> ')
 
     # infinite loop so that function do not terminate and thread do not end.
@@ -225,49 +225,37 @@ def clientthread(conn):
             '''
             reply = 'access delete file completed| next cmd: '
 
-        elif cliInput[i] == 'cdir':
-            reply = 'access create directory s3| next cmd: '
-
-        elif cliInput[i] == 'deldir':
-            reply = 'access delete directory s3| next cmd: '
-
-        elif cliInput[i] == 'lsdir':
-            reply = 'access list contents of directory s3| next cmd: '
-
-            # need to figure out how to pass to client
-            s3 = boto3.resource('s3')
-            for bucket in s3.buckets.all():
-                print(bucket.name)
-
-        elif cliInput[i] == 'lsdnode':
-            reply = 'access list datanotes that store replicas of each block of file s3| next cmd: '
-
         elif cliInput[i] == 'hello':
             print("Connecting to Namenode...")
             reply = rpc_namenode.hello_world()
 
-        elif cliInput[i] == 'getfilesize':
-            print("Getting filenameSize from Namenode...")
-            reply = rpc_namenode.write1("testfile1.txt", 256)
+        #elif cliInput[i] == 'getfilesize':
+        #    print("Getting filenameSize from Namenode...")
+        #    reply = rpc_namenode.write1("testfile1.txt", 256)
 
-        elif cliInput[i] == 'runnamenode':
-            print("Running Namenode")
-            subprocess.call('ls', shell=True, cwd='/mnt/c/workspace/SUFS/Namenode')
-            subprocess.call('python NamenodeServer.py', shell=True, cwd='/mnt/c/workspace/SUFS/Namenode')
+        # elif cliInput[i] == 'runnamenode':
+        #     print("Running Namenode")
+        #     subprocess.call('ls', shell=True, cwd='/mnt/c/workspace/SUFS/Namenode')
+        #     subprocess.call('python NamenodeServer.py', shell=True, cwd='/mnt/c/workspace/SUFS/Namenode')
+        #
+        #     # subprocess.call('cd Namenode', shell=True)
+        #     # subprocess.call('ls', shell=True)
+        #     reply = 'namenode started| next cmd: '
+        #
+        # elif cliInput[i] == 'rundatanode':
+        #     print("Running datanode")
+        #     subprocess.call('ls', shell=True, cwd='/mnt/c/workspace/SUFS/Namenode')
+        #     subprocess.call('python DatanodeServer.py', shell=True, cwd='/mnt/c/workspace/SUFS/Datanode')
+        #
+        #     # subprocess.call('cd Namenode', shell=True)
+        #     # subprocess.call('ls', shell=True)
+        #     reply = 'namenode started| next cmd: '
 
-            # subprocess.call('cd Namenode', shell=True)
-            # subprocess.call('ls', shell=True)
-            reply = 'namenode started| next cmd: '
+        #######################
+        # Directory Commands
+        #######################
 
-        elif cliInput[i] == 'rundatanode':
-            print("Running datanode")
-            subprocess.call('ls', shell=True, cwd='/mnt/c/workspace/SUFS/Namenode')
-            subprocess.call('python DatanodeServer.py', shell=True, cwd='/mnt/c/workspace/SUFS/Datanode')
-
-            # subprocess.call('cd Namenode', shell=True)
-            # subprocess.call('ls', shell=True)
-            reply = 'namenode started| next cmd: '
-
+        # create a directory
         elif cliInput[i] == 'mkdir':
             path = ''
             dir = ''
@@ -277,17 +265,18 @@ def clientthread(conn):
                 rpc_namenode.mkdir(path, dir)
             except:
                 dir = ''
-            # create a directory
             reply = 'create directory ' + path + dir
 
-        elif cliInput[i] == 'deletedir':
-            # remove a directory
+        # remove a directory
+        elif cliInput[i] == 'rmdir':
+
             try:
                 path = cliInput[i + 1]
                 reply = rpc_namenode.deletedir(path)
             except:
                 reply = 'could not delete path'
 
+        # list directory contents
         elif cliInput[i] == 'ls':
             dir = ''
             try:
@@ -298,9 +287,12 @@ def clientthread(conn):
                     reply += '|_ ' + f + '\n'
             except:
                 reply = 'failed list directory\n'
-        elif cliInput[i] == 'createDN':
-            reply = createDataNodes(2)
 
+        #######################
+        # Namenode Commands
+        #######################
+
+        # Create new Namenode
         elif cliInput[i] == 'createNN':
             try:
                 start_nodes()
@@ -308,6 +300,7 @@ def clientthread(conn):
             except:
                 reply = 'Could not createc Namenode!'
 
+        # Connect to existing Namenode
         elif cliInput[i] == 'connectNN':
             try:
                 RPC_NAMENODE_SERVER_URL = cliInput[i+1]
@@ -318,8 +311,23 @@ def clientthread(conn):
             except:
                 reply = 'Could not connect to Namenode! '
 
+        #######################
+        # Datanode Commands
+        #######################
+
+        # Create new Datanode
+        elif cliInput[i] == 'createDN':
+            reply = createDataNodes(2)
+
+        # Print list of Datanodes and Timestamps from Namenode
         elif cliInput[i] == 'printDN':
             reply = rpc_namenode.printDataNodes()
+
+        #######################
+        # Misc. Commands
+        #######################
+
+        # Exit
         elif cliInput[i] == '0':
             break
         else:
