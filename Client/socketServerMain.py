@@ -50,7 +50,6 @@ def create_ec2():
     ec2 = boto3.resource('ec2')
     instance_id = ''
     instance_check = None
-    global NAMENODE_IP
     instance = ec2.create_instances(
         ImageId='ami-4471e63c',
         MinCount=1,
@@ -70,9 +69,10 @@ def create_ec2():
         instance_check = ec2.Instance(instance_id)
 
     RPC_NAMENODE_SERVER_URL = 'http://' + str(instance_check.public_ip_address) + ':8000'
+    global NAMENODE_IP
     NAMENODE_IP = str(instance_check.public_ip_address)
     print('Waiting for Namenode to start...')
-    time.sleep(120)
+    time.sleep(60)
 
     print('Running New Node at:', RPC_NAMENODE_SERVER_URL)
     return instance_check
@@ -100,10 +100,8 @@ def start_nodes():
 
     #terminate_ec2(new_namenode.id)
 
-
 def createDataNodes(numDataNodes):
     dnIps = []
-    global NAMENODE_IP
     i = 0
     while i < numDataNodes:
         #create datanodes
@@ -111,35 +109,41 @@ def createDataNodes(numDataNodes):
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-            ImageId='ami-4a6dfa32',
-            MinCount=1,
-            MaxCount=1,
-            InstanceType='t2.micro',
+        ImageId = 'ami-4a6dfa32',
+        MinCount = 1,
+        MaxCount = 1,
+        InstanceType='t2.micro',
+        #UserData='#!/bin/bash\r\npython /home/ec2-user/SUFS/Namenode/NamenodeServer.py'
         )
         instance_id = instance[0].id
-        print('Created Datanode:', instance[0].id, instance[0].public_ip_address)
+        print('Created Datanode Server:', instance[0].id, instance[0].public_ip_address)
+        instance_check = instance[0]
+        print('Getting Public IP...')
+        # Wait for server to
+        while instance_check.public_ip_address == None:
+            time.sleep(10)
+            instance_check = ec2.Instance(instance_id)
+
         #store ips' in dnIps list
-        dnIps.append(instance[0].public_ip_address)
+        print (str(instance_check.public_ip_address))
+        dnIps.append(str(instance_check.public_ip_address))
         i = i + 1
     #outside of loop
     #wait for instances to boot up
-    time.sleep(120)
+    print ("waiting for datanodes to start")
+    time.sleep(60)
     # go thru and send namenode ip and datanode ip
     for ip in dnIps:
-        print('NamenodeIP:', NAMENODE_IP, 'DatanodeIP:', ip)
+        print (NAMENODE_IP)
+        print (ip)
         #what is our datanode port?
         datanode = xmlrpclib.ServerProxy("http://" + str(ip) + ':' + '8888')
         #send namenode ip and the datanode ip
         datanode.receiveNNIp(NAMENODE_IP, ip)
         print("started heartbeat on " + ip)
 
-
-def connect_to_namenode(namenode_ip):
-    global rpc_namenode
-    global NAMENODE_IP
-    rpc_namenode = xmlrpclib.ServerProxy('http://' + namenode_ip + ':8000')
-    NAMENODE_IP = namenode_ip
-    print('Connected to Namenode:', 'http://' + namenode_ip + ':8000')
+# Start Nodes
+start_nodes()
 
 
 # Function for handling connections. This will be used to create threads
@@ -304,17 +308,9 @@ def clientthread(conn):
             except:
                 reply = 'failed list directory\n'
         elif cliInput[i] == 'createDN':
-            createDataNodes(3)
+            createDataNodes(2)
         elif cliInput[i] == 'printDN':
             print(rpc_namenode.printDataNodes())
-            reply = ''
-        elif cliInput[i] == 'startnn':
-            start_nodes()
-            reply = 'Starting Namenode...'
-        elif cliInput[i] == 'connectnn':
-            nn_ip = cliInput[i+1]
-            connect_to_namenode(nn_ip)
-            reply = 'Connecting to Namenode...'
         elif cliInput[i] == '0':
             break
         else:
@@ -336,8 +332,7 @@ while 1:
     conn, addr = s.accept()
     print('Connected with ' + addr[0] + ':' + str(addr[1]))
 
-    # start new thread takes 1st argument as a function name to be run,
-    # second is the tuple of arguments to the function.
-    start_new_thread(clientthread, (conn,))
+    # start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
+    start_new_thread(clientthread ,(conn,))
 
 s.close()

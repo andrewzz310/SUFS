@@ -31,16 +31,18 @@ class NameNode:
     # Create a file
     # Example of how to call the function:      createFile("/home/st/", "text1.txt")
     def createFile(self, path, filename):
-        if path in self.contentsInDir:
-            if file in self.contentsInDir[path]:
-                return "File exists"
+        # The '#' is not allowed in filename
+        if "#" not in filename:
+            if path in self.contentsInDir:
+                if file in self.contentsInDir[path]:
+                    return "File exists"
+                else:
+                    self.contentsInDir[path].append(filename)
+                    # when the file is created, an S3 object should be specified
+                    # and the data from S3 should be written into the file__________________________
+                    return "Successfully created a file"
             else:
-                self.contentsInDir[path].append(filename)
-                # when the file is created, an S3 object should be specified
-                # and the data from S3 should be written into the file__________________________
-                return "Successfully created a file"
-        else:
-            return "Fail to create a file because the directory doesn't exist"
+                return "Fail to create a file because the directory doesn't exist"
 
 
 
@@ -63,14 +65,16 @@ class NameNode:
     # Create a directory
     # Example of how to call the function:   mkdir("/home/", "st")
     def mkdir(self, path, dir):
-        if "/" in dir:
-            return "Name of directory cannot have '/'"
-        if path in self.contentsInDir:
-            self.contentsInDir[path + dir + "/"] = []
-            self.contentsInDir[path].append(dir)
-            return "Successfully created a directory"
-        else:
-            return "Fail to create a directory"
+        # The '#' is not allowed in directory name
+        if "#" not in dir:
+            if "/" in dir:
+                return "Name of directory cannot have '/'"
+            if path in self.contentsInDir:
+                self.contentsInDir[path + dir + "/"] = []
+                self.contentsInDir[path].append(dir)
+                return "Successfully created a directory"
+            else:
+                return "Fail to create a directory"
 
 
     # Example of how to call the function:     deleteDirectory("/home/st/")
