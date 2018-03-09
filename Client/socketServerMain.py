@@ -50,6 +50,7 @@ def create_ec2():
     ec2 = boto3.resource('ec2')
     instance_id = ''
     instance_check = None
+    global NAMENODE_IP
     instance = ec2.create_instances(
         ImageId='ami-4471e63c',
         MinCount=1,
@@ -99,8 +100,10 @@ def start_nodes():
 
     #terminate_ec2(new_namenode.id)
 
+
 def createDataNodes(numDataNodes):
     dnIps = []
+    global NAMENODE_IP
     i = 0
     while i < numDataNodes:
         #create datanodes
@@ -108,11 +111,10 @@ def createDataNodes(numDataNodes):
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-        ImageId = 'ami-4471e63c',
-        MinCount = 1,
-        MaxCount = 1,
-        InstanceType='t2.micro',
-        #UserData='#!/bin/bash\r\npython /home/ec2-user/SUFS/Namenode/NamenodeServer.py'
+            ImageId='ami-4a6dfa32',
+            MinCount=1,
+            MaxCount=1,
+            InstanceType='t2.micro',
         )
         instance_id = instance[0].id
         print('Created Datanode:', instance[0].id, instance[0].public_ip_address)
@@ -124,14 +126,20 @@ def createDataNodes(numDataNodes):
     time.sleep(120)
     # go thru and send namenode ip and datanode ip
     for ip in dnIps:
+        print('NamenodeIP:', NAMENODE_IP, 'DatanodeIP:', ip)
         #what is our datanode port?
         datanode = xmlrpclib.ServerProxy("http://" + str(ip) + ':' + '8888')
         #send namenode ip and the datanode ip
         datanode.receiveNNIp(NAMENODE_IP, ip)
         print("started heartbeat on " + ip)
 
-# Start Nodes
-start_nodes()
+
+def connect_to_namenode(namenode_ip):
+    global rpc_namenode
+    global NAMENODE_IP
+    rpc_namenode = xmlrpclib.ServerProxy('http://' + namenode_ip + ':8000')
+    NAMENODE_IP = namenode_ip
+    print('Connected to Namenode:', 'http://' + namenode_ip + ':8000')
 
 
 # Function for handling connections. This will be used to create threads
@@ -299,6 +307,14 @@ def clientthread(conn):
             createDataNodes(3)
         elif cliInput[i] == 'printDN':
             print(rpc_namenode.printDataNodes())
+            reply = ''
+        elif cliInput[i] == 'startnn':
+            start_nodes()
+            reply = 'Starting Namenode...'
+        elif cliInput[i] == 'connectnn':
+            nn_ip = cliInput[i+1]
+            connect_to_namenode(nn_ip)
+            reply = 'Connecting to Namenode...'
         elif cliInput[i] == '0':
             break
         else:
@@ -320,7 +336,8 @@ while 1:
     conn, addr = s.accept()
     print('Connected with ' + addr[0] + ':' + str(addr[1]))
 
-    # start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
-    start_new_thread(clientthread ,(conn,))
+    # start new thread takes 1st argument as a function name to be run,
+    # second is the tuple of arguments to the function.
+    start_new_thread(clientthread, (conn,))
 
 s.close()

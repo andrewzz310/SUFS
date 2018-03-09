@@ -1,10 +1,11 @@
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 import xmlrpclib
 
-#filename is defined by NameNode
+
+# filename is defined by NameNode
 def sendFileToDN(filename):
-     with open(filename, "rb") as handle:
-         return xmlrpclib.Binary(handle.read())
+    with open(filename, "rb") as handle:
+        return xmlrpclib.Binary(handle.read())
 
 
 server = SimpleXMLRPCServer(("localhost", 5000))
