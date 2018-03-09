@@ -90,7 +90,7 @@ def start_nodes():
     RPC_NAMENODE_SERVER_URL = 'http://' + new_namenode.public_ip_address + ':8000'
 
     rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
-    rpc_namenode.myIp(NAMENODE_IP)
+    #rpc_namenode.myIp(NAMENODE_IP)
     print('Namenode Connected!', NAMENODE_IP)
 
     #terminate_ec2(new_namenode.id)
@@ -301,12 +301,12 @@ def clientthread(conn):
         elif cliInput[i] == 'createDN':
             reply = createDataNodes(2)
 
-        elif cliInput[i] == 'startNN':
+        elif cliInput[i] == 'createNN':
             try:
                 start_nodes()
                 reply = 'Started Namenode!'
             except:
-                reply = 'Could not create Namenode!'
+                reply = 'Could not createc Namenode!'
 
         elif cliInput[i] == 'connectNN':
             try:

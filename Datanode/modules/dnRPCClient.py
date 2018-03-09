@@ -19,6 +19,9 @@ class dnRPCClient:
     
     def targetBlock(self, blockID, blockData):
         return self.server.targetBlock(blockID, blockData)
+    
+    def receiveNNIp(self, nnIp, myIp):
+        return self.server.receiveNNIp(nnIp, myIp)
 """
 Example of us
 """
