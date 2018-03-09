@@ -51,7 +51,7 @@ def create_ec2():
     instance_id = ''
     instance_check = None
     instance = ec2.create_instances(
-        ImageId='ami-4471e63c',
+        ImageId='ami-d60d9aae',
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
@@ -109,7 +109,7 @@ def createDataNodes(numDataNodes):
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-        ImageId = 'ami-d5198ead',
+        ImageId = 'ami-2c019654',
         MinCount = 1,
         MaxCount = 1,
         InstanceType='t2.micro',
@@ -139,9 +139,9 @@ def createDataNodes(numDataNodes):
         #what is our datanode port?
         datanode = xmlrpclib.ServerProxy("http://" + str(ip) + ':' + '8888')
         #send namenode ip and the datanode ip
-        datanode.receiveNNIp(NAMENODE_IP, ip)
+        datanode.receiveNNIp("http://" + NAMENODE_IP, "http://" + ip)
         print("started heartbeat on " + ip)
-
+    return "yay! it worked"
 # Start Nodes
 start_nodes()
 
@@ -308,9 +308,9 @@ def clientthread(conn):
             except:
                 reply = 'failed list directory\n'
         elif cliInput[i] == 'createDN':
-            createDataNodes(2)
+            reply = createDataNodes(2)
         elif cliInput[i] == 'printDN':
-            print(rpc_namenode.printDataNodes())
+            reply = rpc_namenode.printDataNodes()
         elif cliInput[i] == '0':
             break
         else:
