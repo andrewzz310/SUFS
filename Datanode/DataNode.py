@@ -31,3 +31,4 @@ class DataNode:
         proxy = xmlrpclib.ServerProxy("http://localhost:5000/")
         with open(filename, "wb") as handle:
             handle.write(proxy.sendFileToDN().data)
+
