@@ -88,6 +88,7 @@ def receiveNNIp(nnIp, myIp):
     start_new_thread(heartBeat,())
     #begin blockreport sending
     start_new_thread(sendBlockReport,())
+    return True
 
 
 

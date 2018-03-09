@@ -51,7 +51,7 @@ def create_ec2():
     instance_id = ''
     instance_check = None
     instance = ec2.create_instances(
-        ImageId='ami-7ede4906',
+        ImageId='ami-4471e63c',
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
@@ -101,14 +101,14 @@ def start_nodes():
 
 def createDataNodes(numDataNodes):
     dnIps = []
-    i = 1
+    i = 0
     while i < numDataNodes:
         #create datanodes
         ec2 = boto3.resource('ec2')
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-        ImageId = 'datanode image here',
+        ImageId = 'ami-4471e63c',
         MinCount = 1,
         MaxCount = 1,
         InstanceType='t2.micro',
@@ -125,9 +125,10 @@ def createDataNodes(numDataNodes):
     # go thru and send namenode ip and datanode ip
     for ip in dnIps:
         #what is our datanode port?
-        datanode = xmlrpclib.ServerProxy(str(ip) + ':' + '8888')
+        datanode = xmlrpclib.ServerProxy("http://" + str(ip) + ':' + '8888')
         #send namenode ip and the datanode ip
         datanode.receiveNNIp(NAMENODE_IP, ip)
+        print("started heartbeat on " + ip)
 
 # Start Nodes
 start_nodes()
