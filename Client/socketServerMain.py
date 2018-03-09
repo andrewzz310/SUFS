@@ -69,6 +69,7 @@ def create_ec2():
         instance_check = ec2.Instance(instance_id)
 
     RPC_NAMENODE_SERVER_URL = 'http://' + str(instance_check.public_ip_address) + ':8000'
+    global NAMENODE_IP
     NAMENODE_IP = str(instance_check.public_ip_address)
     print('Waiting for Namenode to start...')
     time.sleep(120)
@@ -108,22 +109,32 @@ def createDataNodes(numDataNodes):
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-        ImageId = 'ami-4471e63c',
+        ImageId = 'ami-4a6dfa32',
         MinCount = 1,
         MaxCount = 1,
         InstanceType='t2.micro',
         #UserData='#!/bin/bash\r\npython /home/ec2-user/SUFS/Namenode/NamenodeServer.py'
         )
         instance_id = instance[0].id
-        print('Created Datanode:', instance[0].id, instance[0].public_ip_address)
+        print('Created Namenode Server:', instance[0].id, instance[0].public_ip_address)
+        instance_check = instance[0]
+        print('Getting Public IP...')
+        # Wait for server to
+        while instance_check.public_ip_address == None:
+            instance_check = ec2.Instance(instance_id)
+
         #store ips' in dnIps list
-        dnIps.append(instance[0].public_ip_address)
+        print (str(instance_check.public_ip_address))
+        dnIps.append(str(instance_check.public_ip_address))
         i = i + 1
     #outside of loop
     #wait for instances to boot up
+    print ("waiting for datanodes to start")
     time.sleep(120)
     # go thru and send namenode ip and datanode ip
     for ip in dnIps:
+        print (NAMENODE_IP)
+        print (ip)
         #what is our datanode port?
         datanode = xmlrpclib.ServerProxy("http://" + str(ip) + ':' + '8888')
         #send namenode ip and the datanode ip
@@ -296,7 +307,7 @@ def clientthread(conn):
             except:
                 reply = 'failed list directory\n'
         elif cliInput[i] == 'createDN':
-            createDataNodes(3)
+            createDataNodes(2)
         elif cliInput[i] == 'printDN':
             print(rpc_namenode.printDataNodes())
         elif cliInput[i] == '0':
