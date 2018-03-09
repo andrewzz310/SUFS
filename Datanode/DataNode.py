@@ -5,7 +5,7 @@ class DataNode:
     def __init__(self, ip, nnIp, nnPort):
         self.blocks = []
         self.ip = ip
-        self.nnRPC = nnRPCClient.nnRPCClient(nnIp, nnPort)
+        self.nnRPC = nnRPCClient.nnRPCClient("http://" + nnIp, nnPort)
 
 
     # server to another DataNode
@@ -31,3 +31,4 @@ class DataNode:
         proxy = xmlrpclib.ServerProxy("http://localhost:5000/")
         with open(filename, "wb") as handle:
             handle.write(proxy.sendFileToDN().data)
+

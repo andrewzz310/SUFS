@@ -6,23 +6,17 @@ from __future__ import print_function
 import socket
 import sys
 import boto3
-import botocore
 import xmlrpclib
 import subprocess
 import os
 import time
 from thread import *
 import modules.BlockDivider as BlockDivider
-import modules.RPCClient as RPCClient
 
 
 # For RPC client interactions
-# TODO: make these dictionaries
-#rpc_namenode = RPCClient.RPCClient('http://localhost', 8000)
 RPC_NAMENODE_SERVER_URL = ''
-#rpc_namenode = xmlrpclib.ServerProxy('http://34.215.161.146:8000')
 rpc_namenode = None
-rpc_datanode = RPCClient.RPCClient('http://localhost', 8880)
 
 HOST = ''    # Symbolic name meaning all available interfaces
 PORT = 8888  # Arbitrary non-privileged port
@@ -45,13 +39,12 @@ s.listen(10)
 print('Server now listening')
 
 
-# TODO: Start Namenode and Datanodes here
 def create_ec2():
     ec2 = boto3.resource('ec2')
     instance_id = ''
     instance_check = None
     instance = ec2.create_instances(
-        ImageId='ami-4471e63c',
+        ImageId='ami-d60d9aae',
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
@@ -88,6 +81,7 @@ def terminate_ec2(instance_id):
 def start_nodes():
     new_namenode = create_ec2()
     global rpc_namenode
+    global NAMENODE_IP
 
     ec2 = boto3.resource('ec2')
     for instance in ec2.instances.all():
@@ -96,9 +90,11 @@ def start_nodes():
     RPC_NAMENODE_SERVER_URL = 'http://' + new_namenode.public_ip_address + ':8000'
 
     rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
-    print('Namenode Connected!', RPC_NAMENODE_SERVER_URL)
+    rpc_namenode.myIp(NAMENODE_IP)
+    print('Namenode Connected!', NAMENODE_IP)
 
     #terminate_ec2(new_namenode.id)
+
 
 def createDataNodes(numDataNodes):
     dnIps = []
@@ -109,7 +105,7 @@ def createDataNodes(numDataNodes):
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-        ImageId = 'ami-4a6dfa32',
+        ImageId = 'ami-2c019654',
         MinCount = 1,
         MaxCount = 1,
         InstanceType='t2.micro',
@@ -139,16 +135,15 @@ def createDataNodes(numDataNodes):
         #what is our datanode port?
         datanode = xmlrpclib.ServerProxy("http://" + str(ip) + ':' + '8888')
         #send namenode ip and the datanode ip
-        datanode.receiveNNIp(NAMENODE_IP, ip)
+        datanode.receiveNNIp("http://" + NAMENODE_IP, "http://" + ip)
         print("started heartbeat on " + ip)
-
-# Start Nodes
-start_nodes()
+    return "yay! it worked"
 
 
 # Function for handling connections. This will be used to create threads
 def clientthread(conn):
     global rpc_namenode
+    global RPC_NAMENODE_SERVER_URL
 
     # Sending message to connected client
     conn.send('Welcome to the SUFS MAIN Portal. Type command and hit enter and i will return it as a test\n') #send only takes string
@@ -251,10 +246,6 @@ def clientthread(conn):
             print("Connecting to Namenode...")
             reply = rpc_namenode.hello_world()
 
-        elif cliInput[i] == 'datanode':
-            print("Connecting to Datanode...")
-            reply = rpc_datanode.hello_world()
-
         elif cliInput[i] == 'getfilesize':
             print("Getting filenameSize from Namenode...")
             reply = rpc_namenode.write1("testfile1.txt", 256)
@@ -308,9 +299,27 @@ def clientthread(conn):
             except:
                 reply = 'failed list directory\n'
         elif cliInput[i] == 'createDN':
-            createDataNodes(2)
+            reply = createDataNodes(2)
+
+        elif cliInput[i] == 'startNN':
+            try:
+                start_nodes()
+                reply = 'Started Namenode!'
+            except:
+                reply = 'Could not create Namenode!'
+
+        elif cliInput[i] == 'connectNN':
+            try:
+                RPC_NAMENODE_SERVER_URL = cliInput[i+1]
+                rpc_namenode = xmlrpclib.ServerProxy("http://" + str(RPC_NAMENODE_SERVER_URL) + ':8000')
+                rpc_namenode.hello_world()
+                print('Connected to Namenode', RPC_NAMENODE_SERVER_URL)
+                reply = 'Connected to Namenode!'
+            except:
+                reply = 'Could not connect to Namenode! '
+
         elif cliInput[i] == 'printDN':
-            print(rpc_namenode.printDataNodes())
+            reply = rpc_namenode.printDataNodes()
         elif cliInput[i] == '0':
             break
         else:

@@ -11,14 +11,14 @@ from thread import *
 
 ######### GLOBAL VARIABLES #########
 PORT = 8888
-HOST = "localhost"
+HOST = ""
 
 NAMENODE_HOST = ""
 NAMENODE_PORT = "8000"
 
-MY_IP = "" # public ip
+MY_IP = ""  # public ip
 
-datanode = None #this is the datanodes structure
+datanode = None  #this is the datanodes structure
 
 
 # Restrict to a particular path.
@@ -92,7 +92,6 @@ def receiveNNIp(nnIp, myIp):
     #begin blockreport sending
     start_new_thread(sendBlockReport,())
     return True
-
 
 
 # Register hello world function
