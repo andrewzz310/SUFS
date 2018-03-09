@@ -77,6 +77,7 @@ def targetBlock(blockID, dnIp, port):
 #begin block thread
 #instantiates the datanode structure
 def receiveNNIp(nnIp, myIp):
+    print ("received namenode ip, starting heartbeats")
     global NAMENODE_HOST = nnIp
     global MY_IP = myIp
 

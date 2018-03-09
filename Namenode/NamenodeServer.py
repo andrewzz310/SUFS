@@ -29,7 +29,8 @@ def hello_world():
 
 def write1(filename, size):
     print (filename, " ", size)
-    blocks = nn.addFile(filename, size)
+    #missing function for writing?
+    blocks = None #nn.addFile(filename, size) 
     return str(blocks)
 
 
@@ -66,6 +67,12 @@ def deletedir(path):
     return nn.deleteDirectory(path)
 
 
+def startHeartBeats():
+    nn.startThreads()
+
+def printDataNodes():
+    return str(nn.alive)
+
 # Register hello world function
 server.register_function(write1)
 server.register_function(putFile)
@@ -74,9 +81,17 @@ server.register_function(mkdir)
 server.register_function(deletedir)
 
 
+#socketservermain calls this once dn's have been created
+#maybe not, right now set it up so threads start on instantiation
+server.register_function(startHeartBeats)
+
+
 # Register hello world function
 server.register_function(hello_world)
 server.register_function(receiveHeartBeat) #datanode calls this
+
+#test functions
+server.register_function(printDataNodes)
 
 # Run the server's main loop
 print("Staring Namenode Server on port " + str(PORT) + "...")

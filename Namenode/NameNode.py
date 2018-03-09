@@ -5,6 +5,7 @@ import time
 import os
 import xmlrpclib
 from threading import Thread, Lock
+from thread import *
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 
@@ -24,6 +25,7 @@ class NameNode:
         self.dnToBlock = {}
         self.mutex = Lock()
         self.contentsInDir = {"/home/": []}
+        self.startThreads()
 
 
     # Create a file
@@ -159,18 +161,30 @@ class NameNode:
     #     print blockManager.get_DataNodeNumber()
 
 
+
+######### Alex's fault tolerance stuff #########
+
+    #start threads
+    def startThreads(self):
+        start_new_thread(self.checkTimes, ())
+        start_new_thread(self.checkReplicas, ())
+
     def checkTimes(self):
-        for key in self.alive.keys():
-            diff = time.time() - self.alive[key]
-            if (diff > 10):
-                del self.alive[key]
+        while 1:
+            time.sleep(30)
+            for key in self.alive.keys():
+                diff = time.time() - self.alive[key]
+                if (diff > 40):
+                    del self.alive[key]
 
 
     def checkReplicas(self):
-        notRep = [] #structure that holds
-        for blockID in self.dnToBlock.keys():
-            if (len(self.dnToBlock[blockID]) != self.REPLICATION):
-                notRep.append(blockID)
+        while 1:
+            time.sleep(30)
+            notRep = [] #structure that holds
+            for blockID in self.dnToBlock.keys():
+                if (len(self.dnToBlock[blockID]) != self.REPLICATION):
+                    notRep.append(blockID)
         return notRep
 
 # for testing
