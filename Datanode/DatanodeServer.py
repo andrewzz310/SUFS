@@ -63,8 +63,8 @@ def receiveBlock(blockID, blockData):
 
 
 # used by namenode for targeted replications
-def targetBlock(blockID, dnIp, port):
-    targetDn = dnRPCClient.dnRPCClient(dnIp, port)
+def targetBlock(blockID, dnIp):
+    targetDn = dnRPCClient.dnRPCClient(dnIp, 8888)
     blockData = "" #This needs to be replaced with a blockdata thing from our data structure
     #call datanode structure to write this to hdd
     targetDn.receiveBlock(blockID, blockData)
@@ -81,7 +81,7 @@ def receiveNNIp(nnIp, myIp):
     global NAMENODE_HOST 
     NAMENODE_HOST = nnIp
     global MY_IP 
-    MY_IP= myIp
+    MY_IP = myIp
 
     #instantiate datanode stuff here after we get ips
     global datanode 

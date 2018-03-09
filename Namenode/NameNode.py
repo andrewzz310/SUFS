@@ -8,6 +8,7 @@ from threading import Thread, Lock
 from thread import *
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
+from modules import dnRPCClient
 
 
 class NameNode:
@@ -17,15 +18,16 @@ class NameNode:
     2) Picking N different Datanodes to store each block (then return list of blocks and datanodes)
     3) only one writer at a time so we need a lock and thread for writeFile
     """
-    def __init__(self):
+    def __init__(self, myIp):
         self.REPLICATION = 3 # pick 3 different datanodes to store each block by default
         self.fileD = {} # Dictionary for which blocks are part of which file
         self.blockD = {} # Dictionary for which datanodes are storing each block
         self.alive = {} # Dict for alive datanodes
-        self.dnToBlock = {}
+        self.dnToBlock = {} #<block, datanodes>
         self.mutex = Lock()
         self.contentsInDir = {"/home/": []}
         self.startThreads()
+        self.ip = myIp
 
 
     # Create a file
@@ -173,25 +175,62 @@ class NameNode:
     #start threads
     def startThreads(self):
         start_new_thread(self.checkTimes, ())
-        start_new_thread(self.checkReplicas, ())
 
     def checkTimes(self):
         while 1:
             time.sleep(30)
-            for key in self.alive.keys():
-                diff = time.time() - self.alive[key]
+            for ip in self.alive.keys():
+                diff = time.time() - self.alive[ip]
                 if (diff > 40):
-                    del self.alive[key]
+                    del self.alive[ip]
+                    self.createNewDN(ip)
+                    self.deleteFromBlockReport(ip)
 
 
-    def checkReplicas(self):
-        while 1:
-            time.sleep(30)
-            notRep = [] #structure that holds
-            for blockID in self.dnToBlock.keys():
-                if (len(self.dnToBlock[blockID]) != self.REPLICATION):
-                    notRep.append(blockID)
-        return notRep
+    def deleteFromBlockReport(self, dnIp):
+        for block in self.blockD[dnIp]:
+            for ip in self.dnToBlock[block]:
+                if (ip == dnIp):
+                    self.dnToBlock[block].remove(dnIp)
+        
+
+    def createNewDN(self, prevDNIp):
+        ec2 = boto3.resource('ec2')
+        instance_id = ''
+        instance_check = None
+        instance = ec2.create_instances(
+        ImageId = 'ami-2c019654',
+        MinCount = 1,
+        MaxCount = 1,
+        InstanceType='t2.micro',
+        )
+        instance_id = instance[0].id
+        print('Created Datanode Server:', instance[0].id, instance[0].public_ip_address)
+        instance_check = instance[0]
+        print('Getting Public IP...')
+
+        # Wait for server to
+        while instance_check.public_ip_address == None:
+            time.sleep(10)
+            instance_check = ec2.Instance(instance_id)
+
+        dnIp = str(instance_check.public_ip_address)
+        datanode = xmlrpclib.ServerProxy("http://" + dnIp + ':' + '8888')
+        datanode.receiveNNIp("http://" + self.ip, "http://" + dnIp)
+        self.moveBlocks(dnIp, prevDNIp)
+
+
+    def moveBlocks(self, targetDNIp, prevDNIp):
+        for block in self.blockD[prevDNIp]:
+            for ip in self.dnToBlock[block]:
+                try:
+                    datanode = dnRPCClient.dnRPCClient(ip, 8888)
+                    success = datanode.targetBlock(block, targetDNIp)
+                    if (success):
+                        break
+                except:
+                    continue
+        return True
 
 # for testing
 # s = Namenode()
