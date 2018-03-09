@@ -11,7 +11,7 @@ from thread import *
 
 ######### GLOBAL VARIABLES #########
 PORT = 8888
-HOST = "localhost"
+HOST = ""
 
 NAMENODE_HOST = ""
 NAMENODE_PORT = "8000"
