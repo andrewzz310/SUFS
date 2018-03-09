@@ -8,6 +8,7 @@ from threading import Thread, Lock
 from thread import *
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
+import re
 
 
 class NameNode:
@@ -31,10 +32,9 @@ class NameNode:
     # Create a file
     # Example of how to call the function:      createFile("/home/st/", "text1.txt")
     def createFile(self, path, filename):
-        # HAVE TO CHECK IF THE NAME IS VALID_______________________________________________________
-
-        # The '#' is not allowed in filename
-        if "#" not in filename:
+        # Check if the filename is valid.  This prevents causing Exception on ec2 instance
+        # NOTE:  The '#' is not allowed in filename because it's used for blockID stuff
+        if re.match("^[\w,\s-]+\.[A-Za-z]{3}$", filename):
             if path in self.contentsInDir:
                 if file in self.contentsInDir[path]:
                     return "File exists"
@@ -45,6 +45,8 @@ class NameNode:
                     return "Successfully created a file"
             else:
                 return "Fail to create a file because the directory doesn't exist"
+        else:
+            return "Invalid filename"
 
 
 
