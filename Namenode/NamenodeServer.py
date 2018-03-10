@@ -79,8 +79,8 @@ def myIp(nnip):
     global NAMENODE_IP
     NAMENODE_IP = nnip
     global nn
-    nn = NameNode(NAMENODE_IP)
-    return True
+    nn = NameNode(nnip)
+    return NAMENODE_IP
 
 
 # Register hello world function
