@@ -6,6 +6,7 @@ from __future__ import print_function
 import socket
 import sys
 import boto3
+import botocore
 import xmlrpclib
 import subprocess
 import os
@@ -306,8 +307,8 @@ def clientthread(conn):
             try:
                 start_nodes()
                 reply = 'Started Namenode!'
-            except:
-                reply = 'Could not createc Namenode!'
+            except botocore.exceptions.ClientError as e:
+                reply = 'Could not create Namenode!\n' + e.message
 
         # Connect to existing Namenode
         elif cliInput[i] == 'connectNN':
