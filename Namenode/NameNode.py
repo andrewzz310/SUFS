@@ -30,9 +30,9 @@ class NameNode:
         self.dnToBlock = {}
         self.mutex = Lock()
         self.contentsInDir = {"/home/": []}
-        self.startThreads()
         self.ip = myIp
-
+        self.startThreads()
+        
 
     # Create a file
     # Example of how to call the function:      createFile("/home/st/", "text1.txt")
@@ -201,7 +201,7 @@ class NameNode:
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-        ImageId = 'ami-2c019654',
+        ImageId = 'ami-02990f7a',
         MinCount = 1,
         MaxCount = 1,
         InstanceType='t2.micro',
