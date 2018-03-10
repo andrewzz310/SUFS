@@ -35,13 +35,13 @@ class NameNode:
         self.blockD = {}
 
         # List of Datanodes for easy lookup
-        # [[DataNode1, [blockID, blockID]], [DataNode2, [blockID, blockID]], …]
+       
         self.listDN = []
 
         self.alive = {} # Dict for alive datanodes
 
         self.dnToBlock = {}
-        self.mutex = Lock()
+        #self.mutex = Lock()
         self.contentsInDir = {"/home/": []}
         self.startThreads()
         self.ip = myIp
@@ -224,7 +224,7 @@ class NameNode:
                     del self.alive[ip]
                     print ("create new datanode")
                     self.createNewDN(ip)
-                    print ("deleteing from blockreport")
+                    print ("deleting from blockreport")
                     self.deleteFromBlockReport(ip)
 
 
@@ -242,7 +242,7 @@ class NameNode:
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-        ImageId = 'ami-02990f7a',
+        ImageId = 'ami-c56afcbd',
         MinCount = 1,
         MaxCount = 1,
         InstanceType='t2.micro',
