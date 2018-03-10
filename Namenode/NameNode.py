@@ -25,15 +25,30 @@ class NameNode:
     """
     def __init__(self, myIp):
         self.REPLICATION = 3 # pick 3 different datanodes to store each block by default
-        self.fileD = {} # Dictionary for which blocks are part of which file
-        self.blockD = {} # Dictionary for which datanodes are storing each block
+
+        # Dictionary for which blocks are part of which file
+        # {key : value} = {filename : [blockID, blockID, blockID, ...]}
+        self.fileD = {}
+
+        # Dictionary for which datanodes are storing each block
+        # {key : value} = {blockID : [DataNode1, DataNode2, DataNode3]}
+        self.blockD = {}
+
+        # List of Datanodes for easy lookup
+        # [[DataNode1, [blockID, blockID]], [DataNode2, [blockID, blockID]], …]
+        self.listDN = []
+
+
         self.alive = {} # Dict for alive datanodes
+
         self.dnToBlock = {}
         self.mutex = Lock()
         self.contentsInDir = {"/home/": []}
         self.startThreads()
         self.ip = myIp
         self.block_size = 256
+
+
 
     # Create a file
     # Example of how to call the function:      createFile("/home/st/", "text1.txt")
@@ -88,6 +103,7 @@ class NameNode:
                 return False  # Fail to create a file because the directory doesn't exist
         else:
             return False  # Invalid filename
+
 
 
     # Delete a file
@@ -163,19 +179,6 @@ class NameNode:
                     result.append(content)
         return result
 
-# mkdir("/home/", "hang")
-# printDic()
-# print("")
-#
-# mkdir("/home/hang/", "nguyen")
-# printDic()
-# print("")
-#
-# deleteDirectory("/home/hang/")
-# printDic()
-# print("")
-#
-# ls("/home/")
 
 
     def writeFile(self, filename, blocks):  #pass in array of blocks as arguments
@@ -226,12 +229,14 @@ class NameNode:
                     self.deleteFromBlockReport(ip)
 
 
+
     def deleteFromBlockReport(self, dnIp):
         for block in self.blockD[dnIp]:
             for ip in self.dnToBlock[block]:
                 if (ip == dnIp):
                     self.dnToBlock[block].remove(dnIp)
         
+
 
     def createNewDN(self, prevDNIp):
         ec2 = boto3.resource('ec2')
@@ -259,6 +264,7 @@ class NameNode:
         datanode = xmlrpclib.ServerProxy("http://" + dnIp + ':' + '8888')
         datanode.receiveNNIp("http://" + self.ip, "http://" + dnIp)
         self.moveBlocks(dnIp, prevDNIp)
+
 
 
     def moveBlocks(self, targetDNIp, prevDNIp):
