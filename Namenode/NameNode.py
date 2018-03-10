@@ -220,7 +220,9 @@ class NameNode:
                 diff = time.time() - self.alive[ip]
                 if (diff > 40):
                     del self.alive[ip]
+                    print ("create new datanode")
                     self.createNewDN(ip)
+                    print ("deleteing from blockreport")
                     self.deleteFromBlockReport(ip)
 
 
@@ -236,7 +238,7 @@ class NameNode:
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-        ImageId = 'ami-2c019654',
+        ImageId = 'ami-02990f7a',
         MinCount = 1,
         MaxCount = 1,
         InstanceType='t2.micro',
@@ -251,6 +253,8 @@ class NameNode:
             time.sleep(10)
             instance_check = ec2.Instance(instance_id)
 
+        time.sleep(60)
+        
         dnIp = str(instance_check.public_ip_address)
         datanode = xmlrpclib.ServerProxy("http://" + dnIp + ':' + '8888')
         datanode.receiveNNIp("http://" + self.ip, "http://" + dnIp)

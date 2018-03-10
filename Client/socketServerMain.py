@@ -21,7 +21,7 @@ RPC_NAMENODE_SERVER_URL = ''
 rpc_namenode = None
 
 HOST = ''    # Symbolic name meaning all available interfaces
-PORT = 8888  # Arbitrary non-privileged port
+PORT = 9999  # Arbitrary non-privileged port
 NAMENODE_IP = ''
 
 # Client
@@ -49,7 +49,7 @@ def create_ec2():
     instance_id = ''
     instance_check = None
     instance = ec2.create_instances(
-        ImageId='ami-cf63f5b7',
+        ImageId='ami-0287117a',
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
@@ -110,7 +110,7 @@ def createDataNodes(numDataNodes):
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-            ImageId='ami-516ef829',
+            ImageId='ami-02990f7a',
             MinCount=1,
             MaxCount=1,
             InstanceType='t2.micro',

@@ -101,6 +101,7 @@ server.register_function(myIp)
 # Register hello world function
 server.register_function(hello_world)
 server.register_function(receiveHeartBeat) #datanode calls this
+server.register_function(receiveBlockReport)
 
 #test functions
 server.register_function(printDataNodes)
