@@ -44,7 +44,7 @@ def create_ec2():
     instance_id = ''
     instance_check = None
     instance = ec2.create_instances(
-        ImageId='ami-d60d9aae',
+        ImageId='ami-daeb7da2',
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
@@ -90,7 +90,7 @@ def start_nodes():
     RPC_NAMENODE_SERVER_URL = 'http://' + new_namenode.public_ip_address + ':8000'
 
     rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
-    #rpc_namenode.myIp(NAMENODE_IP)
+    print(rpc_namenode.myIp(NAMENODE_IP))
     print('Namenode Connected!', NAMENODE_IP)
 
     #terminate_ec2(new_namenode.id)
@@ -105,7 +105,7 @@ def createDataNodes(numDataNodes):
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-        ImageId = 'ami-2c019654',
+        ImageId = 'ami-6be87e13',
         MinCount = 1,
         MaxCount = 1,
         InstanceType='t2.micro',
@@ -302,12 +302,8 @@ def clientthread(conn):
             reply = createDataNodes(2)
 
         elif cliInput[i] == 'createNN':
-            try:
                 start_nodes()
                 reply = 'Started Namenode!'
-            except:
-                reply = 'Could not createc Namenode!'
-
         elif cliInput[i] == 'connectNN':
             try:
                 RPC_NAMENODE_SERVER_URL = cliInput[i+1]
