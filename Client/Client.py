@@ -21,8 +21,8 @@ class Client:
     def put_file_to_nn(self, path, file_name):
         self.path = path
         self.file_name = file_name
-        self.save_file_from_s3(file_name)
-        block_info = self.register_file_to_nn(file_name, os.path.getsize(file_name))
+        self.save_file_from_s3(self.file_name)
+        block_info = self.register_file_to_nn(self.path, self.file_name, os.path.getsize(self.file_name))
 
         print(block_info)
         # Split files
@@ -57,5 +57,5 @@ class Client:
 
         return result
 
-    def register_file_to_nn(self, file_name, file_size):
-        return self.rpc_namenode.putFile(file_name, file_size)
+    def register_file_to_nn(self, path, file_name, file_size):
+        return self.rpc_namenode.putFile(path, file_name, file_size)

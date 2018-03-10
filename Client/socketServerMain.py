@@ -148,6 +148,7 @@ def createDataNodes(numDataNodes):
 def clientthread(conn):
     global rpc_namenode
     global RPC_NAMENODE_SERVER_URL
+    global NAMENODE_IP
 
     # Sending message to connected client
     conn.send('Welcome to the SUFS MAIN Portal. Type command and hit enter and i will return it as a test\n') #send only takes string
@@ -168,7 +169,7 @@ def clientthread(conn):
         if cliInput[i] == 'cf':
             path = cliInput[i+1]
             file_name = cliInput[i+2]
-            client.get_file_from_s3('testfile.txt')
+            client.save_file_from_s3('testfile.txt')
             client.put_file_to_nn('/home/', 'testfile.txt')
             reply = 'Created a file!'
             # '''
@@ -312,14 +313,17 @@ def clientthread(conn):
         # Connect to existing Namenode
         elif cliInput[i] == 'connectNN':
             try:
-                RPC_NAMENODE_SERVER_URL = cliInput[i+1]
-                rpc_namenode = xmlrpclib.ServerProxy("http://" + str(RPC_NAMENODE_SERVER_URL) + ':8000')
+                NAMENODE_IP = cliInput[i+1]
+                RPC_NAMENODE_SERVER_URL = 'http://' + str(NAMENODE_IP) + ':8000'
+
+                rpc_namenode = xmlrpclib.ServerProxy("http://" + str(NAMENODE_IP) + ':8000')
+                print(rpc_namenode.myIp(NAMENODE_IP))
                 rpc_namenode.hello_world()
-                client.set_namenode(RPC_NAMENODE_SERVER_URL)
+                client.set_namenode(NAMENODE_IP)
                 print('Connected to Namenode', RPC_NAMENODE_SERVER_URL)
                 reply = 'Connected to Namenode!'
-            except:
-                reply = 'Could not connect to Namenode! '
+            except botocore.exceptions.ClientError as e:
+                reply = 'Could not connect to Namenode!\n' + e.message
 
         #######################
         # Datanode Commands

@@ -35,12 +35,14 @@ def write1(filename, size):
 
 
 def receiveHeartBeat(myIp):
+    global nn
     #where myIP is the datanodes IP (so you can access the RPC stuff)
     nn.alive[myIp] = time.time()
     return True
 
 
 def receiveBlockReport(myIp, blocks):
+    global nn
     nn.blockD[myIp] = blocks
     for blockID in blocks: #do the translation the other way as well.
         nn.dnToBlock[blockID].add(myIp)
@@ -48,38 +50,53 @@ def receiveBlockReport(myIp, blocks):
 
 
 def putFile(path, filename, size):
-    nn.createFile(path, filename)
+    global nn
     print path, filename, size
-    return # results of namenode an
+    nn.createFile(path, filename, size)
+    return []  # results of namenode an
 
 
 # Directory functions
 def createFile(path, filename):
+    global nn
     return nn.createFile(path, filename)
 
+
 def deleteFile(path, filename):
+    global nn
     return nn.deleteFile(path, filename)
 
+
 def mkdir(path, dir):
+    global nn
     return nn.mkdir(path, dir)
 
+
 def deletedir(path):
+    global nn
     return nn.deleteDirectory(path)
 
+
 def ls(path):
+    global nn
     return nn.ls(path)
 
+
 def startHeartBeats():
+    global nn
     nn.startThreads()
 
+
 def printDataNodes():
+    global nn
     return str(nn.alive)
+
 
 def myIp(nnip):
     global NAMENODE_IP
     NAMENODE_IP = nnip
     global nn
-    nn = NameNode(nnip)
+    nn = NameNode(NAMENODE_IP)
     return NAMENODE_IP
 
 

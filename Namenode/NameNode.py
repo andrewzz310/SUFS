@@ -35,13 +35,13 @@ class NameNode:
         self.blockD = {}
 
         # List of Datanodes for easy lookup
-       
+        # [[DataNode1, [blockID, blockID]], [DataNode2, [blockID, blockID]], ...]
         self.listDN = []
 
         self.alive = {} # Dict for alive datanodes
 
         self.dnToBlock = {}
-        #self.mutex = Lock()
+        self.mutex = Lock()
         self.contentsInDir = {"/home/": []}
         self.startThreads()
         self.ip = myIp
@@ -50,23 +50,23 @@ class NameNode:
 
 
     # Create a file
-    # Example of how to call the function:      createFile("/home/st/", "text1.txt")
+    # Example of how to call the function:      createFile("/home/st/", "text1.txt", 983)
     # returns list of (blockID, DatanodeIP)
     def createFile(self, path, filename, filesize):
         result = list()
-        num_of_blocks = math.ceil(filesize / self.block_size)
-        path_hash = path.replace('/', '#')
-        block_base_name = path_hash + filename + '.part'
-
-        # Check if the filename is valid. This prevents causing Exception on ec2 instance
-        if self.checkValidFile(path, filename):
-            # TODO: find Datanodes for each Block
-            for i in range(1,num_of_blocks+1):
-                print('Block: ' + block_base_name + str(1))
-                result.append((block_base_name+i, ''))
-
-            # Add file to Directory
-            self.contentsInDir[path].append(filename)
+        # num_of_blocks = math.ceil(filesize / self.block_size)
+        # path_hash = path.replace('/', '#')
+        # block_base_name = path_hash + filename + '.part'
+        #
+        # # Check if the filename is valid. This prevents causing Exception on ec2 instance
+        # if self.checkValidFile(path, filename):
+        #     # TODO: find Datanodes for each Block
+        #     for i in range(1, num_of_blocks+1):
+        #         print('Block: ' + block_base_name + str(1))
+        #         result.append((block_base_name+i, ''))
+        #
+        #     # Add file to Directory
+        #     self.contentsInDir[path].append(filename)
 
         return result
         # Check if the filename is valid.  This prevents causing Exception on ec2 instance
@@ -224,7 +224,7 @@ class NameNode:
                     del self.alive[ip]
                     print ("create new datanode")
                     self.createNewDN(ip)
-                    print ("deleting from blockreport")
+                    print ("deleteing from blockreport")
                     self.deleteFromBlockReport(ip)
 
 
