@@ -6,7 +6,7 @@ from __future__ import print_function
 import socket
 import sys
 import boto3
-import botocore
+import botocore  # for exception handling
 import xmlrpclib
 import subprocess
 import os
@@ -49,7 +49,7 @@ def create_ec2():
     instance_id = ''
     instance_check = None
     instance = ec2.create_instances(
-        ImageId='ami-daeb7da2',
+        ImageId='ami-cf63f5b7',
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
@@ -110,11 +110,10 @@ def createDataNodes(numDataNodes):
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-        ImageId = 'ami-6be87e13',
-        MinCount = 1,
-        MaxCount = 1,
-        InstanceType='t2.micro',
-        #UserData='#!/bin/bash\r\npython /home/ec2-user/SUFS/Namenode/NamenodeServer.py'
+            ImageId='ami-516ef829',
+            MinCount=1,
+            MaxCount=1,
+            InstanceType='t2.micro',
         )
         instance_id = instance[0].id
         print('Created Datanode Server:', instance[0].id, instance[0].public_ip_address)
