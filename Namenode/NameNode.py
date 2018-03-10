@@ -38,12 +38,12 @@ class NameNode:
         # [[DataNode1, [blockID, blockID]], [DataNode2, [blockID, blockID]], ...]
         self.listDN = []
 
-        self.alive = {'localhost': 2234, '123.123123.123.3': 244, '423.545.777.8': 67876}  # Dict for alive datanodes, <key: datanodeIP, value: timestamp>
+        self.alive = {}  # Dict for alive datanodes, <key: datanodeIP, value: timestamp>
 
         self.dnToBlock = {}
         self.mutex = Lock()
         self.contentsInDir = {"/home/": []}
-        #self.startThreads()
+        self.startThreads()
         self.ip = myIp
         self.block_size = 256
         self.dn_assign_counter = 0  # used to assign blocks to datanodes ex: self.dn_assign_counter % <number of DNs>
