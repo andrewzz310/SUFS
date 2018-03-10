@@ -48,7 +48,7 @@ def create_ec2():
     instance_id = ''
     instance_check = None
     instance = ec2.create_instances(
-        ImageId='ami-d60d9aae',
+        ImageId='ami-daeb7da2',
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
@@ -94,8 +94,7 @@ def start_nodes():
 
     rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
     client.set_namenode(RPC_NAMENODE_SERVER_URL)
-    # TODO: give Namenode its own IP
-    #rpc_namenode.myIp(NAMENODE_IP)
+    print(rpc_namenode.myIp(NAMENODE_IP))
     print('Namenode Connected!', NAMENODE_IP)
 
     #terminate_ec2(new_namenode.id)
@@ -110,7 +109,7 @@ def createDataNodes(numDataNodes):
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-        ImageId = 'ami-2c019654',
+        ImageId = 'ami-6be87e13',
         MinCount = 1,
         MaxCount = 1,
         InstanceType='t2.micro',
