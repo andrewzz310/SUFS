@@ -1,5 +1,6 @@
 import xmlrpclib
 from modules import nnRPCClient
+import os
 
 class DataNode:
     def __init__(self, ip, nnIp, nnPort):
@@ -33,4 +34,10 @@ class DataNode:
         proxy = xmlrpclib.ServerProxy(proxyStr)
         with open(blockID, "wb") as handle:
             handle.write(proxy.sendFileToDN().data)
+
+
+
+    def removeBlock(self, blockID):
+        os.remove(blockID)
+        print "Successfully removed block " + blockID
 
