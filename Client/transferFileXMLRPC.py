@@ -1,6 +1,7 @@
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 import xmlrpclib
 
+# client side is function writeBlocks in DataNode.py
 
 # filename is defined by NameNode
 def sendFileToDN(filename):
