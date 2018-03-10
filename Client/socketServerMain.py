@@ -12,6 +12,7 @@ import os
 import time
 from thread import *
 import modules.BlockDivider as BlockDivider
+import Client
 
 
 # For RPC client interactions
@@ -21,6 +22,9 @@ rpc_namenode = None
 HOST = ''    # Symbolic name meaning all available interfaces
 PORT = 8888  # Arbitrary non-privileged port
 NAMENODE_IP = ''
+
+# Client
+client = Client.Client()
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print('Socket created')
@@ -48,7 +52,6 @@ def create_ec2():
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
-        #UserData='#!/bin/bash\r\npython /home/ec2-user/SUFS/Namenode/NamenodeServer.py'
     )
     instance_id = instance[0].id
     print('Created Namenode Server:', instance[0].id, instance[0].public_ip_address)
@@ -90,6 +93,8 @@ def start_nodes():
     RPC_NAMENODE_SERVER_URL = 'http://' + new_namenode.public_ip_address + ':8000'
 
     rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
+    client.set_namenode(RPC_NAMENODE_SERVER_URL)
+    # TODO: give Namenode its own IP
     #rpc_namenode.myIp(NAMENODE_IP)
     print('Namenode Connected!', NAMENODE_IP)
 
@@ -162,50 +167,55 @@ def clientthread(conn):
         i = 0
 
         if cliInput[i] == 'cf':
-            '''
-            #If we want to create bucket
-            myS3 = boto3.resource('s3')
-            myS3.create_bucket(Bucket='sufs-project', CreateBucketConfiguration={
-            'LocationConstraint': 'us-west-2'})
-            '''
-
-            # downloading file to current local directory from s3
-            """BUCKET_NAME = 'sufs-project'
-            KEY= 'part-r-00000'
-            s3 = boto3.resource('s3')
-            try:
-                s3.Bucket(BUCKET_NAME).download_file(KEY, 'part-r-00000')
-            except botocore.exceptions.ClientError as e:
-                if e.response['Error']['Code'] == "404":
-                    print("The object does not exist.")
-                else:
-                    raise
-            """
-
-            file_name = '/Users/justin/cs/cloud/input/testfile.txt'
-            input_file = open(file_name)
-            output_dir = "/Users/justin/cs/cloud/output"
-            input_file_size = os.path.getsize(file_name)
-            print("Getting filenameSize from Namenode...")
-            reply = rpc_namenode.write1(file_name, input_file_size)
-
-            print("it worked!!!!!!!")
-
-            # for debug
-            conn.send('file generated locally\n')
-
-            # call splitFile() from block divider to divide blocks to pass to namenode to decide n datanodes to store blocks
-            bd = BlockDivider.BlockDivider()
-            bd.split_file(file_name, output_dir)
-            print (bd)
-            # splitFile() needs to be modified errno22 invalid mode ('w') line 39 in blockdivider.py
-
-            '''
-            1) send blocks and filename over to namenode
-            2) wait for namenode to put file in to directory structure and picks N (replication factor) different data nodes to store each block
-            3) wait for amenode to return list of blocks and datanodes and then pass the blocks to datanode to store
-            '''
-            reply = 'Completed task of creating new file in SUFS | next cmd: '
+            path = cliInput[i+1]
+            file_name = cliInput[i+2]
+            client.get_file_from_s3('testfile.txt')
+            client.put_file_to_nn('/home/', 'testfile.txt')
+            reply = 'Created a file!'
+            # '''
+            # #If we want to create bucket
+            # myS3 = boto3.resource('s3')
+            # myS3.create_bucket(Bucket='sufs-project', CreateBucketConfiguration={
+            # 'LocationConstraint': 'us-west-2'})
+            # '''
+            #
+            # # downloading file to current local directory from s3
+            # """BUCKET_NAME = 'sufs-project'
+            # KEY= 'part-r-00000'
+            # s3 = boto3.resource('s3')
+            # try:
+            #     s3.Bucket(BUCKET_NAME).download_file(KEY, 'part-r-00000')
+            # except botocore.exceptions.ClientError as e:
+            #     if e.response['Error']['Code'] == "404":
+            #         print("The object does not exist.")
+            #     else:
+            #         raise
+            # """
+            #
+            # file_name = '/Users/justin/cs/cloud/input/testfile.txt'
+            # input_file = open(file_name)
+            # output_dir = "/Users/justin/cs/cloud/output"
+            # input_file_size = os.path.getsize(file_name)
+            # print("Getting filenameSize from Namenode...")
+            # reply = rpc_namenode.write1(file_name, input_file_size)
+            #
+            # print("it worked!!!!!!!")
+            #
+            # # for debug
+            # conn.send('file generated locally\n')
+            #
+            # # call splitFile() from block divider to divide blocks to pass to namenode to decide n datanodes to store blocks
+            # bd = BlockDivider.BlockDivider()
+            # bd.split_file(file_name, output_dir)
+            # print (bd)
+            # # splitFile() needs to be modified errno22 invalid mode ('w') line 39 in blockdivider.py
+            #
+            # '''
+            # 1) send blocks and filename over to namenode
+            # 2) wait for namenode to put file in to directory structure and picks N (replication factor) different data nodes to store each block
+            # 3) wait for amenode to return list of blocks and datanodes and then pass the blocks to datanode to store
+            # '''
+            # reply = 'Completed task of creating new file in SUFS | next cmd: '
 
         elif cliInput[i] == 'rf filename':
 
@@ -306,6 +316,7 @@ def clientthread(conn):
                 RPC_NAMENODE_SERVER_URL = cliInput[i+1]
                 rpc_namenode = xmlrpclib.ServerProxy("http://" + str(RPC_NAMENODE_SERVER_URL) + ':8000')
                 rpc_namenode.hello_world()
+                client.set_namenode(RPC_NAMENODE_SERVER_URL)
                 print('Connected to Namenode', RPC_NAMENODE_SERVER_URL)
                 reply = 'Connected to Namenode!'
             except:
@@ -350,6 +361,6 @@ while 1:
     print('Connected with ' + addr[0] + ':' + str(addr[1]))
 
     # start new thread takes 1st argument as a function name to be run, second is the tuple of arguments to the function.
-    start_new_thread(clientthread ,(conn,))
+    start_new_thread(clientthread, (conn,))
 
 s.close()

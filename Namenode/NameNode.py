@@ -2,6 +2,7 @@ import boto3
 import socket
 import sys
 import time
+import math
 import os
 import xmlrpclib
 from threading import Thread, Lock
@@ -32,27 +33,61 @@ class NameNode:
         self.contentsInDir = {"/home/": []}
         self.startThreads()
         self.ip = myIp
-
+        self.block_size = 256
 
     # Create a file
     # Example of how to call the function:      createFile("/home/st/", "text1.txt")
-    def createFile(self, path, filename):
+    # returns list of (blockID, DatanodeIP)
+    def createFile(self, path, filename, filesize):
+        result = list()
+        num_of_blocks = math.ceil(filesize / self.block_size)
+        path_hash = path.replace('/', '#')
+        block_base_name = path_hash + filename + '.part'
+
+        # Check if the filename is valid. This prevents causing Exception on ec2 instance
+        if self.checkValidFile(path, filename):
+            # TODO: find Datanodes for each Block
+            for i in range(1,num_of_blocks+1):
+                print('Block: ' + block_base_name + str(1))
+                result.append((block_base_name+i, ''))
+
+            # Add file to Directory
+            self.contentsInDir[path].append(filename)
+
+        return result
+        # Check if the filename is valid.  This prevents causing Exception on ec2 instance
+        # NOTE:  The '#' is not allowed in filename because it's used for blockID stuff
+        # if re.match("^[\w,\s-]+\.[A-Za-z]{3}$", filename):
+        #     if path in self.contentsInDir:
+        #         if file in self.contentsInDir[path]:
+        #             return "File exists"
+        #         else:
+        #             self.contentsInDir[path].append(filename)
+        #             # when the file is created, an S3 object should be specified
+        #             # and the data from S3 should be written into the file__________________________
+        #             return "Successfully created a file"
+        #     else:
+        #         return "Fail to create a file because the directory doesn't exist"
+        # else:
+        #     return "Invalid filename"
+
+    # checkFile("/home/st/", "text1.txt")
+    # returns True if ok to add file else False
+    def checkValidFile(self, path, filename):
         # Check if the filename is valid.  This prevents causing Exception on ec2 instance
         # NOTE:  The '#' is not allowed in filename because it's used for blockID stuff
         if re.match("^[\w,\s-]+\.[A-Za-z]{3}$", filename):
             if path in self.contentsInDir:
                 if file in self.contentsInDir[path]:
-                    return "File exists"
+                    return False  # File already exists
                 else:
-                    self.contentsInDir[path].append(filename)
                     # when the file is created, an S3 object should be specified
                     # and the data from S3 should be written into the file__________________________
-                    return "Successfully created a file"
+                    return True
             else:
-                return "Fail to create a file because the directory doesn't exist"
+                return False  # Fail to create a file because the directory doesn't exist
         else:
-            return "Invalid filename"
-
+            return False  # Invalid filename
 
 
     # Delete a file

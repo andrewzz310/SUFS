@@ -47,9 +47,9 @@ def receiveBlockReport(myIp, blocks):
     return True
 
 
-def putFile(filename, size):
-    print (filename)
-    print (size)
+def putFile(path, filename, size):
+    nn.createFile(path, filename)
+    print path, filename, size
     return # results of namenode an
 
 
