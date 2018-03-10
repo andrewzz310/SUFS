@@ -52,14 +52,13 @@ def receiveBlockReport(myIp, blocks):
 def putFile(path, filename, size):
     global nn
     print path, filename, size
-    nn.createFile(path, filename, size)
-    return []  # results of namenode an
+    return nn.createFile(path, filename, size)  # results of namenode an
 
 
 # Directory functions
-def createFile(path, filename):
+def createFile(path, filename, size):
     global nn
-    return nn.createFile(path, filename)
+    return nn.createFile(path, filename, size)
 
 
 def deleteFile(path, filename):

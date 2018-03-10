@@ -38,14 +38,15 @@ class NameNode:
         # [[DataNode1, [blockID, blockID]], [DataNode2, [blockID, blockID]], ...]
         self.listDN = []
 
-        self.alive = {} # Dict for alive datanodes
+        self.alive = {'localhost': 2234, '123.123123.123.3': 244, '423.545.777.8': 67876}  # Dict for alive datanodes, <key: datanodeIP, value: timestamp>
 
         self.dnToBlock = {}
         self.mutex = Lock()
         self.contentsInDir = {"/home/": []}
-        self.startThreads()
+        #self.startThreads()
         self.ip = myIp
         self.block_size = 256
+        self.dn_assign_counter = 0  # used to assign blocks to datanodes ex: self.dn_assign_counter % <number of DNs>
 
 
 
@@ -54,19 +55,24 @@ class NameNode:
     # returns list of (blockID, DatanodeIP)
     def createFile(self, path, filename, filesize):
         result = list()
-        # num_of_blocks = math.ceil(filesize / self.block_size)
-        # path_hash = path.replace('/', '#')
-        # block_base_name = path_hash + filename + '.part'
-        #
-        # # Check if the filename is valid. This prevents causing Exception on ec2 instance
-        # if self.checkValidFile(path, filename):
-        #     # TODO: find Datanodes for each Block
-        #     for i in range(1, num_of_blocks+1):
-        #         print('Block: ' + block_base_name + str(1))
-        #         result.append((block_base_name+i, ''))
-        #
-        #     # Add file to Directory
-        #     self.contentsInDir[path].append(filename)
+        num_of_blocks = int(math.ceil(filesize / self.block_size))
+        path_hash = path.replace('/', '#')
+        block_base_name = path_hash + filename + '.part'
+        num_of_datanodes = len(self.alive)
+
+        # Check if the filename is valid. This prevents causing Exception on ec2 instance
+        if self.checkValidFile(path, filename):
+            for i in range(1, num_of_blocks+1):
+                print('Block: ' + block_base_name + str(i))
+                dn_index = self.dn_assign_counter % num_of_datanodes
+                dn_ip = self.alive.keys()[dn_index]
+                #dn_ip = self.alive[dn_ip]
+                result.append((block_base_name+str(i), dn_ip))
+                print('Added ' + block_base_name+str(i) + ' to list!')
+                self.dn_assign_counter += 1
+
+            # Add file to Directory
+            self.contentsInDir[path].append(filename)
 
         return result
         # Check if the filename is valid.  This prevents causing Exception on ec2 instance
