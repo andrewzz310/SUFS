@@ -27,8 +27,10 @@ class DataNode:
         # 5) send BlockReport to NameNode
 
 
-    def writeBlock(self, data, blockID):
-        proxy = xmlrpclib.ServerProxy("http://localhost:5000/")
+    def writeBlock(self, data, blockID, IPv4, portNum):
+        proxyStr = "http://" + IPv4 + ":" + portNum + "/"
+        # proxy = xmlrpclib.ServerProxy("http://ec2-34-217-70-211.us-west-2.compute.amazonaws.com:8000/")
+        proxy = xmlrpclib.ServerProxy(proxyStr)
         with open(blockID, "wb") as handle:
             handle.write(proxy.sendFileToDN().data)
 

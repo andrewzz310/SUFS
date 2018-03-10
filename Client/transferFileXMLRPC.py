@@ -7,8 +7,8 @@ def sendFileToDN(filename):
     with open(filename, "rb") as handle:
         return xmlrpclib.Binary(handle.read())
 
-
-server = SimpleXMLRPCServer(("localhost", 5000))
+# need Public DNS (IPv4)
+server = SimpleXMLRPCServer((IPv4, 5000))
 print "Listening on port 5000..."
 server.register_function(sendFileToDN, 'sendFileToDN')
 
