@@ -38,7 +38,6 @@ class NameNode:
         # [[DataNode1, [blockID, blockID]], [DataNode2, [blockID, blockID]], …]
         self.listDN = []
 
-
         self.alive = {} # Dict for alive datanodes
 
         self.dnToBlock = {}
