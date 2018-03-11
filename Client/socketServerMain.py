@@ -176,23 +176,24 @@ def clientthread(conn):
             client.put_file_to_nn(path, file_name)
             reply = 'Created a file ' + file_name + '!'
 
-        elif cliInput[i] == 'rf filename':
-
+        elif cliInput[i] == 'rm':
             '''
             1) get info on where list of blocks are stored on which datanodes from the nameNode
             2) contact datanodes for the blocks
             3) read file based on blocks returned
             '''
+            path = cliInput[i + 1]
+            file_name = cliInput[i + 2]
+            print(client.delete_file(path, file_name))
+            reply = 'Removed file ' + path + file_name
 
-            reply = 'access read file completed| next cmd: '
-
-        elif cliInput[i] == 'df filename':
-            '''
-            1) get info on where list of blocks are stored on which datanodes from the nameNode
-            2) contact datanodes for the blocks
-            3) tell datanode to remove blocks and tell namenode to remove file in the directory and list of datanodes that holds the block
-            '''
-            reply = 'access delete file completed| next cmd: '
+        # elif cliInput[i] == 'df filename':
+        #     '''
+        #     1) get info on where list of blocks are stored on which datanodes from the nameNode
+        #     2) contact datanodes for the blocks
+        #     3) tell datanode to remove blocks and tell namenode to remove file in the directory and list of datanodes that holds the block
+        #     '''
+        #     reply = 'access delete file completed| next cmd: '
 
         elif cliInput[i] == 'hello':
             print("Connecting to Namenode...")
