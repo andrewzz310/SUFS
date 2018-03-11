@@ -198,10 +198,9 @@ class NameNode:
     # Given a file path, the NameNode returns a list of blocks for that file
     # and a list of DataNodes that hold replicas for each list
     # Example of how to call the function:      lsDataNode("/home/text.txt")
-    # Return:   1st value: a list of blocks for that file
-    #           2nd value: DataNodes that hold replicas for this blockID
-    #           3rd value: DataNodes that hold replicas for this blockID
-    #           ...
+    # Return a dictionary:      {key : value}
+    #                           {blockID, [DataNode1, DataNode2, DataNode3]}
+    #                           {blockID, [DataNode3, DataNode4, DataNode5]}
     def lsDataNode(self, pathfilename):
         retDict = collections.OrderedDict()
         blockIDlist = []
