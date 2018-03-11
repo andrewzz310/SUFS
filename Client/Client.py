@@ -5,7 +5,6 @@ from modules import BlockDivider
 
 
 class Client:
-
     def __init__(self):
         self.file_name = None
         self.path = None
