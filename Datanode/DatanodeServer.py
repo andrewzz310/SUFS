@@ -34,6 +34,7 @@ server.register_introspection_functions()
 
 #repeat this function every 10 seconds
 def heartBeat():
+    global MY_IP
     nn = nnRPCClient.nnRPCClient(NAMENODE_HOST, NAMENODE_PORT)
     while 1:
         time.sleep(10)
@@ -57,6 +58,7 @@ def hello_world():
 #receive a block from anybody who calls this function
 # primarily used by datanode
 def receiveBlock(blockID, blockData):
+    global datanode
     datanode.receiveBlock(blockID, blockData)
     #call datanode structure to write this to hdd
     return True

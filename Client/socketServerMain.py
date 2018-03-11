@@ -14,7 +14,7 @@ import time
 from thread import *
 import modules.BlockDivider as BlockDivider
 import Client
-from transferFileXMLRPC import sendServer
+
 
 
 # For RPC client interactions
@@ -174,58 +174,9 @@ def clientthread(conn):
         if cliInput[i] == 'cf':
             path = cliInput[i+1]
             file_name = cliInput[i+2]
-            client.save_file_from_s3('testfile.txt')
-            client.put_file_to_nn('/home/', 'testfile.txt')
-            reply = 'Created a file!'
-
-            # Server for sending file to DataNode
-            server = sendServer(HOST)
-            #server.sendFileToDN(filepartname)
-
-            # '''
-            # #If we want to create bucket
-            # myS3 = boto3.resource('s3')
-            # myS3.create_bucket(Bucket='sufs-project', CreateBucketConfiguration={
-            # 'LocationConstraint': 'us-west-2'})
-            # '''
-            #
-            # # downloading file to current local directory from s3
-            # """BUCKET_NAME = 'sufs-project'
-            # KEY= 'part-r-00000'
-            # s3 = boto3.resource('s3')
-            # try:
-            #     s3.Bucket(BUCKET_NAME).download_file(KEY, 'part-r-00000')
-            # except botocore.exceptions.ClientError as e:
-            #     if e.response['Error']['Code'] == "404":
-            #         print("The object does not exist.")
-            #     else:
-            #         raise
-            # """
-            #
-            # file_name = '/Users/justin/cs/cloud/input/testfile.txt'
-            # input_file = open(file_name)
-            # output_dir = "/Users/justin/cs/cloud/output"
-            # input_file_size = os.path.getsize(file_name)
-            # print("Getting filenameSize from Namenode...")
-            # reply = rpc_namenode.write1(file_name, input_file_size)
-            #
-            # print("it worked!!!!!!!")
-            #
-            # # for debug
-            # conn.send('file generated locally\n')
-            #
-            # # call splitFile() from block divider to divide blocks to pass to namenode to decide n datanodes to store blocks
-            # bd = BlockDivider.BlockDivider()
-            # bd.split_file(file_name, output_dir)
-            # print (bd)
-            # # splitFile() needs to be modified errno22 invalid mode ('w') line 39 in blockdivider.py
-            #
-            # '''
-            # 1) send blocks and filename over to namenode
-            # 2) wait for namenode to put file in to directory structure and picks N (replication factor) different data nodes to store each block
-            # 3) wait for amenode to return list of blocks and datanodes and then pass the blocks to datanode to store
-            # '''
-            # reply = 'Completed task of creating new file in SUFS | next cmd: '
+            client.save_file_from_s3(file_name)
+            client.put_file_to_nn(path, file_name)
+            reply = 'Created a file ' + file_name + '!'
 
         elif cliInput[i] == 'rf filename':
 

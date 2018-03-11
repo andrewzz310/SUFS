@@ -9,7 +9,7 @@ class BlockDivider:
     def __init__(self):
         self.BLOCKSIZE = 256
 
-    def split_file(self, filename, out_path):
+    def split_file(self, path, filename, out_path):
         """
         Splits a file into blocks and returns this location or newly created block files.
         :param filename: absolute path to file (ex:"/Users/justin/cs/cloud/input/testfile.txt")
@@ -21,6 +21,8 @@ class BlockDivider:
         split_paths = os.path.split(filename)
         input_file_name = split_paths[1]
         print "file name: " + input_file_name
+
+        path_hash = path.replace('/', '#')
 
         # open file
         input_file = open(filename)
@@ -35,7 +37,7 @@ class BlockDivider:
         current_size = 0
         while current_size < input_file_size:
             output_data = input_file.read(self.BLOCKSIZE)
-            output_file_name = out_path + input_file_name + '.part' + str(block_number)
+            output_file_name = out_path + path_hash + input_file_name + '.part' + str(block_number)
             output = open(output_file_name, 'w')
             output.write(output_data)
             output.close()
