@@ -30,6 +30,7 @@ class DataNode:
         # 5) send BlockReport to NameNode
 
 
+
     # server side is transferFileXMLRPC.py
     def writeBlock(self, data, blockID, IPv4, portNum):
         proxyStr = "http://" + IPv4 + ":" + portNum + "/"
