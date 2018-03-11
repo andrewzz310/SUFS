@@ -49,7 +49,7 @@ def create_ec2():
     instance_id = ''
     instance_check = None
     instance = ec2.create_instances(
-        ImageId='',
+        ImageId='ami-1b168063',
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
