@@ -48,14 +48,9 @@ def receiveHeartBeat(myIp):
 
 def receiveBlockReport(myIp, blocks):
     global nn
-    nn.blockD[myIp] = blocks
+    nn.dnToBlock[myIp] = blocks
     for blockID in blocks: #do the translation the other way as well.
-        if blockID in nn.blockD:
-            #nn.dnToBlock[blockID].add(myIp)
-            nn.blockD[blockID].append(myIp)
-        else:
-            nn.blockD[blockID].append(myIp)
-
+	nn.blockD[blockID].append(myIp)
     printDictTest(nn.blockD)
     return True
 
