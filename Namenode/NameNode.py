@@ -269,8 +269,8 @@ class NameNode:
 
 
     def deleteFromBlockReport(self, dnIp):
-        for block in self.dnToBlock[dnIp]:
-            for ip in self.blockD[block]:
+        for block in self.dnToBlock.get(dnIp, []):
+            for ip in self.blockD.get(block, []):
                 if (ip == dnIp):
                     self.blockD[block].remove(dnIp)
         
@@ -314,8 +314,8 @@ class NameNode:
 
 
     def moveBlocks(self, targetDNIp, prevDNIp):
-        for block in self.blockD[prevDNIp]:
-            for ip in self.dnToBlock[block]:
+        for block in self.dnToBlock.get(prevDNIp, []):
+            for ip in self.blockD.get(block, []):
                 try:
                     datanode = dnRPCClient.dnRPCClient(ip, 8888)
                     success = datanode.targetBlock(block, targetDNIp)
