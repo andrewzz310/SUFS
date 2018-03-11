@@ -121,12 +121,15 @@ class NameNode:
 
     # Delete a file
     # Example of how to call the function:      deleteFile("/home/st/", "text.txt")
+    # Return the dictionary with key is blockID and value is a list of DataNodes
+    #        and the ClientServer will connect with those DataNodes to delete blocks
     def deleteFile(self, path, filename):
         if path in self.contentsInDir:
             if filename in self.contentsInDir[path]:
-                # delete the file (blocks) in DataNodes________________________________________
                 self.contentsInDir[path].remove(filename)
-                return "Successfully delete a file"
+
+                # delete the file (blocks) in DataNodes________________________________________
+                return self.lsDataNode(path + filename)
             else:
                 return "File doesn't exist"
         else:

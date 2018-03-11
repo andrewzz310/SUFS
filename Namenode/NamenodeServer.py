@@ -17,17 +17,14 @@ class RequestHandler(SimpleXMLRPCRequestHandler):
     rpc_paths = ('/RPC2',)
 
 
-
 # Create server
 server = SimpleXMLRPCServer((HOST, PORT), requestHandler=RequestHandler)
 server.register_introspection_functions()
 
 
-
 # Register a function under a different name
 def hello_world():
     return "Hello, Namenode!\n"
-
 
 
 def write1(filename, size):
@@ -37,13 +34,10 @@ def write1(filename, size):
     return str(blocks)
 
 
-
 def receiveHeartBeat(myIp):
-    global nn
     #where myIP is the datanodes IP (so you can access the RPC stuff)
     nn.alive[myIp] = time.time()
     return True
-
 
 
 def receiveBlockReport(myIp, blocks):
@@ -55,76 +49,43 @@ def receiveBlockReport(myIp, blocks):
     return True
 
 
-
-# FOR TESTING_________________________________________________________________________
-def printDictTest(dict):
-    for key, value in dict:
-        print key + " : " + value
-
-
-
 def putFile(path, filename, size):
-    global nn
+    nn.createFile(path, filename)
     print path, filename, size
-    return nn.createFile(path, filename, size)  # results of namenode an
-
+    return # results of namenode an
 
 
 # Directory functions
-def createFile(path, filename, size):
-    global nn
-    return nn.createFile(path, filename, size)
-
-
+def createFile(path, filename):
+    return nn.createFile(path, filename)
 
 def deleteFile(path, filename):
-    global nn
     return nn.deleteFile(path, filename)
 
-
-
 def mkdir(path, dir):
-    global nn
     return nn.mkdir(path, dir)
 
-
-
 def deletedir(path):
-    global nn
     return nn.deleteDirectory(path)
 
-
-
 def ls(path):
-    global nn
     return nn.ls(path)
 
-
-def lsDataNode(pathfilename):
-    global nn
-    return nn.lsDataNode(pathfilename)
-
-
 def startHeartBeats():
-    global nn
     nn.startThreads()
 
-
-
 def printDataNodes():
-    global nn
     return str(nn.alive)
-
-
 
 def myIp(nnip):
     global NAMENODE_IP
     NAMENODE_IP = nnip
     global nn
-    nn = NameNode(NAMENODE_IP)
+    nn = NameNode(nnip)
     return NAMENODE_IP
 
-
+def getBlockReport():
+    return nn.dnToBlock
 
 # Register hello world function
 server.register_function(write1)
@@ -134,12 +95,12 @@ server.register_function(deleteFile)
 server.register_function(mkdir)
 server.register_function(deletedir)
 server.register_function(ls)
-server.register_function(lsDataNode)
 
 #socketservermain calls this once dn's have been created
 #maybe not, right now set it up so threads start on instantiation
 server.register_function(startHeartBeats)
 server.register_function(myIp)
+server.register_function(getBlockReport)
 
 
 # Register hello world function

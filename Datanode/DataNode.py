@@ -28,7 +28,7 @@ class DataNode:
     def receiveBlock(self, blockID, blockData):
         with open(blockID, "wb") as handle:
             handle.write(blockData.data)
-            self.blocks.append(blockID)
+        self.blocks.append(blockID)
         return True
 
 

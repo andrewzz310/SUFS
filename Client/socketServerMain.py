@@ -176,23 +176,24 @@ def clientthread(conn):
             client.put_file_to_nn(path, file_name)
             reply = 'Created a file ' + file_name + '!'
 
-        elif cliInput[i] == 'rf filename':
-
+        elif cliInput[i] == 'rm':
             '''
             1) get info on where list of blocks are stored on which datanodes from the nameNode
             2) contact datanodes for the blocks
             3) read file based on blocks returned
             '''
+            path = cliInput[i + 1]
+            file_name = cliInput[i + 2]
+            print(client.delete_file(path, file_name))
+            reply = 'Removed file ' + path + file_name
 
-            reply = 'access read file completed| next cmd: '
-
-        elif cliInput[i] == 'df filename':
-            '''
-            1) get info on where list of blocks are stored on which datanodes from the nameNode
-            2) contact datanodes for the blocks
-            3) tell datanode to remove blocks and tell namenode to remove file in the directory and list of datanodes that holds the block
-            '''
-            reply = 'access delete file completed| next cmd: '
+        # elif cliInput[i] == 'df filename':
+        #     '''
+        #     1) get info on where list of blocks are stored on which datanodes from the nameNode
+        #     2) contact datanodes for the blocks
+        #     3) tell datanode to remove blocks and tell namenode to remove file in the directory and list of datanodes that holds the block
+        #     '''
+        #     reply = 'access delete file completed| next cmd: '
 
         elif cliInput[i] == 'hello':
             print("Connecting to Namenode...")
@@ -285,13 +286,23 @@ def clientthread(conn):
             except botocore.exceptions.ClientError as e:
                 reply = 'Could not connect to Namenode!\n' + e.message
 
+        elif cliInput[i] == 'printBR':
+            try:
+                RPC_NAMENODE_SERVER_URL = 'http://' + NAMENODE_IP + ':8000'
+                rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
+                br = rpc_namenode.getBlockReport()
+                for ip in br.keys():
+                    print (ip)
+                    print (br[ip])
+            except:
+                print ("there was a problem")
         #######################
         # Datanode Commands
         #######################
 
         # Create new Datanode
         elif cliInput[i] == 'createDN':
-            reply = createDataNodes(2)
+            reply = createDataNodes(3)
 
         # Print list of Datanodes and Timestamps from Namenode
         elif cliInput[i] == 'printDN':
