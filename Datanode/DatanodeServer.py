@@ -7,6 +7,7 @@ from DataNode import DataNode
 from modules import dnRPCClient as dnRPCClient
 from modules import nnRPCClient as nnRPCClient
 import time
+import os
 from thread import *
 
 ######### GLOBAL VARIABLES #########
@@ -60,8 +61,9 @@ def hello_world():
 def receiveBlock(blockID, blockData):
     global datanode
     datanode.receiveBlock(blockID, blockData)
+    print('Block received! ' + blockID)
     #call datanode structure to write this to hdd
-    return True
+    return os.getcwd()
 
 
 # used by namenode for targeted replications

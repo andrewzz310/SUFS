@@ -117,6 +117,7 @@ def createDataNodes(numDataNodes):
             MinCount=1,
             MaxCount=1,
             InstanceType='t2.micro',
+            KeyName='suaws',
         )
         instance_id = instance[0].id
         print('Created Datanode Server:', instance[0].id, instance[0].public_ip_address)

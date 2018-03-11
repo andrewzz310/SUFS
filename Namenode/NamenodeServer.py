@@ -56,15 +56,15 @@ def receiveBlockReport(myIp, blocks):
         else:
             nn.blockD[blockID].append(myIp)
 
-    printDictTest(nn.blockD)
+    #printDictTest(nn.blockD)
     return True
 
 
 
 # FOR TESTING_________________________________________________________________________
-def printDictTest(dict):
-    for key, value in dict:
-        print key + " : " + value
+# def printDictTest(dict):
+#     for key, value in dict:
+#         print key + " : " + value
 
 
 

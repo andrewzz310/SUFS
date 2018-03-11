@@ -8,6 +8,9 @@ class DataNode:
         self.blocks = []
         self.ip = ip
         self.nnRPC = nnRPCClient.nnRPCClient("http://" + nnIp, nnPort)
+        self.block_dir = '~/blocks/'
+        if not os.path.exists(self.block_dir):
+            os.makedirs(self.block_dir)
 
 
     # server to another DataNode
@@ -26,13 +29,14 @@ class DataNode:
     # 4) update BlockReport (slef.listBlockID)
     # 5) send BlockReport to NameNode
     def receiveBlock(self, blockID, blockData):
-        with open(blockID, "wb") as handle:
+        with open(self.block_dir+blockID, "wb") as handle:
             handle.write(blockData.data)
-            self.blocks.append(blockID)
+
+        self.blocks.append(blockID)
         return True
 
 
     def removeBlock(self, blockID):
-        os.remove(blockID)
+        os.remove(self.block_dir+blockID)
         print "Successfully removed block " + blockID
 

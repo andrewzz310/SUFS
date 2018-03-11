@@ -39,7 +39,8 @@ class Client:
 
             with open(block[0], "rb") as handle:
                 obj = xmlrpclib.Binary(handle.read())
-                rpc_datanode.receiveBlock(block[0], obj)
+
+            print(rpc_datanode.receiveBlock(block[0], obj))
 
     def save_file_from_s3(self, file_name):
         s3 = boto3.client('s3')
