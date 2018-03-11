@@ -105,6 +105,10 @@ def ls(path):
     return nn.ls(path)
 
 
+def lsDataNode(pathfilename):
+    global nn
+    return nn.lsDataNode(pathfilename)
+
 
 def startHeartBeats():
     global nn
@@ -135,6 +139,7 @@ server.register_function(deleteFile)
 server.register_function(mkdir)
 server.register_function(deletedir)
 server.register_function(ls)
+server.register_function(lsDataNode)
 
 #socketservermain calls this once dn's have been created
 #maybe not, right now set it up so threads start on instantiation

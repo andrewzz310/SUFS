@@ -27,20 +27,19 @@ class NameNode:
         self.REPLICATION = 3 # pick 3 different datanodes to store each block by default
 
         # Dictionary for which blocks are part of which file
-        # {key : value} = {filename : [blockID, blockID, blockID, ...]}
+        # {key : value} = {path+filename : [blockID, blockID, blockID, ...]}
         self.fileD = {}
 
         # Dictionary for which datanodes are storing each block
         # {key : value} = {blockID : [DataNode1, DataNode2, DataNode3]}
         self.blockD = {}
 
-        # List of Datanodes for easy lookup
-        # [[DataNode1, [blockID, blockID]], [DataNode2, [blockID, blockID]], ...]
-        self.listDN = []
-
         self.alive = {}  # Dict for alive datanodes, <key: datanodeIP, value: timestamp>
 
+        # Dictinary of Datanodes for easy lookup
+        # {key : value} = {DataNode1 : [blockID, blockID], DataNode2 : [blockID, blockID], ...}
         self.dnToBlock = {}
+
         self.mutex = Lock()
         self.contentsInDir = {"/home/": []}
         self.startThreads()
@@ -63,18 +62,22 @@ class NameNode:
 
         # Check if the filename is valid. This prevents causing Exception on ec2 instance
         if self.checkValidFile(path, filename):
+            listBlockID = []
             while current_size < filesize:
                 print('Block: ' + block_base_name + str(block_num))
                 dn_index = self.dn_assign_counter % num_of_datanodes
                 dn_ip = self.alive.keys()[dn_index]
-                result.append((block_base_name+str(block_num), dn_ip))
-                print('Added ' + block_base_name+str(block_num) + ' to list!')
+                blockID = block_base_name+str(block_num)
+                result.append((blockID, dn_ip))
+                print('Added ' + blockID + ' to list!')
                 self.dn_assign_counter += 1
                 current_size += self.block_size
                 block_num += 1
-
+                listBlockID.append(blockID)
             # Add file to Directory
             self.contentsInDir[path].append(filename)
+
+            self.fileD[path+filename] = listBlockID
 
         return result
         # Check if the filename is valid.  This prevents causing Exception on ec2 instance
@@ -193,26 +196,25 @@ class NameNode:
     # List the DataNodes that store replicas of each block of a file
     # Given a file path, the NameNode returns a list of blocks for that file
     # and a list of DataNodes that hold replicas for each list
-    def lsDataNode(self, path, filename):
+    # Example of how to call the function:      lsDataNode("/home/text.txt")
+    # Return:   1st value: a list of blocks for that file
+    #           2nd value: DataNodes that hold replicas for this blockID
+    #           3rd value: DataNodes that hold replicas for this blockID
+    #           ...
+    def lsDataNode(self, pathfilename):
         retList = []
         blockIDlist = []
-        if path in self.contentsInDir:
-            if filename in self.contentsInDir[path]:
-                if filename in self.fileD:
-                    blockIDlist = self.fileD[filename]
 
-                    # a list of blocks for that file
-                    retList.append(blockIDlist)
-                    # and a list of DataNodes that hold replicas for each list
-                    for blockID in blockIDlist:
-                        if blockID in self.blockD:
-                            retList.append(self.blockD[blockID])
-                    return retList
-            else:
-                return "File doesn't exist"
-        else:
-            return "No such directory"
+        if pathfilename in self.fileD:
+            blockIDlist = self.fileD[pathfilename]
 
+            # a list of blocks for that file
+            retList.append(blockIDlist)
+            # and a list of DataNodes that hold replicas for each list
+            for blockID in blockIDlist:
+                if blockID in self.blockD:
+                    retList.append(self.blockD[blockID])
+            return retList
 
 
 
