@@ -227,11 +227,11 @@ class NameNode:
             for ip in self.alive.keys():
                 diff = time.time() - self.alive[ip]
                 if (diff > 40):
-                    del self.alive[ip]
                     print ("create new datanode")
                     self.createNewDN(ip)
-                    print ("deleteing from blockreport")
+                    print ("deleting from blockreport")
                     self.deleteFromBlockReport(ip)
+                    del self.alive[ip]
 
 
 
