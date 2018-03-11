@@ -158,7 +158,7 @@ class NameNode:
                     print("List of files need to delete: ", self.contentsInDir[key])
                     del self.contentsInDir[key]
 
-            # 3. Remove the directory from parent directory
+            # 4. Remove the directory from parent directory
             index = 0
             # Find the parent path
             for i, val in enumerate(path[:-1]):  # exclude the last "/"

@@ -14,6 +14,7 @@ import time
 from thread import *
 import modules.BlockDivider as BlockDivider
 import Client
+from transferFileXMLRPC import sendServer
 
 
 # For RPC client interactions
@@ -26,6 +27,8 @@ NAMENODE_IP = ''
 
 # Client
 client = Client.Client()
+
+
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print('Socket created')
@@ -172,6 +175,11 @@ def clientthread(conn):
             client.save_file_from_s3('testfile.txt')
             client.put_file_to_nn('/home/', 'testfile.txt')
             reply = 'Created a file!'
+
+            # Server for sending file to DataNode
+            server = sendServer(HOST)
+            #server.sendFileToDN(filepartname)
+
             # '''
             # #If we want to create bucket
             # myS3 = boto3.resource('s3')
