@@ -11,6 +11,7 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 import re
 from modules import dnRPCClient
+import collections
 
 
 # NOTE:  The '#' is not allowed in filename because it's used for blockID stuff
@@ -202,19 +203,16 @@ class NameNode:
     #           3rd value: DataNodes that hold replicas for this blockID
     #           ...
     def lsDataNode(self, pathfilename):
-        retList = []
+        retDict = collections.OrderedDict()
         blockIDlist = []
 
         if pathfilename in self.fileD:
             blockIDlist = self.fileD[pathfilename]
-
-            # a list of blocks for that file
-            retList.append(blockIDlist)
             # and a list of DataNodes that hold replicas for each list
             for blockID in blockIDlist:
                 if blockID in self.blockD:
-                    retList.append(self.blockD[blockID])
-            return retList
+                    retDict[blockID] = self.blockD[blockID]
+            return retDict
 
 
 
@@ -253,6 +251,8 @@ class NameNode:
     def startThreads(self):
         start_new_thread(self.checkTimes, ())
 
+
+
     def checkTimes(self):
         while 1:
             time.sleep(30)
@@ -284,7 +284,7 @@ class NameNode:
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-        ImageId = 'ami-830593fb',
+        ImageId = 'ami-22e2735a',
         MinCount = 1,
         MaxCount = 1,
         InstanceType='t2.micro',
