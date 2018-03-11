@@ -284,6 +284,7 @@ class NameNode:
         print('blocks moved')
 
 
+
     def moveBlocks(self, targetDNIp, prevDNIp):
         for block in self.blockD[prevDNIp]:
             for ip in self.dnToBlock[block]:
