@@ -191,6 +191,8 @@ class NameNode:
 
 
     # List the DataNodes that store replicas of each block of a file
+    # Given a file path, the NameNode returns a list of blocks for that file
+    # and a list of DataNodes that hold replicas for each list
     def lsDataNode(self, path, filename):
         retList = []
         blockIDlist = []
@@ -199,6 +201,9 @@ class NameNode:
                 if filename in self.fileD:
                     blockIDlist = self.fileD[filename]
 
+                    # a list of blocks for that file
+                    retList.append(blockIDlist)
+                    # and a list of DataNodes that hold replicas for each list
                     for blockID in blockIDlist:
                         if blockID in self.blockD:
                             retList.append(self.blockD[blockID])
