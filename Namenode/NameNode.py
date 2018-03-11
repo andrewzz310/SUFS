@@ -241,10 +241,10 @@ class NameNode:
 
 
     def deleteFromBlockReport(self, dnIp):
-        for block in self.blockD[dnIp]:
-            for ip in self.dnToBlock[block]:
+        for block in self.dnToBlock[dnIp]:
+            for ip in self.blockD[block]:
                 if (ip == dnIp):
-                    self.dnToBlock[block].remove(dnIp)
+                    self.blockD[block].remove(dnIp)
         
 
 
