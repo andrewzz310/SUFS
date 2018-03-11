@@ -50,13 +50,13 @@ def receiveBlockReport(myIp, blocks):
     global nn
     nn.blockD[myIp] = blocks
     for blockID in blocks: #do the translation the other way as well.
-        if blockID in nn.dnToBlock:
+        if blockID in nn.blockD:
             #nn.dnToBlock[blockID].add(myIp)
-            nn.dnToBlock[blockID].append(myIp)
+            nn.blockD[blockID].append(myIp)
         else:
-            nn.dnToBlock[blockID].append(myIp)
+            nn.blockD[blockID].append(myIp)
 
-    printDictTest(nn.dnToBlock)
+    printDictTest(nn.blockD)
     return True
 
 
