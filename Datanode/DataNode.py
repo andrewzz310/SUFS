@@ -19,6 +19,8 @@ class DataNode:
 
     # client to another DataNode
     def receiveBlock(self, blockID, blockData):
+        with open(blockID, "wb") as handle:
+            handle.write(blockData.data)
         return ""
         # save new block & update report
         # 1) create a file

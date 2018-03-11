@@ -14,7 +14,7 @@ import time
 from thread import *
 import modules.BlockDivider as BlockDivider
 import Client
-from transferFileXMLRPC import sendServer
+
 
 
 # For RPC client interactions
@@ -176,9 +176,7 @@ def clientthread(conn):
             client.put_file_to_nn('/home/', 'testfile.txt')
             reply = 'Created a file!'
 
-            # Server for sending file to DataNode
-            server = sendServer(HOST)
-            #server.sendFileToDN(filepartname)
+
 
             # '''
             # #If we want to create bucket
