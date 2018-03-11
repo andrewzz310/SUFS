@@ -227,11 +227,13 @@ class NameNode:
             for ip in self.alive.keys():
                 diff = time.time() - self.alive[ip]
                 if (diff > 40):
+                    sys.stdout=open("/home/ec2-user/test.txt","w")
                     print ("create new datanode")
                     self.createNewDN(ip)
                     print ("deleting from blockreport")
                     self.deleteFromBlockReport(ip)
                     del self.alive[ip]
+                    sys.stdout.close()
 
 
 
@@ -252,6 +254,7 @@ class NameNode:
         MinCount = 1,
         MaxCount = 1,
         InstanceType='t2.micro',
+        KeyName = "mac os x"
         )
         instance_id = instance[0].id
         print('Created Datanode Server:', instance[0].id, instance[0].public_ip_address)
@@ -262,14 +265,16 @@ class NameNode:
         while instance_check.public_ip_address == None:
             time.sleep(10)
             instance_check = ec2.Instance(instance_id)
-
-        time.sleep(60)
+        print('Waiting for bootup')
+        time.sleep(40)
         
         dnIp = str(instance_check.public_ip_address)
+        print (dnIp)
         datanode = xmlrpclib.ServerProxy("http://" + dnIp + ':' + '8888')
+        print ('connected to dn')
         datanode.receiveNNIp("http://" + self.ip, "http://" + dnIp)
+        print ('heartbeat started on ' + dnIp)
         self.moveBlocks(dnIp, prevDNIp)
-
 
 
     def moveBlocks(self, targetDNIp, prevDNIp):
