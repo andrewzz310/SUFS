@@ -229,14 +229,14 @@ class NameNode:
             for ip in self.alive.keys():
                 diff = time.time() - self.alive[ip]
                 if (diff > 40):
-                    sys.stdout=open("/home/ec2-user/test.txt","w")
+                    #sys.stdout=open("/home/ec2-user/test.txt","w")
                     print ("create new datanode")
                     self.createNewDN(ip)
                     print ("deleting from blockreport")
                     self.deleteFromBlockReport(ip)
                     print("removing from membership")
                     del self.alive[ip]
-                    sys.stdout.close()
+                    #sys.stdout.close()
 
 
 
@@ -254,7 +254,7 @@ class NameNode:
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-        ImageId = 'ami-c56afcbd',
+        ImageId = 'ami-830593fb',
         MinCount = 1,
         MaxCount = 1,
         InstanceType='t2.micro',

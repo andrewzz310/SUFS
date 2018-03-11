@@ -52,7 +52,7 @@ def create_ec2():
     instance_id = ''
     instance_check = None
     instance = ec2.create_instances(
-        ImageId='ami-7c198f04',
+        ImageId='ami-e602949e',
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
@@ -114,7 +114,7 @@ def createDataNodes(numDataNodes):
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-            ImageId='ami-c56afcbd',
+            ImageId='ami-830593fb',
             MinCount=1,
             MaxCount=1,
             InstanceType='t2.micro',
