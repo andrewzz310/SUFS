@@ -17,14 +17,17 @@ class RequestHandler(SimpleXMLRPCRequestHandler):
     rpc_paths = ('/RPC2',)
 
 
+
 # Create server
 server = SimpleXMLRPCServer((HOST, PORT), requestHandler=RequestHandler)
 server.register_introspection_functions()
 
 
+
 # Register a function under a different name
 def hello_world():
     return "Hello, Namenode!\n"
+
 
 
 def write1(filename, size):
@@ -34,6 +37,7 @@ def write1(filename, size):
     return str(blocks)
 
 
+
 def receiveHeartBeat(myIp):
     global nn
     #where myIP is the datanodes IP (so you can access the RPC stuff)
@@ -41,12 +45,27 @@ def receiveHeartBeat(myIp):
     return True
 
 
+
 def receiveBlockReport(myIp, blocks):
     global nn
     nn.blockD[myIp] = blocks
     for blockID in blocks: #do the translation the other way as well.
-        nn.dnToBlock[blockID].add(myIp)
+        if blockID in nn.dnToBlock:
+            #nn.dnToBlock[blockID].add(myIp)
+            nn.dnToBlock[blockID].append(myIp)
+        else:
+            nn.dnToBlock[blockID].append(myIp)
+
+    printDictTest(nn.dnToBlock)
     return True
+
+
+
+# FOR TESTING_________________________________________________________________________________
+def printDictTest(dict):
+    for key, value in dict:
+        print key + " : " + value
+
 
 
 def putFile(path, filename, size):
@@ -55,10 +74,12 @@ def putFile(path, filename, size):
     return nn.createFile(path, filename, size)  # results of namenode an
 
 
+
 # Directory functions
 def createFile(path, filename, size):
     global nn
     return nn.createFile(path, filename, size)
+
 
 
 def deleteFile(path, filename):
@@ -66,9 +87,11 @@ def deleteFile(path, filename):
     return nn.deleteFile(path, filename)
 
 
+
 def mkdir(path, dir):
     global nn
     return nn.mkdir(path, dir)
+
 
 
 def deletedir(path):
@@ -76,9 +99,11 @@ def deletedir(path):
     return nn.deleteDirectory(path)
 
 
+
 def ls(path):
     global nn
     return nn.ls(path)
+
 
 
 def startHeartBeats():
@@ -86,9 +111,11 @@ def startHeartBeats():
     nn.startThreads()
 
 
+
 def printDataNodes():
     global nn
     return str(nn.alive)
+
 
 
 def myIp(nnip):
@@ -97,6 +124,7 @@ def myIp(nnip):
     global nn
     nn = NameNode(NAMENODE_IP)
     return NAMENODE_IP
+
 
 
 # Register hello world function
