@@ -32,7 +32,8 @@ class Client:
 
         # Send each block to Datanode
         for block in block_info:
-            rpc_datanode = xmlrpclib.ServerProxy("http://" + str(block[1]) + ':8888')
+            print 'Connected to Datanode ' + str(block[1]) + ' and ' + block[0]
+            rpc_datanode = xmlrpclib.ServerProxy(str(block[1]) + ':8888')
 
             # TODO: remove this later...
             #rpc_datanode.receiveNNIp(self.RPC_NAMENODE_SERVER_URL, '127.0.0.1')

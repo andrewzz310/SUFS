@@ -56,7 +56,6 @@ def create_ec2():
         MinCount=1,
         MaxCount=1,
         InstanceType='t2.micro',
-        KeyName = "mac os x"
     )
     instance_id = instance[0].id
     print('Created Namenode Server:', instance[0].id, instance[0].public_ip_address)
@@ -98,7 +97,7 @@ def start_nodes():
     RPC_NAMENODE_SERVER_URL = 'http://' + new_namenode.public_ip_address + ':8000'
 
     rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
-    client.set_namenode(RPC_NAMENODE_SERVER_URL)
+    client.set_namenode(NAMENODE_IP)
     print(rpc_namenode.myIp(NAMENODE_IP))
     print('Namenode Connected!', NAMENODE_IP)
 
@@ -118,7 +117,7 @@ def createDataNodes(numDataNodes):
             MinCount=1,
             MaxCount=1,
             InstanceType='t2.micro',
-            KeyName = "mac os x"
+            KeyName='suaws',  # TODO: remove this later
         )
         instance_id = instance[0].id
         print('Created Datanode Server:', instance[0].id, instance[0].public_ip_address)
@@ -275,9 +274,10 @@ def clientthread(conn):
         elif cliInput[i] == 'connectNN':
             try:
                 NAMENODE_IP = cliInput[i+1]
-                RPC_NAMENODE_SERVER_URL = 'http://' + str(NAMENODE_IP) + ':8000'
+                print('Connecting to Namenode ' + NAMENODE_IP)
+                RPC_NAMENODE_SERVER_URL = 'http://' + NAMENODE_IP + ':8000'
 
-                rpc_namenode = xmlrpclib.ServerProxy("http://" + str(NAMENODE_IP) + ':8000')
+                rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
                 print(rpc_namenode.myIp(NAMENODE_IP))
                 rpc_namenode.hello_world()
                 client.set_namenode(NAMENODE_IP)

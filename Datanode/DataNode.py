@@ -19,16 +19,17 @@ class DataNode:
 
 
     # client to DataNode
+    # save new block & update report
+    # 1) create a file
+    # 2) write blockData to that file
+    # 3) close the file
+    # 4) update BlockReport (slef.listBlockID)
+    # 5) send BlockReport to NameNode
     def receiveBlock(self, blockID, blockData):
         with open(blockID, "wb") as handle:
             handle.write(blockData.data)
-        return ""
-        # save new block & update report
-        # 1) create a file
-        # 2) write blockData to that file
-        # 3) close the file
-        # 4) update BlockReport (slef.listBlockID)
-        # 5) send BlockReport to NameNode
+            self.blocks.append(blockID)
+        return True
 
 
     def removeBlock(self, blockID):
