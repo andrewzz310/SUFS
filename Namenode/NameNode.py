@@ -93,6 +93,8 @@ class NameNode:
         # else:
         #     return "Invalid filename"
 
+
+
     # checkFile("/home/st/", "text1.txt")
     # returns True if ok to add file else False
     def checkValidFile(self, path, filename):
@@ -185,6 +187,27 @@ class NameNode:
                     print(content)
                     result.append(content)
         return result
+
+
+
+    # List the DataNodes that store replicas of each block of a file
+    def lsDataNode(self, path, filename):
+        retList = []
+        blockIDlist = []
+        if path in self.contentsInDir:
+            if filename in self.contentsInDir[path]:
+                if filename in self.fileD:
+                    blockIDlist = self.fileD[filename]
+
+                    for blockID in blockIDlist:
+                        if blockID in self.blockD:
+                            retList.append(self.blockD[blockID])
+                    return retList
+            else:
+                return "File doesn't exist"
+        else:
+            return "No such directory"
+
 
 
 
