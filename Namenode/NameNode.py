@@ -11,6 +11,7 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 import re
 from modules import dnRPCClient
+import collections
 
 
 # NOTE:  The '#' is not allowed in filename because it's used for blockID stuff
@@ -197,24 +198,23 @@ class NameNode:
     # Given a file path, the NameNode returns a list of blocks for that file
     # and a list of DataNodes that hold replicas for each list
     # Example of how to call the function:      lsDataNode("/home/text.txt")
-    # Return:   1st value: a list of blocks for that file
-    #           2nd value: DataNodes that hold replicas for this blockID
-    #           3rd value: DataNodes that hold replicas for this blockID
-    #           ...
+    # Return a dictionary:      {key : value}
+    #                           {blockID, [DataNode1, DataNode2, DataNode3]}
+    #                           {blockID, [DataNode3, DataNode4, DataNode5]}
     def lsDataNode(self, pathfilename):
-        retList = []
+        retDict = collections.OrderedDict()
         blockIDlist = []
 
         if pathfilename in self.fileD:
             blockIDlist = self.fileD[pathfilename]
 
             # a list of blocks for that file
-            retList.append(blockIDlist)
+            retDict.append(blockIDlist)
             # and a list of DataNodes that hold replicas for each list
             for blockID in blockIDlist:
                 if blockID in self.blockD:
-                    retList.append(self.blockD[blockID])
-            return retList
+                    retDict[blockID] = self.blockD[blockID]
+            return retDict
 
 
 
