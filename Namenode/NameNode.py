@@ -286,7 +286,7 @@ class NameNode:
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-        ImageId = 'ami-78e77600',
+        ImageId = 'ami-0beb7a73',
         MinCount = 1,
         MaxCount = 1,
         InstanceType='t2.micro',
