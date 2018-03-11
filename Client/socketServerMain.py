@@ -117,7 +117,7 @@ def createDataNodes(numDataNodes):
             MinCount=1,
             MaxCount=1,
             InstanceType='t2.micro',
-            KeyName='suaws',  # TODO: remove this later
+            KeyName='mac os x',  # TODO: remove this later
         )
         instance_id = instance[0].id
         print('Created Datanode Server:', instance[0].id, instance[0].public_ip_address)
@@ -286,13 +286,23 @@ def clientthread(conn):
             except botocore.exceptions.ClientError as e:
                 reply = 'Could not connect to Namenode!\n' + e.message
 
+        elif cliInput[i] == 'printBR':
+            try:
+                RPC_NAMENODE_SERVER_URL = 'http://' + NAMENODE_IP + ':8000'
+                rpc_namenode = xmlrpclib.ServerProxy(RPC_NAMENODE_SERVER_URL)
+                br = rpc_namenode.getBlockReport()
+                for ip in br.keys():
+                    print (ip)
+                    print (br[ip])
+            except:
+                print ("there was a problem")
         #######################
         # Datanode Commands
         #######################
 
         # Create new Datanode
         elif cliInput[i] == 'createDN':
-            reply = createDataNodes(2)
+            reply = createDataNodes(3)
 
         # Print list of Datanodes and Timestamps from Namenode
         elif cliInput[i] == 'printDN':
