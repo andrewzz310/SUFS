@@ -294,8 +294,10 @@ def clientthread(conn):
                 for ip in br.keys():
                     print (ip)
                     print (br[ip])
+                    reply = "look at the client"
             except:
                 print ("there was a problem")
+                reply = "there was a problem"
         #######################
         # Datanode Commands
         #######################
