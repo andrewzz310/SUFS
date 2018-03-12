@@ -45,7 +45,10 @@ def receiveBlockReport(myIp, blocks):
     global nn
     nn.dnToBlock[myIp] = blocks
     for blockID in blocks: #do the translation the other way as well.
-	    nn.blockD[blockID].append(myIp)
+        if blockID in nn.blockD:
+	        nn.blockD[blockID].append(myIp)
+        else:
+            nn.blockD[blockID] = [myIp]
     return True
 
 
