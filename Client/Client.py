@@ -66,4 +66,13 @@ class Client:
         return self.rpc_namenode.putFile(path, file_name, file_size)
 
     def delete_file(self, path, file_name):
-        return self.rpc_namenode.deleteFile(path, file_name)
+        datanode_list = self.rpc_namenode.deleteFile(path, file_name)
+        return self.remove_files_from_datanodes(datanode_list)
+
+    def remove_files_from_datanodes(self, dn_list):
+        # connect to each datanode and remove block
+        for block in dn_list:
+            for dn in dn_list[block]:
+                dn_rpc = xmlrpclib.ServerProxy(dn + ':8000')
+                dn_rpc.removeBlock(block)
+                print('Deleted Block ' + block + ' from ' + dn)

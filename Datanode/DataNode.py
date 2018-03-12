@@ -39,4 +39,5 @@ class DataNode:
     def removeBlock(self, blockID):
         os.remove(self.block_dir+blockID)
         print "Successfully removed block " + blockID
+        return True
 

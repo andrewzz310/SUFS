@@ -66,6 +66,11 @@ def receiveBlock(blockID, blockData):
     return os.getcwd()
 
 
+def removeBlock(blockID):
+    global datanode
+    datanode.removeBlock(blockID)
+    return True
+
 # used by namenode for targeted replications
 def targetBlock(blockID, dnIp):
     targetDn = dnRPCClient.dnRPCClient(dnIp, 8888)
@@ -101,6 +106,7 @@ def receiveNNIp(nnIp, myIp):
 # Register hello world function
 server.register_function(hello_world)
 server.register_function(receiveBlock)
+server.register_function(removeBlock)
 server.register_function(targetBlock)
 server.register_function(receiveNNIp)
 # Run the server's main loop
