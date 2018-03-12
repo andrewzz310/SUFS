@@ -15,10 +15,12 @@ class DataNode:
 
     # server to another DataNode
     def giveBlock(self, blockID, DataNodeID):
-        otherdn = xmlrpclib.ServerProxy(DataNodeID)
+        #otherdn = xmlrpclib.ServerProxy(DataNodeID)
         # string in the current blockID
-        blockData = ""
-        otherdn.receiveBlock(blockID, blockData)
+        block_obj = None
+        with open(blockID, "rb") as handle:
+            block_obj = xmlrpclib.Binary(handle.read())
+        return block_obj
 
 
     # client to DataNode
