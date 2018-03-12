@@ -36,13 +36,14 @@ class Client:
             print 'Connected to Datanode ' + str(block[1]) + ' and ' + block[0]
             rpc_datanode = xmlrpclib.ServerProxy(str(block[1]) + ':8888')
 
-            # TODO: remove this later...
-            #rpc_datanode.receiveNNIp(self.RPC_NAMENODE_SERVER_URL, '127.0.0.1')
-
             with open(block[0], "rb") as handle:
                 obj = xmlrpclib.Binary(handle.read())
-
             print(rpc_datanode.receiveBlock(block[0], obj))
+            # delete block file from local storage
+            os.remove(block[0])
+
+        # delete original file from local storage
+        os.remove(file_name)
 
     def save_file_from_s3(self, file_name):
         s3 = boto3.client('s3')
