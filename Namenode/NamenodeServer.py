@@ -55,8 +55,11 @@ def receiveBlockReport(myIp, blocks):
 
 def checkReplicas():
     global nn
+    time.sleep(10)
     for block in nn.blockD.keys():
         if (len(nn.blockD[block]) < nn.REPLICATION):
+            print (block)
+            print (len(nn.blockD[block]))
             replicate(len(nn.blockD[block]), block)
 
 def replicate(curRepFac, block):
@@ -66,8 +69,11 @@ def replicate(curRepFac, block):
     blocksrc = None
     #find first ip that can connect to
     for ip in nn.blockD[block]:
+        time.sleep(10)
         try:
             blocksrc = dnRPCClient.dnRPCClient(ip, 8888)
+            print ("source ip" + ip)
+            print ("block to replicate: " + block)
             break
         except:
             continue
@@ -77,6 +83,7 @@ def replicate(curRepFac, block):
             if (targetip not in nn.blockD.get(block)):
                 blocksrc.targetBlock(block, targetip)
                 rep += 1
+                print (block + " rep factor: " + rep)
             counter += 1
 
 
