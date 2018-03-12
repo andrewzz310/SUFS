@@ -39,14 +39,14 @@ def heartBeat():
     global MY_IP
     nn = nnRPCClient.nnRPCClient(NAMENODE_HOST, NAMENODE_PORT)
     while 1:
-        time.sleep(1)
+        time.sleep(10)
         nn.receiveHeartBeat(MY_IP)
 
 #repeat this function every 10 seconds to send block report
 def sendBlockReport():
     nn = nnRPCClient.nnRPCClient(NAMENODE_HOST, NAMENODE_PORT)
     while 1:
-        time.sleep(1)
+        time.sleep(4)
         #send datanodes blocks
         nn.receiveBlockReport(MY_IP, datanode.blocks)
     

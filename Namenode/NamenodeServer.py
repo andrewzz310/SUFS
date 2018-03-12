@@ -6,6 +6,7 @@ from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 from NameNode import NameNode
 import time
 from modules import dnRPCClient as dnRPCClient
+from thread import *
 
 PORT = 8000
 HOST = ""
@@ -50,7 +51,6 @@ def receiveBlockReport(myIp, blocks):
 	        nn.blockD[blockID].append(myIp)
         else:
             nn.blockD[blockID] = [myIp]
-    checkReplicas()
     return True
 
 def checkReplicas():
@@ -80,6 +80,7 @@ def replicate(curRepFac, block):
 
     while (rep < nn.REPLICATION and counter < len(nn.alive)):
         for targetip in nn.alive.keys():
+            print (targetip)
             if (targetip not in nn.blockD.get(block)):
                 blocksrc.targetBlock(block, targetip)
                 rep += 1
@@ -127,6 +128,7 @@ def myIp(nnip):
     NAMENODE_IP = nnip
     global nn
     nn = NameNode(nnip)
+    start_new_thread(checkReplicas, ())
     return NAMENODE_IP
 
 def getBlockReport():
