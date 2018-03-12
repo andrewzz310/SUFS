@@ -9,6 +9,7 @@ from modules import nnRPCClient as nnRPCClient
 import time
 import os
 from thread import *
+import xmlrpclib
 
 ######### GLOBAL VARIABLES #########
 PORT = 8888
@@ -74,9 +75,12 @@ def removeBlock(blockID):
 # used by namenode for targeted replications
 def targetBlock(blockID, dnIp):
     targetDn = dnRPCClient.dnRPCClient(dnIp, 8888)
-    blockData = "" #This needs to be replaced with a blockdata thing from our data structure
+    path = "/home/ec2-user/blocks/" + blockID
+    obj = None
+    with open(path, "rb") as handle:
+        obj = xmlrpclib.Binary(handle.read())
     #call datanode structure to write this to hdd
-    targetDn.receiveBlock(blockID, blockData)
+    targetDn.receiveBlock(blockID, obj)
     return True
 
 ######### CALL THIS FUNCTION FIRST VIA NAMENODE RPC #########

@@ -11,6 +11,8 @@ class Client:
         self.bucket_name = 'sufs-shieldsj'
         self.RPC_NAMENODE_SERVER_URL = ''
         self.rpc_namenode = None
+        self.alive = {}
+        self.REPLICATION = 3
 
     def set_namenode(self, url):
         self.RPC_NAMENODE_SERVER_URL = url
@@ -76,3 +78,18 @@ class Client:
                 dn_rpc = xmlrpclib.ServerProxy(dn + ':8000')
                 dn_rpc.removeBlock(block)
                 print('Deleted Block ' + block + ' from ' + dn)
+
+    def replicate(self, sourceIP, blockID):
+        counter = self.alive.keys().index(sourceIP) + 1
+        rep = 0
+        num_of_datanodes = len(self.alive)
+        while (rep < self.REPLICATION):
+            dn_index = counter % num_of_datanodes
+            dn_ip = self.alive.keys()[dn_index]
+            if (dn_ip == sourceIP):
+                break
+            datanode = xmlrpclib.ServerProxy(sourceIP, 8888)
+            datanode.targetBlock(blockID, dn_ip)
+            counter += 1
+            rep += 1
+    

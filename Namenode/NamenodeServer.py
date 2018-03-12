@@ -5,12 +5,13 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 from SimpleXMLRPCServer import SimpleXMLRPCRequestHandler
 from NameNode import NameNode
 import time
+from modules import dnRPCClient as dnRPCClient
 
 PORT = 8000
 HOST = ""
 NAMENODE_IP = ""
 nn = None
-
+REPLICATION = 3
 
 # Restrict to a particular path.
 class RequestHandler(SimpleXMLRPCRequestHandler):
@@ -49,7 +50,34 @@ def receiveBlockReport(myIp, blocks):
 	        nn.blockD[blockID].append(myIp)
         else:
             nn.blockD[blockID] = [myIp]
+    checkReplicas()
     return True
+
+def checkReplicas():
+    global nn
+    for block in nn.blockD.keys():
+        if (len(nn.blockD[block]) < nn.REPLICATION):
+            replicate(len(nn.blockD[block]), block)
+
+def replicate(curRepFac, block):
+    global nn
+    rep = curRepFac
+    counter = 0
+    blocksrc = None
+    #find first ip that can connect to
+    for ip in nn.blockD[block]:
+        try:
+            blocksrc = dnRPCClient.dnRPCClient(ip, 8888)
+            break
+        except:
+            continue
+
+    while (rep < nn.REPLICATION or counter < len(nn.alive)):
+        for targetip in nn.alive.keys():
+            if (targetip not in nn.blockD.get(block)):
+                blocksrc.targetBlock(block, targetip)
+                rep += 1
+            counter += 1
 
 
 def putFile(path, filename, size):
