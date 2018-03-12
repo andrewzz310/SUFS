@@ -45,7 +45,7 @@ class NameNode:
         self.contentsInDir = {"/home/": []}
         self.startThreads()
         self.ip = myIp
-        self.block_size = 256
+        self.block_size = 256000000  # in bytes aka 256MB
         self.dn_assign_counter = 0  # used to assign blocks to datanodes ex: self.dn_assign_counter % <number of DNs>
 
 
@@ -102,7 +102,7 @@ class NameNode:
     def checkValidFile(self, path, filename):
         # Check if the filename is valid.  This prevents causing Exception on ec2 instance
         # NOTE:  The '#' is not allowed in filename because it's used for blockID stuff
-        if re.match("^[\w,\s-]+\.[A-Za-z]{3}$", filename):
+        if re.match("^[\w,\s-]+[\.[A-Za-z]+]$", filename):
             if path in self.contentsInDir:
                 if file in self.contentsInDir[path]:
                     return False  # File already exists
@@ -184,7 +184,7 @@ class NameNode:
             retDict = {}
             for file in self.contentsInDir[path]:
                 # check if it is a directory or file
-                if re.match("^[\w,\s-]+\.[A-Za-z]{3}$", file):
+                if re.match("^[\w,\s-]+[\.[A-Za-z]+]$", file):
                     retDict.update(self.lsDataNode(path + file))
             del self.contentsInDir[path]
 
