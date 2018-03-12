@@ -312,7 +312,7 @@ def clientthread(conn):
 
         # Create new Datanode
         elif cliInput[i] == 'createDN':
-            reply = createDataNodes(3)
+            reply = createDataNodes(4)
 
         # Print list of Datanodes and Timestamps from Namenode
         elif cliInput[i] == 'printDN':
