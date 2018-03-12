@@ -14,9 +14,13 @@ class Client:
         self.alive = {}
         self.REPLICATION = 3
 
+
+
     def set_namenode(self, url):
         self.RPC_NAMENODE_SERVER_URL = url
         self.rpc_namenode = xmlrpclib.ServerProxy("http://" + str(self.RPC_NAMENODE_SERVER_URL) + ':8000')
+
+
 
     # Main function
     def put_file_to_nn(self, path, file_name):
@@ -45,6 +49,8 @@ class Client:
         # delete original file from local storage
         os.remove(file_name)
 
+
+
     def save_file_from_s3(self, file_name):
         s3 = boto3.client('s3')
         response = s3.get_object(Bucket=self.bucket_name, Key=file_name)
@@ -53,6 +59,8 @@ class Client:
         temp_file.write(response['Body'].read())
         temp_file.close()
         print 'File Name:', file_name, 'File Size:', os.path.getsize(file_name)
+
+
 
     def show_all_s3_files(self):
         s3 = boto3.resource('s3')
@@ -65,8 +73,12 @@ class Client:
 
         return result
 
+
+
     def register_file_to_nn(self, path, file_name, file_size):
         return self.rpc_namenode.putFile(path, file_name, file_size)
+
+
 
     def delete_file(self, path, file_name):
         datanode_list = self.rpc_namenode.deleteFile(path, file_name)
@@ -106,10 +118,16 @@ class Client:
 
     def read_file(self, path, file_name):
         dict = self.rpc_namenode.lsDataNode(path+file)
+
+        outputFile = open(file_name, 'w+')
         for blockID, listDN in sorted(dict.iteritems()):
               # choose the 1st DataNode in listDN
               dnIP = listDN[0]
 
               # make the connect to this DataNode to read the block
+              dn_rpc = xmlrpclib.ServerProxy(dnIP + ':8000')
+              block_data = dn_rpc.getBlock()
 
-              # print the block?
+              # write to the file
+              outputFile.write(block_data)
+        outputFile.close()

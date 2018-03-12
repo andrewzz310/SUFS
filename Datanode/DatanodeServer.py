@@ -66,6 +66,10 @@ def receiveBlock(blockID, blockData):
     #call datanode structure to write this to hdd
     return os.getcwd()
 
+def giveBlock(blockID):
+    global datanode
+    return datanode.giveBlock(blockID)
+
 
 def removeBlock(blockID):
     global datanode
