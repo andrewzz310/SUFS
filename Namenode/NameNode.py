@@ -131,9 +131,9 @@ class NameNode:
                 # delete the file (blocks) in DataNodes________________________________________
                 return self.lsDataNode(path + filename)
             else:
-                return "File doesn't exist"
+                return {}  # File doesn't exist
         else:
-            return "No such directory"
+            return {}  # No such directory
 
 
 
