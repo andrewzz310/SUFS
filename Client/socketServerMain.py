@@ -265,6 +265,17 @@ def clientthread(conn):
                     reply += '|_ ' + f + '\n'
             except:
                 reply = 'failed list directory\n'
+        # List the DataNodes that store replicas of each block of a file
+        elif cliInput[i] == 'lsDN':
+            try:
+                path = cliInput[i + 1]
+                file_name = cliInput[i + 2]
+                dict = rpc_namenode.lsDataNode(path+file_name)
+                reply = 'Contents of ' + path + ' ' + file_name + ':\n'
+                for blockID, listDN in sorted(dict.iteritems()):
+                    reply += 'blockID=' + blockID + '  ' + 'list of datanodes '+  listDN + '\n'
+            except:
+                reply = 'failed list dthe DataNodes that store replicas of each block of a file\n'
 
         #######################
         # Namenode Commands
