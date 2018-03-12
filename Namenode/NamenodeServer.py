@@ -72,7 +72,7 @@ def replicate(curRepFac, block):
         except:
             continue
 
-    while (rep < nn.REPLICATION or counter < len(nn.alive)):
+    while (rep < nn.REPLICATION and counter < len(nn.alive)):
         for targetip in nn.alive.keys():
             if (targetip not in nn.blockD.get(block)):
                 blocksrc.targetBlock(block, targetip)

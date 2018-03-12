@@ -113,7 +113,7 @@ def createDataNodes(numDataNodes):
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-            ImageId='ami-0beb7a73',
+            ImageId='ami-b49607cc',
             MinCount=1,
             MaxCount=1,
             InstanceType='t2.micro',
@@ -323,7 +323,7 @@ def clientthread(conn):
 
         # Create new Datanode
         elif cliInput[i] == 'createDN':
-            reply = createDataNodes(3)
+            reply = createDataNodes(4)
 
         # Print list of Datanodes and Timestamps from Namenode
         elif cliInput[i] == 'printDN':
