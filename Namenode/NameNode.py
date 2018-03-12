@@ -143,9 +143,9 @@ class NameNode:
                 # delete the file (blocks) in DataNodes________________________________________
                 return self.lsDataNode(path + filename)
             else:
-                return "File doesn't exist"
+                return {}  # File doesn't exist
         else:
-            return "No such directory"
+            return {}  # No such directory
 
 
 
@@ -168,17 +168,35 @@ class NameNode:
         if path == "/home/":
             return "You can't delete the root folder"
         if path in self.contentsInDir:
-            # 1. look at the list and delete all the files_________________________________
+            # 1. look at the list and delete all the files___________NEED TO TEST
             #    Note: Ignore if there is a sub-directory, it will be delete in the for loop
+
+            # if the directory is empty, return here
+            if len(self.contentsInDir[path]) == 0:
+                del self.contentsInDir[path]
+                return {}
+
             print("List of files need to delete: ", self.contentsInDir[path])
+
+            retDict = {}
+            for file in self.contentsInDir[path]:
+                # check if it is a directory or file
+                if re.match("^[\w,\s-]+\.[A-Za-z]{3}$", file):
+                    retDict.update(self.lsDataNode(path + file))
             del self.contentsInDir[path]
+
 
             # 2. check if there is sub-directory in the current "path"
             #    If there is, delete it.
             for key in self.contentsInDir.keys():
                 if path in key:
-                    # 3. look at the list and delete all the files__________________________
+                    # 3. look at the list and delete all the files___________NEED TO TEST
                     print("List of files need to delete: ", self.contentsInDir[key])
+                    for file in self.contentsInDir[key]:
+                        # check if it is a directory or file
+                        if re.match("^[\w,\s-]+\.[A-Za-z]{3}$", file):
+                            retDict.update(self.lsDataNode(key + file))
+
                     del self.contentsInDir[key]
 
             # 4. Remove the directory from parent directory
@@ -192,7 +210,7 @@ class NameNode:
             delDirName = path[index+1 : len(path)-1]
             self.contentsInDir[parentDir].remove(delDirName)
 
-        return 'Removed ' + path
+        return retDict
 
 
 

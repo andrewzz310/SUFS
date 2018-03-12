@@ -69,7 +69,13 @@ class Client:
 
     def delete_file(self, path, file_name):
         datanode_list = self.rpc_namenode.deleteFile(path, file_name)
-        return self.remove_files_from_datanodes(datanode_list)
+        print(datanode_list)
+        if not datanode_list.empty:
+            return 'Block does not exists...'
+        else:
+            self.remove_files_from_datanodes(datanode_list)
+
+        return 'Removed blocks!'
 
     def remove_files_from_datanodes(self, dn_list):
         # connect to each datanode and remove block
@@ -78,6 +84,7 @@ class Client:
                 dn_rpc = xmlrpclib.ServerProxy(dn + ':8000')
                 dn_rpc.removeBlock(block)
                 print('Deleted Block ' + block + ' from ' + dn)
+<<<<<<< HEAD
 
     def replicate(self, sourceIP, blockID):
         counter = self.alive.keys().index(sourceIP) + 1
@@ -93,3 +100,6 @@ class Client:
             counter += 1
             rep += 1
     
+=======
+        return True
+>>>>>>> 2b0053dfbfca6b341e85a075c46575777109ac6b
