@@ -70,7 +70,7 @@ class Client:
     def delete_file(self, path, file_name):
         datanode_list = self.rpc_namenode.deleteFile(path, file_name)
         print(datanode_list)
-        if not datanode_list.empty:
+        if not datanode_list:
             return 'Block does not exists...'
         else:
             self.remove_files_from_datanodes(datanode_list)
@@ -81,7 +81,8 @@ class Client:
         # connect to each datanode and remove block
         for block in dn_list:
             for dn in dn_list[block]:
-                dn_rpc = xmlrpclib.ServerProxy(dn + ':8000')
+                print('dn:', dn)
+                dn_rpc = xmlrpclib.ServerProxy(dn + ':8888')
                 dn_rpc.removeBlock(block)
                 print('Deleted Block ' + block + ' from ' + dn)
         return True
