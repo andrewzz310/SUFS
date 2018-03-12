@@ -205,7 +205,7 @@ class NameNode:
     #                           {blockID, [DataNode1, DataNode2, DataNode3]}
     #                           {blockID, [DataNode3, DataNode4, DataNode5]}
     def lsDataNode(self, pathfilename):
-        retDict = collections.OrderedDict()
+        retDict = {} #collections.OrderedDict()
         blockIDlist = []
 
         if pathfilename in self.fileD:
