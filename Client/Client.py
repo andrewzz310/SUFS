@@ -77,6 +77,8 @@ class Client:
 
         return 'Removed blocks!'
 
+
+
     def remove_files_from_datanodes(self, dn_list):
         # connect to each datanode and remove block
         for block in dn_list:
@@ -86,3 +88,15 @@ class Client:
                 dn_rpc.removeBlock(block)
                 print('Deleted Block ' + block + ' from ' + dn)
         return True
+
+
+
+    def delete_dir(self, dir_path):
+        datanode_list = self.rpc_namenode.deleteDirectory(dir_path)
+        print(datanode_list)
+        if not datanode_list:
+            return 'Block does not exists...'
+        else:
+            self.remove_files_from_datanodes(datanode_list)
+
+        return 'Removed blocks!'
