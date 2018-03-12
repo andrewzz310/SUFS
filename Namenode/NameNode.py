@@ -117,6 +117,17 @@ class NameNode:
 
 
 
+    # Update self.blockD and self.dnToBlock after calling deleteFile() or deleteDirectory
+    def removeItemInBlockD_dnToBlock(self, dictionary):
+        for blockID, listDN in dictionary.iteritems():
+            #remove the key-value pair of blockID in dictionary blockD
+            del self.blockD[blockID]
+
+            for datanode in listDN:
+                self.dnToBlock[datanode].remove(blockID)
+
+
+
     # Delete a file
     # Example of how to call the function:      deleteFile("/home/st/", "text.txt")
     # Return the dictionary with key is blockID and value is a list of DataNodes
@@ -127,7 +138,10 @@ class NameNode:
                 self.contentsInDir[path].remove(filename)
 
                 # delete the file (blocks) in DataNodes________________________________________
-                return self.lsDataNode(path + filename)
+                retDict = self.lsDataNode(path + filename)
+
+                self.removeItemInBlockD_dnToBlock(retDict)
+                return retDict
             else:
                 return {}  # File doesn't exist
         else:
@@ -196,6 +210,7 @@ class NameNode:
             delDirName = path[index+1 : len(path)-1]
             self.contentsInDir[parentDir].remove(delDirName)
 
+        self.removeItemInBlockD_dnToBlock(retDict)
         return retDict
 
 
