@@ -123,7 +123,9 @@ class NameNode:
             #remove the key-value pair of blockID in dictionary blockD
             del self.blockD[blockID]
 
+            print "before for-loop"
             for datanode in listDN:
+                print "blockID to delete " + blockID
                 self.dnToBlock[datanode].remove(blockID)
 
 
@@ -140,6 +142,7 @@ class NameNode:
                 # delete the file (blocks) in DataNodes________________________________________
                 retDict = self.lsDataNode(path + filename)
 
+                print "before removeItemInBlockD_dnToBlock"
                 self.removeItemInBlockD_dnToBlock(retDict)
                 return retDict
             else:
