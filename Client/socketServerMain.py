@@ -242,7 +242,7 @@ def clientthread(conn):
 
             try:
                 path = cliInput[i + 1]
-                print(client.delete_file(path))
+                print(client.delete_dir(path))
                 reply = 'Removed file ' + path
                 #reply = rpc_namenode.deletedir(path)
             except:
