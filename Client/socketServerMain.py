@@ -187,6 +187,12 @@ def clientthread(conn):
             print(client.delete_file(path, file_name))
             reply = 'Removed file ' + path + file_name
 
+        elif cliInput[i] == "read":
+            path = cliInput[i + 1]
+            file_name = cliInput[i + 2]
+            print(client.read_file(path, file_name))
+            reply = 'Read file ' + path + file_name
+
         # elif cliInput[i] == 'df filename':
         #     '''
         #     1) get info on where list of blocks are stored on which datanodes from the nameNode

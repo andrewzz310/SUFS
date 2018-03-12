@@ -100,3 +100,15 @@ class Client:
             self.remove_files_from_datanodes(datanode_list)
 
         return 'Removed blocks!'
+
+
+
+    def read_file(self, path, file_name):
+        dict = self.rpc_namenode.lsDataNode(path+file)
+        for blockID, listDN in sorted(dict.iteritems()):
+              # choose the 1st DataNode in listDN
+              dnIP = listDN[0]
+
+              # make the connect to this DataNode to read the block
+
+              # print the block?
