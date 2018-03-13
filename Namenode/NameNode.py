@@ -128,13 +128,13 @@ class NameNode:
             print('dnToBlock')
             for datanode in listDN:
                 print('++++')
-                print(self.dnToBlock[datanode])
-                print(listDN)
+                print('dnToBlock[datanode]', self.dnToBlock[datanode])
+                print('listDN', listDN)
                 print "blockID to delete " + blockID
 
-                if blockID in self.dnToBlock[datanode]:
+                while blockID in self.dnToBlock[datanode]:
+                    print '+++++++ removed ' + blockID + ' from ' + datanode
                     self.dnToBlock[datanode].remove(blockID)
-                #break
 
 
 
@@ -249,11 +249,12 @@ class NameNode:
     #                           {blockID, [DataNode1, DataNode2, DataNode3]}
     #                           {blockID, [DataNode3, DataNode4, DataNode5]}
     def lsDataNode(self, pathfilename):
-        retDict = {} #collections.OrderedDict()
-        blockIDlist = []
+        retDict = {}
+        #blockIDlist = []
 
         if pathfilename in self.fileD:
             blockIDlist = self.fileD[pathfilename]
+            print('blockIDlist', blockIDlist)
             # and a list of DataNodes that hold replicas for each list
             for blockID in blockIDlist:
                 if blockID in self.blockD:
@@ -262,15 +263,15 @@ class NameNode:
 
 
 
-    def writeFile(self, filename, blocks):  #pass in array of blocks as arguments
-
-        uniqueFile = filename
-        #need to find out how to make 'uniqueFile' the name of the file otherwise dictionary overwrites itself everytime method is called
-        self.fileD['uniqueFile'] = blocks
-
-        '''
-        For each block from file, we need to apply replication factor 
-        '''
+    # def writeFile(self, filename, blocks):  #pass in array of blocks as arguments
+    #
+    #     uniqueFile = filename
+    #     #need to find out how to make 'uniqueFile' the name of the file otherwise dictionary overwrites itself everytime method is called
+    #     self.fileD['uniqueFile'] = blocks
+    #
+    #     '''
+    #     For each block from file, we need to apply replication factor
+    #     '''
         # For every element in blocks, part of key<uniqueFile>, Value<blocks>
         #place the block into N different datanodes either by default or updated REPLICATION
         #blockD = {blockName, datanodes}
@@ -304,7 +305,7 @@ class NameNode:
             time.sleep(30)
             for ip in self.alive.keys():
                 diff = time.time() - self.alive[ip]
-                if (diff > 40):
+                if diff > 40:
                     #sys.stdout=open("/home/ec2-user/test.txt","w")
                     print ("create new datanode")
                     self.createNewDN(ip)
@@ -319,7 +320,7 @@ class NameNode:
     def deleteFromBlockReport(self, dnIp):
         for block in self.dnToBlock.get(dnIp, []):
             for ip in self.blockD.get(block, []):
-                if (ip == dnIp):
+                if ip == dnIp:
                     self.blockD[block].remove(dnIp)
         
 

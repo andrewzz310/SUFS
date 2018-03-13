@@ -41,6 +41,7 @@ class DataNode:
     def removeBlock(self, blockID):
         if os.path.isfile(self.block_dir+blockID):
             os.remove(self.block_dir+blockID)
+            self.blocks.remove(blockID)
             print "Successfully removed block " + blockID
             return True
         else:
