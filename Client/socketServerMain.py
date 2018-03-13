@@ -270,17 +270,17 @@ def clientthread(conn):
             #try:
             path = cliInput[i + 1]
             file_name = cliInput[i + 2]
-            print(path)
-            print (file_name)
-            name = path + file_name
-            print(name)
-            dict = rpc_namenode.lsDataNode(name)
+            print(path + file_name)
+            dict = rpc_namenode.lsDataNode(path + file_name)
             reply = 'Contents of ' + path + ' ' + file_name + ':\n'
             for blockID, listDN in sorted(dict.iteritems()):
                 strListDN = ""
                 for datanode in listDN:
                     strListDN += datanode
                     strListDN += ', '
+
+                 #get rid of the last comma
+                strListDN = strListDN[:len(strListDN)-2]
                 reply += 'blockID = ' + blockID + '  ' + 'list of datanodes = [' + strListDN + ']\n'
 
             #except:

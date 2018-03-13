@@ -43,20 +43,24 @@ def receiveHeartBeat(myIp):
     return True
 
 
-def receiveBlockReport(myIp, blocks):
+# blocks is a list of blockIDs
+def receiveBlockReport(myIP, blocks):
     global nn
     #if blocks not in nn.dnToBlock[myIp]:
         #nn.dnToBlock[myIp].append(blocks)
-    nn.dnToBlock[myIp] = blocks
-
+    nn.dnToBlock[myIP] = blocks
+    print("receive Block Report__________________________________________________")
     print('Blocks:')
-    print(nn.dnToBlock[myIp])
+    print(nn.dnToBlock[myIP])
 
     for blockID in blocks: #do the translation the other way as well.
         if blockID in nn.blockD:
-	        nn.blockD[blockID].append(myIp)
+            if myIP not in nn.blockD[blockID]:
+	            nn.blockD[blockID].append(myIP)
         else:
-            nn.blockD[blockID] = [myIp]
+            nn.blockD[blockID] = [myIP]
+
+    print("_______________________________________________________________________")
     return True
 
 def checkReplicas():

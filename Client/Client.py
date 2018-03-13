@@ -8,7 +8,8 @@ class Client:
     def __init__(self):
         self.file_name = None
         self.path = None
-        self.bucket_name = 'sufs-shieldsj'
+        #self.bucket_name = 'sufs-shieldsj'
+        self.bucket_name = 'sufs-client'
         self.RPC_NAMENODE_SERVER_URL = ''
         self.rpc_namenode = None
         self.alive = {}
