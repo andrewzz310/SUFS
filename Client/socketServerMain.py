@@ -258,9 +258,12 @@ def clientthread(conn):
                 if files == 'No such directory':
                     reply = 'No such directory'
                 else:
-                    reply = 'Contents of ' + dir + ':\n'
-                    for f in files:
-                        reply += '|_ ' + f + '\n'
+                    if not files:
+                        reply = 'There is nothing in this directory'
+                    else:
+                        reply = 'Contents of ' + dir + ':\n'
+                        for f in files:
+                            reply += '|_ ' + f + '\n'
             except:
                 reply = 'failed list directory\n'
         # List the DataNodes that store replicas of each block of a file
