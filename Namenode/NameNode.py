@@ -350,11 +350,12 @@ class NameNode:
     def moveBlocks(self, targetDNIp, prevDNIp):
         for block in self.dnToBlock.get(prevDNIp):
             for ip in self.blockD.get(block):
-                datanode = dnRPCClient.dnRPCClient(ip, 8888)
-                success = datanode.targetBlock(block, targetDNIp)
-                if (success):
-                    print('found the block! breaking...')
-                    break
+                if (ip not prevDNIp):
+                    datanode = dnRPCClient.dnRPCClient(ip, 8888)
+                    success = datanode.targetBlock(block, targetDNIp)
+                    if (success):
+                        print('found the block! breaking...')
+                        break
         return True
 
 # for testing
