@@ -125,9 +125,16 @@ class NameNode:
             del self.blockD[blockID]
 
             print "before for-loop"
+            print('dnToBlock')
             for datanode in listDN:
+                print('++++')
+                print(self.dnToBlock[datanode])
+                print(listDN)
                 print "blockID to delete " + blockID
-                self.dnToBlock[datanode].remove(blockID)
+
+                if blockID in self.dnToBlock[datanode]:
+                    self.dnToBlock[datanode].remove(blockID)
+                #break
 
 
 

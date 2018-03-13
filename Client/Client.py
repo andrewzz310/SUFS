@@ -82,10 +82,12 @@ class Client:
 
     def delete_file(self, path, file_name):
         datanode_list = self.rpc_namenode.deleteFile(path, file_name)
+        print('datanode_list: ')
         print(datanode_list)
         if not datanode_list: # check if datanode_list is empty
             return 'Block does not exists...'
         else:
+            print 'Deleting ' + path + file_name
             self.remove_files_from_datanodes(datanode_list)
 
         return 'Removed blocks!'

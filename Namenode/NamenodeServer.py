@@ -45,7 +45,13 @@ def receiveHeartBeat(myIp):
 
 def receiveBlockReport(myIp, blocks):
     global nn
+    #if blocks not in nn.dnToBlock[myIp]:
+        #nn.dnToBlock[myIp].append(blocks)
     nn.dnToBlock[myIp] = blocks
+
+    print('Blocks:')
+    print(nn.dnToBlock[myIp])
+
     for blockID in blocks: #do the translation the other way as well.
         if blockID in nn.blockD:
 	        nn.blockD[blockID].append(myIp)
@@ -85,7 +91,7 @@ def replicate(curRepFac, block):
             if (targetip not in nn.blockD.get(block)):
                 blocksrc.targetBlock(block, targetip)
                 rep += 1
-                print (block + " rep factor: " + str(rep))
+                print (block + " rep factor: " + rep)
             counter += 1
 
 

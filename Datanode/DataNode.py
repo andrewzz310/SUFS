@@ -8,7 +8,7 @@ class DataNode:
         self.blocks = []
         self.ip = ip
         self.nnRPC = nnRPCClient.nnRPCClient("http://" + nnIp, nnPort)
-        self.block_dir = '/home/ec2-user/blocks/'#'/Users/justin/cs/cloud/SUFS/blocks/'#'/home/ec2-user/blocks/'
+        self.block_dir = '/home/ec2-user/blocks/'#'/Users/justin/cs/cloud/SUFS/blocks/'
         if not os.path.exists(self.block_dir):
             os.makedirs(self.block_dir)
 
@@ -39,7 +39,11 @@ class DataNode:
 
 
     def removeBlock(self, blockID):
-        os.remove(self.block_dir+blockID)
-        print "Successfully removed block " + blockID
-        return True
+        if os.path.isfile(self.block_dir+blockID):
+            os.remove(self.block_dir+blockID)
+            print "Successfully removed block " + blockID
+            return True
+        else:
+            print "File not found at " + self.block_dir + blockID
+            return False
 
