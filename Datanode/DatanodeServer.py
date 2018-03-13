@@ -120,6 +120,7 @@ def receiveNNIp(nnIp, myIp):
 # Register hello world function
 server.register_function(hello_world)
 server.register_function(receiveBlock)
+server.register_function(giveBlock)
 server.register_function(removeBlock)
 server.register_function(targetBlock)
 server.register_function(receiveNNIp)
