@@ -246,13 +246,13 @@ def clientthread(conn):
         # remove a directory
         elif cliInput[i] == 'rmdir':
 
-            try:
-                path = cliInput[i + 1]
-                print(client.delete_dir(path))
-                reply = 'Removed file ' + path
+            #try:
+            path = cliInput[i + 1]
+            print(client.delete_dir(path))
+            reply = 'Removed file ' + path
                 #reply = rpc_namenode.deletedir(path)
-            except:
-                reply = 'could not delete path'
+            #except:
+                #reply = 'could not delete path'
 
         # list directory contents
         elif cliInput[i] == 'ls':

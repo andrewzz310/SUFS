@@ -8,8 +8,8 @@ class Client:
     def __init__(self):
         self.file_name = None
         self.path = None
-        self.bucket_name = 'sufs-shieldsj'
-        #self.bucket_name = 'sufs-client'
+        #self.bucket_name = 'sufs-shieldsj'
+        self.bucket_name = 'sufs-client'
         self.RPC_NAMENODE_SERVER_URL = ''
         self.rpc_namenode = None
         self.alive = {}
@@ -108,7 +108,7 @@ class Client:
 
 
     def delete_dir(self, dir_path):
-        datanode_list = self.rpc_namenode.deleteDirectory(dir_path)
+        datanode_list = self.rpc_namenode.deletedir(dir_path)
         print(datanode_list)
         if not datanode_list:
             return 'Block does not exists...'

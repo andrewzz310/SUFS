@@ -170,21 +170,20 @@ class NameNode:
         if path in self.contentsInDir:
             # 1. look at the list and delete all the files___________NEED TO TEST
             #    Note: Ignore if there is a sub-directory, it will be delete in the for loop
+            retDict = {}
 
             # if the directory is empty, return here
             if len(self.contentsInDir[path]) == 0:
                 del self.contentsInDir[path]
-                return {}
+                return retDict
 
             print("List of files need to delete: ", self.contentsInDir[path])
 
-            retDict = {}
             for file in self.contentsInDir[path]:
                 # check if it is a directory or file
                 if re.match("^[\w,\s-]+[\.[A-Za-z]+]*$", file):
                     retDict.update(self.lsDataNode(path + file))
             del self.contentsInDir[path]
-
 
             # 2. check if there is sub-directory in the current "path"
             #    If there is, delete it.
