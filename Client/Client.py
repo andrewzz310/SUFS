@@ -128,7 +128,7 @@ class Client:
 
               # make the connect to this DataNode to read the block
               dn_rpc = xmlrpclib.ServerProxy(dnIP + ':8000')
-              block_data = dn_rpc.getBlock()
+              block_data = dn_rpc.giveBlock()
 
               # write to the file
               outputFile.write(block_data)
