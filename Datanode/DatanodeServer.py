@@ -37,6 +37,8 @@ server.register_introspection_functions()
 #repeat this function every 10 seconds
 def heartBeat():
     global MY_IP
+    global NAMENODE_HOST
+    global NAMENODE_PORT
     nn = nnRPCClient.nnRPCClient(NAMENODE_HOST, NAMENODE_PORT)
     while 1:
         time.sleep(10)
@@ -46,6 +48,8 @@ def heartBeat():
 def sendBlockReport():
     global MY_IP
     global datanode
+    global NAMENODE_HOST
+    global NAMENODE_PORT
     nn = nnRPCClient.nnRPCClient(NAMENODE_HOST, NAMENODE_PORT)
     while 1:
         time.sleep(4)
