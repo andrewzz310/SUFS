@@ -8,17 +8,18 @@ class DataNode:
         self.blocks = []
         self.ip = ip
         self.nnRPC = nnRPCClient.nnRPCClient("http://" + nnIp, nnPort)
-        self.block_dir = '/Users/justin/cs/cloud/SUFS/blocks/'#'/home/ec2-user/blocks/'#'/Users/justin/cs/cloud/SUFS/blocks/'
+        self.block_dir = '/home/ec2-user/blocks/'#'/Users/justin/cs/cloud/SUFS/blocks/'
         if not os.path.exists(self.block_dir):
             os.makedirs(self.block_dir)
 
 
     # server to another DataNode
-    def giveBlock(self, blockID, DataNodeID):
+    #def giveBlock(self, blockID, DataNodeID):
+    def giveBlock(self, blockID):
         #otherdn = xmlrpclib.ServerProxy(DataNodeID)
         # string in the current blockID
         block_obj = None
-        with open(blockID, "rb") as handle:
+        with open(self.block_dir+blockID, "rb") as handle:
             block_obj = xmlrpclib.Binary(handle.read())
         return block_obj
 
