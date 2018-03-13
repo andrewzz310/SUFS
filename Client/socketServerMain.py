@@ -113,7 +113,7 @@ def createDataNodes(numDataNodes):
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-            ImageId='ami-b49607cc',
+            ImageId='ami-69b62611',
             MinCount=1,
             MaxCount=1,
             InstanceType='t2.micro',
