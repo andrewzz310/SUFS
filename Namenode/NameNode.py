@@ -351,7 +351,7 @@ class NameNode:
         for block in self.dnToBlock.get(prevDNIp):
             for ip in self.blockD.get(block):
                 if (ip != prevDNIp):
-                    datanode = dnRPCClient.dnRPCClient("http://" + ip, 8888)
+                    datanode = dnRPCClient.dnRPCClient(ip, 8888)
                     success = datanode.targetBlock(block, "http://" + targetDNIp)
                     if (success):
                         print('found the block! breaking...')
