@@ -48,12 +48,17 @@ def receiveBlockReport(myIP, blocks):
     global nn
 
     nn.dnToBlock[myIP] = blocks
-    print("receive Block Report__________________________________________________")
+    print("\nreceive Block Report__________________________________________________")
     strList = ''
     for block in blocks:
         strList += block
         strList += '  '
-    print('IP: ' + myIP + ' -------  List of blocks received: ' + strList)
+
+    if len(blocks) == 0:
+        strP = ' -------  There is no block'
+    else:
+        strP = ' -------  List of blocks received: ' + strList
+    print('IP: ' + myIP + strP)
 
     for blockID in blocks: #do the translation the other way as well.
         if blockID in nn.blockD:
@@ -62,7 +67,7 @@ def receiveBlockReport(myIP, blocks):
         else:
             nn.blockD[blockID] = [myIP]
         print('    add IP: ' + myIP + ' to dictionary blockD with blockID ' + blockID)
-    print("_______________________________________________________________________")
+    print("_______________________________________________________________________\n")
     return True
 
 def checkReplicas():
