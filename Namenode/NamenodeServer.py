@@ -85,7 +85,7 @@ def replicate(curRepFac, block):
             if (targetip not in nn.blockD.get(block)):
                 blocksrc.targetBlock(block, targetip)
                 rep += 1
-                print (block + " rep factor: " + rep)
+                print (block + " rep factor: " + str(rep))
             counter += 1
 
 
