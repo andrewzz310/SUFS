@@ -307,6 +307,7 @@ class NameNode:
             for ip in self.blockD.get(block, []):
                 if ip == dnIp:
                     self.blockD[block].remove(dnIp)
+        del self.dnToBlock[dnIp]
         
 
 
