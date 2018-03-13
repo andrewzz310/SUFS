@@ -298,6 +298,7 @@ class NameNode:
                     self.deleteFromBlockReport(ip)
                     print("removing from membership")
                     del self.alive[ip]
+                    del self.dnToBlock[ip]
                     #sys.stdout.close()
 
 
@@ -307,7 +308,6 @@ class NameNode:
             for ip in self.blockD.get(block, []):
                 if ip == dnIp:
                     self.blockD[block].remove(dnIp)
-        del self.dnToBlock[dnIp]
         
 
 
