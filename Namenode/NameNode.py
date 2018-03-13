@@ -102,7 +102,7 @@ class NameNode:
     def checkValidFile(self, path, filename):
         # Check if the filename is valid.  This prevents causing Exception on ec2 instance
         # NOTE:  The '#' is not allowed in filename because it's used for blockID stuff
-        if re.match("^[\w,\s-]+[\.[A-Za-z]+]$", filename):
+        if re.match("^[\w,\s-]+[\.[A-Za-z]+]*$", filename):
             if path in self.contentsInDir:
                 if file in self.contentsInDir[path]:
                     return False  # File already exists
@@ -113,6 +113,7 @@ class NameNode:
             else:
                 return False  # Fail to create a file because the directory doesn't exist
         else:
+            print('wrong file format!')
             return False  # Invalid filename
 
 
@@ -146,8 +147,10 @@ class NameNode:
                 self.removeItemInBlockD_dnToBlock(retDict)
                 return retDict
             else:
+                print('File doesn\'t exist')
                 return {}  # File doesn't exist
         else:
+            print('No such directory')
             return {}  # No such directory
 
 
@@ -184,7 +187,7 @@ class NameNode:
             retDict = {}
             for file in self.contentsInDir[path]:
                 # check if it is a directory or file
-                if re.match("^[\w,\s-]+[\.[A-Za-z]+]$", file):
+                if re.match("^[\w,\s-]+[\.[A-Za-z]+]*$", file):
                     retDict.update(self.lsDataNode(path + file))
             del self.contentsInDir[path]
 
@@ -197,7 +200,7 @@ class NameNode:
                     print("List of files need to delete: ", self.contentsInDir[key])
                     for file in self.contentsInDir[key]:
                         # check if it is a directory or file
-                        if re.match("^[\w,\s-]+\.[A-Za-z]{3}$", file):
+                        if re.match("^[\w,\s-]+[\.[A-Za-z]+]*$", file):
                             retDict.update(self.lsDataNode(key + file))
 
                     del self.contentsInDir[key]
@@ -248,7 +251,7 @@ class NameNode:
             for blockID in blockIDlist:
                 if blockID in self.blockD:
                     retDict[blockID] = self.blockD[blockID]
-            return retDict
+        return retDict
 
 
 

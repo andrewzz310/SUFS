@@ -83,7 +83,7 @@ class Client:
     def delete_file(self, path, file_name):
         datanode_list = self.rpc_namenode.deleteFile(path, file_name)
         print(datanode_list)
-        if not datanode_list:
+        if not datanode_list: # check if datanode_list is empty
             return 'Block does not exists...'
         else:
             self.remove_files_from_datanodes(datanode_list)
@@ -117,7 +117,7 @@ class Client:
 
 
     def read_file(self, path, file_name):
-        dict = self.rpc_namenode.lsDataNode(path+file)
+        dict = self.rpc_namenode.lsDataNode(path+file_name)
 
         outputFile = open(file_name, 'w+')
         for blockID, listDN in sorted(dict.iteritems()):

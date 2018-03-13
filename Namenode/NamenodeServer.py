@@ -45,7 +45,9 @@ def receiveHeartBeat(myIp):
 
 def receiveBlockReport(myIp, blocks):
     global nn
-    nn.dnToBlock[myIp] = blocks
+    if blocks not in nn.dnToBlock[myIp]:
+        nn.dnToBlock[myIp].append(blocks)
+
     for blockID in blocks: #do the translation the other way as well.
         if blockID in nn.blockD:
 	        nn.blockD[blockID].append(myIp)
@@ -115,6 +117,10 @@ def ls(path):
     global nn
     return nn.ls(path)
 
+def lsDataNode(path):
+    global nn
+    return nn.lsDataNode(path)
+
 def startHeartBeats():
     global nn
     nn.startThreads()
@@ -143,6 +149,7 @@ server.register_function(deleteFile)
 server.register_function(mkdir)
 server.register_function(deletedir)
 server.register_function(ls)
+server.register_function(lsDataNode)
 
 #socketservermain calls this once dn's have been created
 #maybe not, right now set it up so threads start on instantiation
