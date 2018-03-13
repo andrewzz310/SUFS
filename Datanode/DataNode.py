@@ -8,7 +8,8 @@ class DataNode:
         self.blocks = []
         self.ip = ip
         self.nnRPC = nnRPCClient.nnRPCClient("http://" + nnIp, nnPort)
-        self.block_dir = '/home/ec2-user/blocks/'#'/Users/justin/cs/cloud/SUFS/blocks/'
+        #self.block_dir = '/home/ec2-user/blocks/'#'/Users/justin/cs/cloud/SUFS/blocks/'
+        self.block_dir = '/Users/HangNguyen/Desktop/SUFS/blocks'
         if not os.path.exists(self.block_dir):
             os.makedirs(self.block_dir)
 
