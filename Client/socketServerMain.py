@@ -245,14 +245,9 @@ def clientthread(conn):
 
         # remove a directory
         elif cliInput[i] == 'rmdir':
-
-            try:
-                path = cliInput[i + 1]
-                print(client.delete_dir(path))
-                reply = 'Removed file ' + path
-                #reply = rpc_namenode.deletedir(path)
-            except:
-                reply = 'could not delete path'
+            path = cliInput[i + 1]
+            print(client.delete_dir(path))
+            reply = 'Removed file ' + path
 
         # list directory contents
         elif cliInput[i] == 'ls':
@@ -260,9 +255,12 @@ def clientthread(conn):
             try:
                 dir = cliInput[i + 1]
                 files = rpc_namenode.ls(dir)
-                reply = 'Contents of ' + dir + ':\n'
-                for f in files:
-                    reply += '|_ ' + f + '\n'
+                if files == 'No such directory':
+                    reply = 'No such directory'
+                else:
+                    reply = 'Contents of ' + dir + ':\n'
+                    for f in files:
+                        reply += '|_ ' + f + '\n'
             except:
                 reply = 'failed list directory\n'
         # List the DataNodes that store replicas of each block of a file
