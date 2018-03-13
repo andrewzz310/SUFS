@@ -117,7 +117,7 @@ class Client:
 
 
     def read_file(self, path, file_name):
-        dict = self.rpc_namenode.lsDataNode(path+file)
+        dict = self.rpc_namenode.lsDataNode(path+file_name)
 
         outputFile = open(file_name, 'w+')
         for blockID, listDN in sorted(dict.iteritems()):
