@@ -350,7 +350,7 @@ class NameNode:
     def moveBlocks(self, targetDNIp, prevDNIp):
         for block in self.dnToBlock.get(prevDNIp):
             for ip in self.blockD.get(block):
-                if (ip not prevDNIp):
+                if (ip != prevDNIp):
                     datanode = dnRPCClient.dnRPCClient(ip, 8888)
                     success = datanode.targetBlock(block, targetDNIp)
                     if (success):
