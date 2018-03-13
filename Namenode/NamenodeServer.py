@@ -92,10 +92,10 @@ def replicate(curRepFac, block):
     while (rep < nn.REPLICATION and counter < len(nn.alive)):
         for targetip in nn.alive.keys():
             print (targetip)
-            if (targetip not in nn.blockD.get(block)):
+            if (targetip not in nn.blockD.get(block, [targetip])):
                 blocksrc.targetBlock(block, targetip)
                 rep += 1
-                print (block + " rep factor: " + rep)
+                print (block + " rep factor: " + str(rep))
             counter += 1
 
 
