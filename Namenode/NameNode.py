@@ -102,7 +102,7 @@ class NameNode:
     def checkValidFile(self, path, filename):
         # Check if the filename is valid.  This prevents causing Exception on ec2 instance
         # NOTE:  The '#' is not allowed in filename because it's used for blockID stuff
-        if re.match("^[\w,\s-]+\.[A-Za-z]{3}$", filename):
+        if re.match("^[\w,\s-]+[\.[A-Za-z]{3}$", filename):
             if path in self.contentsInDir:
                 if file in self.contentsInDir[path]:
                     return False  # File already exists
