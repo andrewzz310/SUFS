@@ -107,7 +107,7 @@ class Client:
 
 
     def delete_dir(self, dir_path):
-        datanode_list = self.rpc_namenode.deleteDirectory(dir_path)
+        datanode_list = self.rpc_namenode.deletedir(dir_path)
         print(datanode_list)
         if not datanode_list:
             return 'Block does not exists...'
