@@ -81,21 +81,8 @@ class NameNode:
             self.fileD[path+filename] = listBlockID
 
         return result
-        # Check if the filename is valid.  This prevents causing Exception on ec2 instance
-        # NOTE:  The '#' is not allowed in filename because it's used for blockID stuff
-        # if re.match("^[\w,\s-]+\.[A-Za-z]{3}$", filename):
-        #     if path in self.contentsInDir:
-        #         if file in self.contentsInDir[path]:
-        #             return "File exists"
-        #         else:
-        #             self.contentsInDir[path].append(filename)
-        #             # when the file is created, an S3 object should be specified
-        #             # and the data from S3 should be written into the file__________________________
-        #             return "Successfully created a file"
-        #     else:
-        #         return "Fail to create a file because the directory doesn't exist"
-        # else:
-        #     return "Invalid filename"
+
+
 
     # checkFile("/home/st/", "text1.txt")
     # returns True if ok to add file else False
