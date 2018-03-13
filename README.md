@@ -1,5 +1,114 @@
 # SUFS - Seattle University File System
 
+## Useful Commands
+
+#### Launching Namenode Server
+From SUFS directory
+```
+python Namenode/NamenodeServer.py
+```
+
+#### Launching Datanode Server
+From SUFS directory
+```
+python Datanode/DatanodeServer.py
+```
+
+#### Launching Client Server
+From SUFS directory
+```
+python Client/socketServerMain.py
+```
+
+#### Connecting to Client Server
+```
+telnet <host_name> 9999
+```
+
+## Telnet Commands
+Connect to an existing Namenode. example: connectNN 127.0.0.1
+```
+connectNN <host_ip>
+```
+
+Create Namenode ec2 instance.
+```
+createNN
+```
+
+Create Datanode(s) ec2 instance(s).
+```
+createDN
+```
+
+Connect to an existing Namenode. example: connectNN 127.0.0.1
+```
+connectNN <host_ip>
+```
+
+Add a file to SUFU. File must already exist on an S3 bucket. example: cf /home/ foo.txt
+```
+cf <dir> <file_name>
+```
+
+Remove a file to SUFU. example: rm /home/ foo.txt
+```
+rm <dir> <file_name>
+```
+
+Read (download) a file from SUFU. example: read /home/ foo.txt
+```
+read <dir> <file_name>
+```
+
+Create directory. example: mkdir /home/ foo
+```
+mkdir <path> <new_dir>
+```
+
+Delete directory. example: rmdir /home/foo/
+```
+rmdir <path>
+```
+
+List contents in a directory. example: ls /home/foo/
+```
+ls <path>
+```
+
+List the DataNodes that store replicas of each block of a file. lsDN /home/ foo.txt
+```
+lsDN <path> <file_name>
+```
+
+Show block report.
+```
+printBR 
+```
+
+Print list of Datanodes and Timestamps from Namenode
+```
+printDN
+```
+
+Exit telnet connection
+```
+0
+```
+
+## Miscellaneous Notes
+
+Script to run NamenodeServer on ec2 boot-up.
+```
+sudo nano /etc/rc.local
+python /home/ec2-user/SUFS/Namenode/NamenodeServer.py
+```
+
+Script to run DamenodeServer on ec2 boot-up.
+```
+sudo nano /etc/rc.local
+python /home/ec2-user/SUFS/Damenode/DamenodeServer.py
+```
 
 ### Resources
 1) This python SDK for AWS will be important to use for efficiency and practical purposes for EC2 namenode/datanode instances
@@ -17,56 +126,6 @@ s3.Bucket('my-bucket').put_object(Key='test.jpg', Body=data)
 2) http://boto.readthedocs.io/en/latest/ref/ec2.html ---> This one explains how to directly connect to EC2 inside of our nodes....
 (boto.ec2.connection)
 
-## Useful Commands
-
-#### Launching Namenode Server
-From project root director
-```
-python Namenode/NamenodeServer.py
-```
-
-#### Launching Datanode Server
-From project root director
-```
-python Datanode/DatanodeServer.py
-```
-
-#### Launching Client Server
-From project root director
-```
-python Client/socketServerMain.py
-```
-
-#### Connecting to Client Server
-```
-telnet localhost 8888
-```
-
-Testing Namenode connection from telnet
-```
-hello
-```
-Testing Datanode connection from telnet
-```
-datanode
-```
-
-### Telnet Commands
-Create directory. example: mkdir /home/ foo
-```
-mkdir <path> <new dir>
-```
-
-Delete directory. example: deletedir /home/foo/
-```
-deletedir <path>
-```
-
-List contents in a directory. example: ls /home/foo/
-```
-ls <path>
-```
-
 #### Create ec2 instance
 ```
 #!/usr/bin/env python
@@ -79,10 +138,6 @@ instance = ec2.create_instances(
     InstanceType='t2.micro')
 print instance[0].id, instance[0].public_ip_address
 ````
-
-Namenode 
-sudo nano /etc/rc.local
-python /home/ec2-user/SUFS/Namenode/NamenodeServer.py
 
 #### List ec2 instance
 ````
