@@ -86,6 +86,7 @@ def removeBlock(blockID):
 def targetBlock(blockID, dnIp):
     targetDn = dnRPCClient.dnRPCClient(dnIp, 8888)
     path = "/home/ec2-user/blocks/" + blockID
+    #path = '/Users/justin/cs/cloud/SUFS/blocks/' + blockID
     obj = None
     with open(path, "rb") as handle:
         obj = xmlrpclib.Binary(handle.read())

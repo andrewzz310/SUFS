@@ -170,9 +170,10 @@ def clientthread(conn):
         i = 0
 
         if cliInput[i] == 'cf':
-            path = cliInput[i+1]
-            file_name = cliInput[i+2]
-            client.save_file_from_s3(file_name)
+            path = cliInput[i + 1]
+            bucket_name = cliInput[i + 2]
+            file_name = cliInput[i + 3]
+            client.save_file_from_s3(bucket_name, file_name)
             client.put_file_to_nn(path, file_name)
             reply = 'Created a file ' + file_name + '!'
 
