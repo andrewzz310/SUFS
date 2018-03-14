@@ -7,7 +7,7 @@ from NameNode import NameNode
 import time
 from modules import dnRPCClient as dnRPCClient
 from thread import *
-from random import shuffle
+import random
 
 PORT = 8000
 HOST = ""
@@ -98,7 +98,8 @@ def replicate(curRepFac, block):
             continue
 
     while (rep < nn.REPLICATION and counter < len(nn.alive)):
-        shuffled = shuffle(nn.alive.keys())
+        ips = nn.alive.keys()
+        shuffled = random.shuffle(ips)
         for targetip in shuffled:
             print (targetip)
             if (targetip not in nn.blockD.get(block, [targetip])) and (rep < nn.REPLICATION):
