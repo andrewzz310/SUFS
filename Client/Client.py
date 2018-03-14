@@ -24,10 +24,10 @@ class Client:
 
 
     # Main function
-    def put_file_to_nn(self, path, file_name):
+    def put_file_to_nn(self, path, bucket_name, file_name):
         self.path = path
         self.file_name = file_name
-        self.save_file_from_s3(self.file_name)
+        self.save_file_from_s3(bucket_name, self.file_name)
         block_info = self.register_file_to_nn(self.path, self.file_name, os.path.getsize(self.file_name))
         block_divider = BlockDivider.BlockDivider()
 

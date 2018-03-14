@@ -173,8 +173,8 @@ def clientthread(conn):
             path = cliInput[i + 1]
             bucket_name = cliInput[i + 2]
             file_name = cliInput[i + 3]
-            client.save_file_from_s3(bucket_name, file_name)
-            client.put_file_to_nn(path, file_name)
+            #client.save_file_from_s3(bucket_name, file_name)
+            client.put_file_to_nn(path, bucket_name, file_name)
             reply = 'Created a file ' + file_name + '!'
 
         elif cliInput[i] == 'rm':
