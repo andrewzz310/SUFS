@@ -48,12 +48,13 @@ class NameNode:
         self.block_size = 4000000  # 4MB
         #self.block_size = 64000000  # in bytes aka 64MB
         self.dn_assign_counter = 0  # used to assign blocks to datanodes ex: self.dn_assign_counter % <number of DNs>
+        #self.restore() # If the NameNode gets rebooted, it picks up where it left off.
 
 
 
     def nameNodeDisk(self):
         # write the Directory System like a Real File System on the NameNode's disk
-        outFile = open('NameNodedisk.txt', 'w')
+        outFile = open('contentsInDir.txt', 'w')
         for path, contents in self.contentsInDir.iteritems():
             outFile.write(path)
             outFile.write('\n')
@@ -64,11 +65,32 @@ class NameNode:
             outFile.write(strSize)  # write the length of the contents in the current path
             outFile.write('\n')
 
+
             for file in contents:
                 strFile = file
                 outFile.write(strFile)
-            outFile.write('\n')
-        outFile.close()
+                outFile.write('\n')
+
+        outFile2 = open('fileD.txt', 'w')
+        for pathfilename, listBlockIDs in self.fileD.iteritems():
+            outFile2.write(pathfilename)
+            outFile2.write('\n')
+
+            # write how many blockIDs in path+filename
+            size = len(listBlockIDs)
+            strSize = str(size)
+            outFile2.write(strSize)  # write the length of the blockIDs in the path+filename
+            outFile2.write('\n')
+
+            for blockID in listBlockIDs:
+                strFile = blockID
+                outFile2.write(strFile)
+                outFile2.write('\n')
+        outFile2.close()
+
+
+
+
 
 
 
