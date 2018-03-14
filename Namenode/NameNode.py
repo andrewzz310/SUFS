@@ -50,6 +50,27 @@ class NameNode:
 
 
 
+    def nameNodeDisk(self):
+        # write the Directory System like a Real File System on the NameNode's disk
+        outFile = open('NameNodedisk.txt', 'w')
+        for path, contents in self.contentsInDir.iteritems():
+            outFile.write(path)
+            outFile.write('\n')
+
+            # write how many files and directories in path
+            size = len(contents)
+            strSize = str(size)
+            outFile.write(strSize)  # write the length of the contents in the current path
+            outFile.write('\n')
+
+            for file in contents:
+                strFile = file
+                outFile.write(strFile)
+            outFile.write('\n')
+        outFile.close()
+
+
+
     # Create a file
     # Example of how to call the function:      createFile("/home/st/", "text1.txt", 983)
     # returns list of (blockID, DatanodeIP)
@@ -79,7 +100,7 @@ class NameNode:
             self.contentsInDir[path].append(filename)
 
             self.fileD[path+filename] = listBlockID
-
+            self.nameNodeDisk()
         return result
 
 
@@ -136,6 +157,7 @@ class NameNode:
                 retDict = self.lsDataNode(path + filename)
 
                 self.removeItemInBlockD_dnToBlock(retDict)
+                self.nameNodeDisk()
                 return retDict
             else:
                 print('File doesn\'t exist')
@@ -154,6 +176,7 @@ class NameNode:
         if path in self.contentsInDir:
             self.contentsInDir[path + dir + "/"] = []
             self.contentsInDir[path].append(dir)
+            self.nameNodeDisk()
             return "Successfully created a directory"
         else:
             return "Fail to create a directory"
@@ -207,6 +230,7 @@ class NameNode:
             self.contentsInDir[parentDir].remove(delDirName)
 
         self.removeItemInBlockD_dnToBlock(retDict)
+        self.nameNodeDisk()
         return retDict
 
 
