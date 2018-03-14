@@ -39,10 +39,14 @@ def heartBeat():
     global MY_IP
     global NAMENODE_HOST
     global NAMENODE_PORT
-    nn = nnRPCClient.nnRPCClient(NAMENODE_HOST, NAMENODE_PORT)
+    
     while 1:
-        time.sleep(10)
-        nn.receiveHeartBeat(MY_IP)
+        try:
+            time.sleep(10)
+            nn = nnRPCClient.nnRPCClient(NAMENODE_HOST, NAMENODE_PORT)
+            nn.receiveHeartBeat(MY_IP)
+        except:
+            continue
 
 #repeat this function every 10 seconds to send block report
 def sendBlockReport():
@@ -50,11 +54,15 @@ def sendBlockReport():
     global datanode
     global NAMENODE_HOST
     global NAMENODE_PORT
-    nn = nnRPCClient.nnRPCClient(NAMENODE_HOST, NAMENODE_PORT)
+    
     while 1:
         time.sleep(4)
-        #send datanodes blocks
-        nn.receiveBlockReport(MY_IP, datanode.blocks)
+        try: #attempt to connect to the server
+            nn = nnRPCClient.nnRPCClient(NAMENODE_HOST, NAMENODE_PORT)
+            #send datanodes blocks
+            nn.receiveBlockReport(MY_IP, datanode.blocks)
+        except:
+            continue
     
 
 ######### BEGIN RPC FUNCTIONS #########

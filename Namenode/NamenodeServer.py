@@ -12,7 +12,7 @@ import random
 PORT = 8000
 HOST = ""
 NAMENODE_IP = ""
-nn = None
+nn = NameNode("localhost") #instantiate so that datanodes don't die
 REPLICATION = 3
 
 # Restrict to a particular path.
@@ -148,6 +148,7 @@ def printDataNodes():
     global nn
     return str(nn.alive)
 
+#this instantiates everything
 def myIp(nnip):
     global NAMENODE_IP
     NAMENODE_IP = nnip
