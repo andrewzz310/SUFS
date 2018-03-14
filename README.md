@@ -26,7 +26,7 @@ telnet <host_name> 9999
 ```
 
 ## Telnet Commands
-Connect to an existing Namenode. example: connectNN 127.0.0.1
+Connect to an existing Namenode. ex: ```connectNN 127.0.0.1```
 ```
 connectNN <host_ip>
 ```
@@ -36,47 +36,47 @@ Create Namenode ec2 instance.
 createNN
 ```
 
-Create Datanode(s) ec2 instance(s).
+Create Datanodes ec2 instance(s). Creates 4 datanodes by defalut. ex: ```createDN 6``` or ```createDN```
 ```
-createDN
+createDN <num_of_datanodes>
 ```
 
-Connect to an existing Namenode. example: connectNN 127.0.0.1
+Connect to an existing Namenode. ex: ```connectNN 127.0.0.1```
 ```
 connectNN <host_ip>
 ```
 
-Add a file to SUFU. File must already exist on an S3 bucket. example: cf /home/ sufs-shieldsj foo.txt
+Add a file to SUFU. File must already exist on an S3 bucket. ex: ```cf /home/ sufs-shieldsj foo.txt```
 ```
 cf <dir> <bucket_name> <file_name>
 ```
 
-Remove a file to SUFU. example: rm /home/ foo.txt
+Remove a file to SUFU. ex: ```rm /home/ foo.txt```
 ```
 rm <dir> <file_name>
 ```
 
-Read (download) a file from SUFU. example: read /home/ foo.txt
+Read (download) a file from SUFU. ex: ```read /home/ foo.txt```
 ```
 read <dir> <file_name>
 ```
 
-Create directory. example: mkdir /home/ foo
+Create directory. ex: ```mkdir /home/ foo```
 ```
 mkdir <path> <new_dir>
 ```
 
-Delete directory. example: rmdir /home/foo/
+Delete directory. ex: ```rmdir /home/foo/```
 ```
 rmdir <path>
 ```
 
-List contents in a directory. example: ls /home/foo/
+List contents in a directory. ex: ```ls /home/foo/```
 ```
 ls <path>
 ```
 
-List the DataNodes that store replicas of each block of a file. lsDN /home/ foo.txt
+List the DataNodes that store replicas of each block of a file. ex: ```lsDN /home/ foo.txt```
 ```
 lsDN <path> <file_name>
 ```
