@@ -99,7 +99,8 @@ def replicate(curRepFac, block):
 
     while (rep < nn.REPLICATION and counter < len(nn.alive)):
         ips = nn.alive.keys()
-        for targetip in random.shuffle(ips):
+        random.shuffle(ips)
+        for targetip in ips:
             print (targetip)
             if (targetip not in nn.blockD.get(block, [targetip])) and (rep < nn.REPLICATION):
                 blocksrc.targetBlock(block, targetip)
