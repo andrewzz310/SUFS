@@ -46,9 +46,9 @@ Connect to an existing Namenode. example: connectNN 127.0.0.1
 connectNN <host_ip>
 ```
 
-Add a file to SUFU. File must already exist on an S3 bucket. example: cf /home/ foo.txt
+Add a file to SUFU. File must already exist on an S3 bucket. example: cf /home/ sufs-shieldsj foo.txt
 ```
-cf <dir> <file_name>
+cf <dir> <bucket_name> <file_name>
 ```
 
 Remove a file to SUFU. example: rm /home/ foo.txt

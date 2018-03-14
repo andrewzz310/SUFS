@@ -45,7 +45,8 @@ class NameNode:
         self.contentsInDir = {"/home/": []}
         self.startThreads()
         self.ip = myIp
-        self.block_size = 256#256000000  # in bytes aka 256MB
+        #self.block_size = 4000000  # 4MB
+        self.block_size = 64000000  # in bytes aka 64MB
         self.dn_assign_counter = 0  # used to assign blocks to datanodes ex: self.dn_assign_counter % <number of DNs>
 
 

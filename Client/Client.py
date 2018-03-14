@@ -24,10 +24,10 @@ class Client:
 
 
     # Main function
-    def put_file_to_nn(self, path, file_name):
+    def put_file_to_nn(self, path, bucket_name, file_name):
         self.path = path
         self.file_name = file_name
-        self.save_file_from_s3(self.file_name)
+        self.save_file_from_s3(bucket_name, self.file_name)
         block_info = self.register_file_to_nn(self.path, self.file_name, os.path.getsize(self.file_name))
         block_divider = BlockDivider.BlockDivider()
 
@@ -52,9 +52,9 @@ class Client:
 
 
 
-    def save_file_from_s3(self, file_name):
+    def save_file_from_s3(self, bucket_name, file_name):
         s3 = boto3.client('s3')
-        response = s3.get_object(Bucket=self.bucket_name, Key=file_name)
+        response = s3.get_object(Bucket=bucket_name, Key=file_name)
 
         temp_file = open(file_name, 'w+')
         temp_file.write(response['Body'].read())
