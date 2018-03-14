@@ -7,8 +7,8 @@ import os
 class BlockDivider:
 
     def __init__(self):
-        #self.BLOCKSIZE = 4000000  # 4MB
-        self.BLOCKSIZE = 64000000  # in bytes aka 64MB
+        self.BLOCKSIZE = 4000000  # 4MB
+        #self.BLOCKSIZE = 64000000  # in bytes aka 64MB
 
     def split_file(self, path, filename, out_path):
         """
