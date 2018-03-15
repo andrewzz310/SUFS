@@ -243,6 +243,8 @@ class NameNode:
         if any(char in dir for char in reservedChar):
             return "Name of directory cannot any of reserved characters"
         if path in self.contentsInDir:
+            if dir in self.contentsInDir[path]:
+                return 'Directory exists'
             self.contentsInDir[path + dir + "/"] = []
             self.contentsInDir[path].append(dir)
             self.nameNodeDisk()

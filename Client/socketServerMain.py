@@ -236,13 +236,21 @@ def clientthread(conn):
         elif cliInput[i] == 'mkdir':
             path = ''
             dir = ''
+            result = ''
             try:
                 path = cliInput[i + 1]
                 dir = cliInput[i + 2]
-                rpc_namenode.mkdir(path, dir)
+                result = rpc_namenode.mkdir(path, dir)
             except:
                 dir = ''
-            reply = 'create directory ' + path + dir
+            if result == 'Name of directory cannot any of reserved characters':
+                reply = 'Name of directory cannot any of reserved characters'
+            elif result == 'Fail to create a directory':
+                reply = 'Fail to create a directory'
+            elif result == 'Directory exists':
+                reply = 'Directory exists'
+            else:
+                reply = 'create directory ' + path + dir
 
         # remove a directory
         elif cliInput[i] == 'rmdir':
@@ -267,9 +275,9 @@ def clientthread(conn):
                             reply += '|_ ' + f + '\n'
             except:
                 reply = 'failed list directory\n'
+
         # List the DataNodes that store replicas of each block of a file
         elif cliInput[i] == 'lsDN':
-            #try:
             path = cliInput[i + 1]
             file_name = cliInput[i + 2]
             print(path + file_name)
@@ -284,9 +292,6 @@ def clientthread(conn):
                  #get rid of the last comma
                 strListDN = strListDN[:len(strListDN)-2]
                 reply += 'blockID = ' + blockID + '  ' + 'list of datanodes = [' + strListDN + ']\n'
-
-            #except:
-                #reply = 'failed list the DataNodes that store replicas of each block of a file\n'
 
         #######################
         # Namenode Commands
@@ -328,6 +333,7 @@ def clientthread(conn):
             except:
                 print ("there was a problem")
                 reply = "there was a problem"
+
         #######################
         # Datanode Commands
         #######################
