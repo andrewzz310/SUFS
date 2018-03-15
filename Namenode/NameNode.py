@@ -37,12 +37,16 @@ class NameNode:
 
         self.alive = {}  # Dict for alive datanodes, <key: datanodeIP, value: timestamp>
 
-        # Dictinary of Datanodes for easy lookup
+        # Dictionary of Datanodes for easy lookup
         # {key : value} = {DataNode1 : [blockID, blockID], DataNode2 : [blockID, blockID], ...}
         self.dnToBlock = {}
 
         self.mutex = Lock()
+
+        # Dictionary of path(s) and their content(s)
+        # {key : value} = {/home/ : [file1, dir1], ...}
         self.contentsInDir = {"/home/": []}
+
         self.startThreads()
         self.ip = myIp
         self.block_size = 4000000  # 4MB
@@ -116,7 +120,6 @@ class NameNode:
                     self.contentsInDir[path].append(file)
         outFile.close()
 
-
         outFile = open('fileD.txt', 'r')
 
         while outFile.read(1):
@@ -163,7 +166,7 @@ class NameNode:
                 listBlockID.append(blockID)
             # Add file to Directory
             self.contentsInDir[path].append(filename)
-
+            # Add file and its blockIDS
             self.fileD[path+filename] = listBlockID
             self.nameNodeDisk()
         return result
@@ -222,7 +225,7 @@ class NameNode:
                 retDict = self.lsDataNode(path + filename)
 
                 self.removeItemInBlockD_dnToBlock(retDict)
-                del self.fileD[path+filename]
+                del self.fileD[path+filename]   # Remove file and its blockIDS
                 self.nameNodeDisk()
                 return retDict
             else:
@@ -338,36 +341,7 @@ class NameNode:
 
 
 
-    # def writeFile(self, filename, blocks):  #pass in array of blocks as arguments
-    #
-    #     uniqueFile = filename
-    #     #need to find out how to make 'uniqueFile' the name of the file otherwise dictionary overwrites itself everytime method is called
-    #     self.fileD['uniqueFile'] = blocks
-    #
-    #     '''
-    #     For each block from file, we need to apply replication factor
-    #     '''
-        # For every element in blocks, part of key<uniqueFile>, Value<blocks>
-        #place the block into N different datanodes either by default or updated REPLICATION
-        #blockD = {blockName, datanodes}
-
-        #return list of blocks and datanodes back to client
-
-    # def blockReport(self, datanodeNum, blocks ):
-    #     """
-    #     The block report given from the data node
-    #     Pass in all blocks as array assigned to the specific datanodeNumber e.g. datanode1,datanode2,etc
-    #     :param datanodeNum:
-    #     :param blocks:
-    #     :return:
-    #     """
-    #     blockManager = xmlrpclib.ServerProxy('http://localhost:5000')
-    #     print blockManager.get_blockID()
-    #     print blockManager.get_DataNodeNumber()
-
-
-
-######### Alex's fault tolerance stuff #########
+######### fault tolerance stuff #########
 
     #start threads
     def startThreads(self):
@@ -448,6 +422,3 @@ class NameNode:
                         break
         return True
 
-# for testing
-# s = Namenode()
-# s.blockReport( 1, 2)
