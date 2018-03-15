@@ -354,7 +354,7 @@ class NameNode:
             time.sleep(10)
             for ip in self.alive.keys():
                 diff = time.time() - self.alive[ip]
-                if diff > 90:
+                if diff > 20:
                     print("dead ip is: " + ip)
                     #sys.stdout=open("/home/ec2-user/test.txt","w")
                     print ("create new datanode")
@@ -382,7 +382,7 @@ class NameNode:
         instance_id = ''
         instance_check = None
         instance = ec2.create_instances(
-        ImageId = 'ami-fda23285',
+        ImageId = 'ami-9ff566e7',
         MinCount = 1,
         MaxCount = 1,
         InstanceType='t2.micro',

@@ -43,7 +43,7 @@ def heartBeat():
     
     while 1:
         try:
-            time.sleep(10)
+            time.sleep(2)
             nn = nnRPCClient.nnRPCClient(NAMENODE_HOST, NAMENODE_PORT)
             nn.receiveHeartBeat(MY_IP)
         except:
