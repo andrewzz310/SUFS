@@ -128,7 +128,7 @@ class NameNode:
             strSize = outFile.readline()
             strSize = strSize.replace('\n', '')
             print('_' + strSize + '_')
-            size = int(strSize)
+            size = 0 #int(strSize) 
 
             if size > 0:
                 for i in range(0, size - 1):
