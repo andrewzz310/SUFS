@@ -52,7 +52,7 @@ class NameNode:
         #self.block_size = 4000000  # 4MB
         self.block_size = 64000000  # in bytes aka 64MB
         self.dn_assign_counter = 0  # used to assign blocks to datanodes ex: self.dn_assign_counter % <number of DNs>
-        self.restore() # If the NameNode gets rebooted, it picks up where it left off.
+        #self.restore() # If the NameNode gets rebooted, it picks up where it left off.
 
 
 
