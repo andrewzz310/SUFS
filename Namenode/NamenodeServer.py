@@ -74,9 +74,7 @@ def receiveBlockReport(myIP, blocks):
 
 def checkReplicas():
     global nn
-    global RECEIVED
-    if RECEIVED:
-        time.sleep(60)
+    time.sleep(300)
         while 1:
             time.sleep(10)
             for block in nn.blockD.keys():
@@ -115,7 +113,6 @@ def replicate(curRepFac, block):
 
 def putFile(path, filename, size):
     global nn
-    RECEIVED = True
     #print path, filename, size
     return nn.createFile(path, filename, size) # results of namenode an
 
