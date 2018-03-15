@@ -36,7 +36,7 @@ Create Namenode ec2 instance.
 createNN
 ```
 
-Create Datanodes ec2 instance(s). Creates 4 datanodes by defalut. ex: ```createDN 6``` or ```createDN```
+Create Datanodes ec2 instance(s). Creates 4 datanodes by default. ex: ```createDN 6``` or ```createDN```
 ```
 createDN <num_of_datanodes>
 ```
