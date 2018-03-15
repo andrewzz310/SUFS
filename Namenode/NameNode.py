@@ -351,10 +351,11 @@ class NameNode:
 
     def checkTimes(self):
         while 1:
-            time.sleep(30)
+            time.sleep(10)
             for ip in self.alive.keys():
                 diff = time.time() - self.alive[ip]
-                if diff > 40:
+                if diff > 90:
+                    print("dead ip is: " + ip)
                     #sys.stdout=open("/home/ec2-user/test.txt","w")
                     print ("create new datanode")
                     self.createNewDN(ip)
