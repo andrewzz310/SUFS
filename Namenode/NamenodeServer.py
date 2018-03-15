@@ -76,7 +76,7 @@ def checkReplicas():
     global nn
     time.sleep(300)
     while 1:
-        time.sleep(10)
+        time.sleep(60)
         for block in nn.blockD.keys():
             if (len(nn.blockD[block]) < nn.REPLICATION):
                 print (block)
