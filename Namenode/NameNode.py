@@ -75,7 +75,7 @@ class NameNode:
                 outFile.write('\n')
         outFile.close()
 
-        print('Path to contentsInDir\.txt and fileD\.txt', os.path.dirname(os.path.abspath(__file__)))
+        print('Path to contentsInDir.txt and fileD.txt', os.path.dirname(os.path.abspath(__file__)))
 
         outFile2 = open('fileD.txt', 'w')
         for pathfilename, listBlockIDs in self.fileD.iteritems():

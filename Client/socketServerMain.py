@@ -282,16 +282,20 @@ def clientthread(conn):
             file_name = cliInput[i + 2]
             print(path + file_name)
             dict = rpc_namenode.lsDataNode(path + file_name)
-            reply = 'Contents of ' + path + ' ' + file_name + ':\n'
-            for blockID, listDN in sorted(dict.iteritems()):
-                strListDN = ""
-                for datanode in listDN:
-                    strListDN += datanode
-                    strListDN += ', '
+            if not dict:
+                reply = 'Cannot list the DataNodes that store replicas of each block of a file.  It may because of wrong filename or path'
+            else:
+                reply = 'Contents of ' + path + ' ' + file_name + ':\n'
+                for blockID, listDN in sorted(dict.iteritems()):
+                    strListDN = ""
+                    for datanode in listDN:
+                        strListDN += datanode
+                        strListDN += ', '
 
-                 #get rid of the last comma
-                strListDN = strListDN[:len(strListDN)-2]
-                reply += 'blockID = ' + blockID + '  ' + 'list of datanodes = [' + strListDN + ']\n'
+                     #get rid of the last comma
+                    strListDN = strListDN[:len(strListDN)-2]
+                    reply += 'blockID = ' + blockID + '  ' + 'list of datanodes = [' + strListDN + ']\n'
+
 
         #######################
         # Namenode Commands
@@ -333,7 +337,6 @@ def clientthread(conn):
             except:
                 print ("there was a problem")
                 reply = "there was a problem"
-
         #######################
         # Datanode Commands
         #######################
