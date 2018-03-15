@@ -34,7 +34,7 @@ class Client:
         print('block info:', block_info)
 
         # Split files
-        print ("path is: " + path + " file_name is: " + self.file_name)
+        
         blocks = block_divider.split_file(path, self.file_name, '')
 
         for block in block_info:
@@ -48,7 +48,6 @@ class Client:
 
                 with open(smallblock, "rb") as handle:
                     obj = xmlrpclib.Binary(handle.read())
-                
                 print(rpc_datanode.receiveBlock(block[0], obj))
                 # delete block file from local storage
                 print ("********removing small chunk********")
