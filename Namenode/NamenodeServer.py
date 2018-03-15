@@ -70,7 +70,10 @@ def receiveBlockReport(myIP, blocks):
             nn.blockD[blockID] = [myIP]
         print('    add IP: ' + myIP + ' to dictionary blockD with blockID ' + blockID)
     print("_______________________________________________________________________\n")
+
     return True
+
+
 
 def checkReplicas():
     global nn
