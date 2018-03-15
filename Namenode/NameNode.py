@@ -111,7 +111,7 @@ class NameNode:
             path = path.replace('\n', '')
             strSize = outFile.readline()
             strSize = strSize.replace('\n', '')
-            size = int(strSize)
+            size = 0#int(strSize)
 
             if size > 0:
                 for i in range (0, size-1):
