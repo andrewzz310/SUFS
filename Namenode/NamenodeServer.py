@@ -75,13 +75,13 @@ def receiveBlockReport(myIP, blocks):
 def checkReplicas():
     global nn
     time.sleep(300)
-        while 1:
-            time.sleep(10)
-            for block in nn.blockD.keys():
-                if (len(nn.blockD[block]) < nn.REPLICATION):
-                    print (block)
-                    print (len(nn.blockD[block]))
-                    replicate(len(nn.blockD[block]), block)
+    while 1:
+        time.sleep(10)
+        for block in nn.blockD.keys():
+            if (len(nn.blockD[block]) < nn.REPLICATION):
+                print (block)
+                print (len(nn.blockD[block]))
+                replicate(len(nn.blockD[block]), block)
 
 def replicate(curRepFac, block):
     global nn
