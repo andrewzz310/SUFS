@@ -46,17 +46,17 @@ Connect to an existing Namenode. ex: ```connectNN 127.0.0.1```
 connectNN <host_ip>
 ```
 
-Add a file to SUFU. File must already exist on an S3 bucket. ex: ```cf /home/ sufs-shieldsj foo.txt```
+Add a file to SUFS. File must already exist on an S3 bucket. ex: ```cf /home/ sufs-shieldsj foo.txt```
 ```
 cf <dir> <bucket_name> <file_name>
 ```
 
-Remove a file to SUFU. ex: ```rm /home/ foo.txt```
+Remove a file to SUFS. ex: ```rm /home/ foo.txt```
 ```
 rm <dir> <file_name>
 ```
 
-Read (download) a file from SUFU. ex: ```read /home/ foo.txt```
+Read (download) a file from SUFS. ex: ```read /home/ foo.txt```
 ```
 read <dir> <file_name>
 ```
