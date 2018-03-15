@@ -29,7 +29,7 @@ class BlockDivider:
         input_file = open(filename)
 
         # get file size in bytes
-        input_file_size = os.path.abspath.getsize(filename)
+        input_file_size = os.path.getsize(filename)
         print "file size: " + str(input_file_size)
         print "block size: " + str(self.BLOCKSIZE)
 

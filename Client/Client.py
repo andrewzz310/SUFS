@@ -143,7 +143,7 @@ class Client:
     def read_file(self, path, file_name):
         dict = self.rpc_namenode.lsDataNode(path+file_name)
 
-        outputFile = open(file_name, 'wb')
+        outputFile = open(file_name, 'ab+')
         for blockID, listDN in sorted(dict.iteritems()):
             # choose the 1st DataNode in listDN
             dnIP = listDN[0]
@@ -151,7 +151,7 @@ class Client:
             # make the connect to this DataNode to read the block
             dn_rpc = xmlrpclib.ServerProxy(dnIP + ':8888')
             block_data = dn_rpc.giveBlock(blockID)
-
+            
             print('Block Data:', block_data)
 
             # write to the file
