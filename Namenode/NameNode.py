@@ -323,8 +323,8 @@ class NameNode:
 
 
     # List the DataNodes that store replicas of each block of a file
-    # Given a file path, the NameNode returns a list of blocks for that file
-    # and a list of DataNodes that hold replicas for each list
+    # Given a file path, it returns a dictionary with blockID as key
+    # and  a list of DataNodes that hold replicas as value
     # Example of how to call the function:      lsDataNode("/home/text.txt")
     # Return a dictionary:      {key : value}
     #                           {blockID, [DataNode1, DataNode2, DataNode3]}
