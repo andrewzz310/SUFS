@@ -14,6 +14,7 @@ HOST = ""
 NAMENODE_IP = ""
 nn = NameNode("localhost") #instantiate so that datanodes don't die
 REPLICATION = 3
+RECEIVED = False
 
 # Restrict to a particular path.
 class RequestHandler(SimpleXMLRPCRequestHandler):
@@ -73,13 +74,16 @@ def receiveBlockReport(myIP, blocks):
 
 def checkReplicas():
     global nn
-    while 1:
-        time.sleep(10)
-        for block in nn.blockD.keys():
-            if (len(nn.blockD[block]) < nn.REPLICATION):
-                print (block)
-                print (len(nn.blockD[block]))
-                replicate(len(nn.blockD[block]), block)
+    global RECEIVED
+    if RECEIVED:
+        time.sleep(60)
+        while 1:
+            time.sleep(10)
+            for block in nn.blockD.keys():
+                if (len(nn.blockD[block]) < nn.REPLICATION):
+                    print (block)
+                    print (len(nn.blockD[block]))
+                    replicate(len(nn.blockD[block]), block)
 
 def replicate(curRepFac, block):
     global nn
@@ -111,6 +115,7 @@ def replicate(curRepFac, block):
 
 def putFile(path, filename, size):
     global nn
+    RECEIVED = True
     #print path, filename, size
     return nn.createFile(path, filename, size) # results of namenode an
 
