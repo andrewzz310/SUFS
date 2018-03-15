@@ -48,7 +48,7 @@ class NameNode:
         self.block_size = 4000000  # 4MB
         #self.block_size = 64000000  # in bytes aka 64MB
         self.dn_assign_counter = 0  # used to assign blocks to datanodes ex: self.dn_assign_counter % <number of DNs>
-        #self.restore() # If the NameNode gets rebooted, it picks up where it left off.
+        self.restore() # If the NameNode gets rebooted, it picks up where it left off.
 
 
 
@@ -65,11 +65,12 @@ class NameNode:
             outFile.write(strSize)  # write the length of the contents in the current path
             outFile.write('\n')
 
-
             for file in contents:
                 strFile = file
                 outFile.write(strFile)
                 outFile.write('\n')
+        outFile.close()
+
 
         outFile2 = open('fileD.txt', 'w')
         for pathfilename, listBlockIDs in self.fileD.iteritems():
@@ -90,7 +91,48 @@ class NameNode:
 
 
 
+    # If the NameNode gets rebooted, it picks up where it left off.
+    def restore(self):
+        # if the file doesn't exist, there is nothing in Namenode
+        if os.path.isfile('contentsInDir.txt') == False:
+            return
 
+        if os.stat('contentsInDir.txt').st_size == 0:
+            return
+
+        outFile = open('contentsInDir.txt', 'r')
+
+        while outFile.read(1):
+            path = outFile.readline()
+            path = path.replace('\n', '')
+            strSize = outFile.readline()
+            strSize = strSize.replace('\n', '')
+            size = int(strSize)
+
+            if size > 0:
+                for i in range (0, size-1):
+                    file = outFile.readline()
+                    file = file.replace('\n','')
+                    self.contentsInDir[path].append(file)
+        outFile.close()
+
+
+        outFile = open('fileD.txt', 'r')
+
+        while outFile.read(1):
+            pathfilename = outFile.readline()
+            pathfilename = pathfilename.replace('\n', '')
+            strSize = outFile.readline()
+            strSize = strSize.replace('\n', '')
+            print('_' + strSize + '_')
+            size = int(strSize)
+
+            if size > 0:
+                for i in range(0, size - 1):
+                    blockID = outFile.readline()
+                    blockID = blockID.replace('\n', '')
+                    self.fileD[pathfilename].append(blockID)
+        outFile.close()
 
 
 
@@ -180,6 +222,7 @@ class NameNode:
                 retDict = self.lsDataNode(path + filename)
 
                 self.removeItemInBlockD_dnToBlock(retDict)
+                del self.fileD[path+filename]
                 self.nameNodeDisk()
                 return retDict
             else:
