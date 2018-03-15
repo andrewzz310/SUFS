@@ -10,6 +10,7 @@ import time
 import os
 from thread import *
 import xmlrpclib
+from modules import BlockDivider
 
 ######### GLOBAL VARIABLES #########
 PORT = 8888
@@ -92,14 +93,20 @@ def removeBlock(blockID):
 
 # used by namenode for targeted replications
 def targetBlock(blockID, dnIp):
+    global datanode
     targetDn = dnRPCClient.dnRPCClient(dnIp, 8888)
-    path = "/home/ec2-user/blocks/" + blockID
-    #path = '/Users/justin/cs/cloud/SUFS/blocks/' + blockID
-    obj = None
-    with open(path, "rb") as handle:
-        obj = xmlrpclib.Binary(handle.read())
-    #call datanode structure to write this to hdd
-    targetDn.receiveBlock(blockID, obj)
+    #path = "/home/ec2-user/blocks/" + blockID
+    path = datanode.block_dir + blockID #'/Users/alex/Developer/SUFS/blocks/' + blockID
+    block_divider = BlockDivider.BlockDivider(4000000)
+
+    smallblocks = block_divider.split_file('', path, '')
+    for smallblock in smallblocks:
+        obj = None
+        with open(smallblock, "rb") as handle:
+            obj = xmlrpclib.Binary(handle.read())
+        #call datanode structure to write this to hdd
+        targetDn.receiveBlock(blockID, obj)
+        os.remove(smallblock)
     return True
 
 ######### CALL THIS FUNCTION FIRST VIA NAMENODE RPC #########

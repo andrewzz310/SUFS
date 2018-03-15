@@ -29,14 +29,37 @@ class Client:
         self.file_name = file_name
         self.save_file_from_s3(bucket_name, self.file_name)
         block_info = self.register_file_to_nn(self.path, self.file_name, os.path.getsize(self.file_name))
-        block_divider = BlockDivider.BlockDivider()
+        block_divider = BlockDivider.BlockDivider(64000000)
 
         print('block info:', block_info)
 
         # Split files
+        
         blocks = block_divider.split_file(path, self.file_name, '')
 
+        for block in block_info:
+            print("********next block********")
+            smalldivider = BlockDivider.BlockDivider(4000000)
+            smallblocks = smalldivider.split_file(path, block[0], '')
+            print ("********dividing into small chunks********")
+            for smallblock in smallblocks:
+                print 'Connected to Datanode ' + str(block[1]) + ' and ' + block[0] + " mini-block " + smallblock
+                rpc_datanode = xmlrpclib.ServerProxy(str(block[1]) + ':8888')
+
+                with open(smallblock, "rb") as handle:
+                    obj = xmlrpclib.Binary(handle.read())
+                print(rpc_datanode.receiveBlock(block[0], obj))
+                # delete block file from local storage
+                print ("********removing small chunk********")
+                os.remove(smallblock)
+            print ("********removing parent chunk********")
+            os.remove(block[0])
+
         # Send each block to Datanode
+
+    def saveCode(self): #lol
+        block_info = []
+        file_name = "blah"
         for block in block_info:
             print 'Connected to Datanode ' + str(block[1]) + ' and ' + block[0]
             rpc_datanode = xmlrpclib.ServerProxy(str(block[1]) + ':8888')
@@ -46,10 +69,8 @@ class Client:
             print(rpc_datanode.receiveBlock(block[0], obj))
             # delete block file from local storage
             os.remove(block[0])
-
         # delete original file from local storage
         os.remove(file_name)
-
 
 
     def save_file_from_s3(self, bucket_name, file_name):

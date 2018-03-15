@@ -8,7 +8,7 @@ class DataNode:
         self.blocks = []
         self.ip = ip
         self.nnRPC = nnRPCClient.nnRPCClient("http://" + nnIp, nnPort)
-        self.block_dir = '/home/ec2-user/blocks/'#'/Users/justin/cs/cloud/SUFS/blocks/'
+        self.block_dir = '/home/ec2-user/blocks/'#'/Users/alex/Developer/SUFS/blocks/'##'/Users/justin/cs/cloud/SUFS/blocks/'
         if not os.path.exists(self.block_dir):
             os.makedirs(self.block_dir)
 
@@ -32,10 +32,12 @@ class DataNode:
     # 4) update BlockReport (slef.listBlockID)
     # 5) send BlockReport to NameNode
     def receiveBlock(self, blockID, blockData):
-        with open(self.block_dir+blockID, "wb") as handle:
+        with open(self.block_dir+blockID, "ab+") as handle:
             handle.write(blockData.data)
 
-        self.blocks.append(blockID)
+        if blockID not in self.blocks:
+            self.blocks.append(blockID)
+
         return True
 
 
