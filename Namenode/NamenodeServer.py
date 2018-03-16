@@ -86,6 +86,8 @@ def checkReplicas():
                 print (len(nn.blockD[block]))
                 replicate(len(nn.blockD[block]), block)
 
+
+
 def replicate(curRepFac, block):
     global nn
     rep = curRepFac
@@ -102,11 +104,14 @@ def replicate(curRepFac, block):
         except:
             continue
 
+    # Either gone through all the datanodes or replication factor is met
     while (rep < nn.REPLICATION and counter < len(nn.alive)):
         ips = nn.alive.keys()
+        # Shuffle live datanodes — randomize placement of blocks
         random.shuffle(ips)
         for targetip in ips:
             print (targetip)
+            # If the “targetip” doesn’t have the block, it will write the block there
             if (targetip not in nn.blockD.get(block, [targetip])) and (rep < nn.REPLICATION):
                 blocksrc.targetBlock(block, targetip)
                 rep += 1
@@ -114,10 +119,12 @@ def replicate(curRepFac, block):
             counter += 1
 
 
+
 def putFile(path, filename, size):
     global nn
     #print path, filename, size
     return nn.createFile(path, filename, size) # results of namenode an
+
 
 
 # Directory functions
