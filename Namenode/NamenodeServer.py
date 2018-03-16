@@ -111,7 +111,7 @@ def replicate(curRepFac, block):
         random.shuffle(ips)
         for targetip in ips:
             print (targetip)
-            # If the “targetip” doesn’t have the block, it will write the block there
+            # If the targetip doesnt have the block, it will write the block there
             if (targetip not in nn.blockD.get(block, [targetip])) and (rep < nn.REPLICATION):
                 blocksrc.targetBlock(block, targetip)
                 rep += 1

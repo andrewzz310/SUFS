@@ -16,14 +16,11 @@ class Client:
         self.REPLICATION = 3
 
 
-
     def set_namenode(self, url):
         self.RPC_NAMENODE_SERVER_URL = url
         self.rpc_namenode = xmlrpclib.ServerProxy("http://" + str(self.RPC_NAMENODE_SERVER_URL) + ':8000')
 
 
-
-    # Main function
     def put_file_to_nn(self, path, bucket_name, file_name):
         self.path = path
         self.file_name = file_name
@@ -54,6 +51,9 @@ class Client:
                 os.remove(smallblock)
             print ("********removing parent chunk********")
             os.remove(block[0])
+
+        # Remove original file
+        os.remove(file_name)
 
         # Send each block to Datanode
 
