@@ -380,7 +380,14 @@ class NameNode:
 
 
     def createNewDN(self, prevDNIp):
+        print ('***************************************')
+        print ('***************************************')
+        print ('***************************************')
         print('creating ec2 instance')
+        print ('***************************************')
+        print ('***************************************')
+        print ('***************************************')
+
         ec2 = boto3.resource('ec2')
         instance_id = ''
         instance_check = None
@@ -400,10 +407,16 @@ class NameNode:
             time.sleep(10)
             instance_check = ec2.Instance(instance_id)
         print('Waiting for bootup')
-        time.sleep(40)
+        time.sleep(60)
         
         dnIp = str(instance_check.public_ip_address)
+        print ('***************************************')
+        print ('***************************************')
+        print ('***************************************')
         print (dnIp)
+        print ('***************************************')
+        print ('***************************************')
+        print ('***************************************')
         datanode = xmlrpclib.ServerProxy("http://" + dnIp + ':' + '8888')
         print ('connected to dn')
         datanode.receiveNNIp("http://" + self.ip, "http://" + dnIp)
