@@ -107,11 +107,11 @@ def replicate(curRepFac, block):
     # Either gone through all the datanodes or replication factor is met
     while (rep < nn.REPLICATION and counter < len(nn.alive)):
         ips = nn.alive.keys()
-        # Shuffle live datanodes — randomize placement of blocks
+        # Shuffle live datanodes randomize placement of blocks
         random.shuffle(ips)
         for targetip in ips:
             print (targetip)
-            # If the “targetip” doesn’t have the block, it will write the block there
+            # If the targetip doesnt have the block, it will write the block there
             if (targetip not in nn.blockD.get(block, [targetip])) and (rep < nn.REPLICATION):
                 blocksrc.targetBlock(block, targetip)
                 rep += 1
