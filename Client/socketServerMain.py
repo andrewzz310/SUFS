@@ -194,39 +194,9 @@ def clientthread(conn):
             print(client.read_file(path, file_name))
             reply = 'Read file ' + path + file_name
 
-        # elif cliInput[i] == 'df filename':
-        #     '''
-        #     1) get info on where list of blocks are stored on which datanodes from the nameNode
-        #     2) contact datanodes for the blocks
-        #     3) tell datanode to remove blocks and tell namenode to remove file in the directory and list of datanodes that holds the block
-        #     '''
-        #     reply = 'access delete file completed| next cmd: '
-
         elif cliInput[i] == 'hello':
             print("Connecting to Namenode...")
             reply = rpc_namenode.hello_world()
-
-        #elif cliInput[i] == 'getfilesize':
-        #    print("Getting filenameSize from Namenode...")
-        #    reply = rpc_namenode.write1("testfile1.txt", 256)
-
-        # elif cliInput[i] == 'runnamenode':
-        #     print("Running Namenode")
-        #     subprocess.call('ls', shell=True, cwd='/mnt/c/workspace/SUFS/Namenode')
-        #     subprocess.call('python NamenodeServer.py', shell=True, cwd='/mnt/c/workspace/SUFS/Namenode')
-        #
-        #     # subprocess.call('cd Namenode', shell=True)
-        #     # subprocess.call('ls', shell=True)
-        #     reply = 'namenode started| next cmd: '
-        #
-        # elif cliInput[i] == 'rundatanode':
-        #     print("Running datanode")
-        #     subprocess.call('ls', shell=True, cwd='/mnt/c/workspace/SUFS/Namenode')
-        #     subprocess.call('python DatanodeServer.py', shell=True, cwd='/mnt/c/workspace/SUFS/Datanode')
-        #
-        #     # subprocess.call('cd Namenode', shell=True)
-        #     # subprocess.call('ls', shell=True)
-        #     reply = 'namenode started| next cmd: '
 
         #######################
         # Directory Commands
@@ -296,7 +266,6 @@ def clientthread(conn):
                     strListDN = strListDN[:len(strListDN)-2]
                     reply += 'blockID = ' + blockID + '  ' + 'list of datanodes = [' + strListDN + ']\n'
 
-
         #######################
         # Namenode Commands
         #######################
@@ -337,6 +306,7 @@ def clientthread(conn):
             except:
                 print ("there was a problem")
                 reply = "there was a problem"
+
         #######################
         # Datanode Commands
         #######################
