@@ -417,7 +417,7 @@ class NameNode:
             time.sleep(10)
             instance_check = ec2.Instance(instance_id)
         print('Waiting for bootup')
-        time.sleep(60)
+        time.sleep(120)
         
         dnIp = str(instance_check.public_ip_address)
         print ('***************************************')
