@@ -107,7 +107,7 @@ def replicate(curRepFac, block):
     # Either gone through all the datanodes or replication factor is met
     while (rep < nn.REPLICATION and counter < len(nn.alive)):
         ips = nn.alive.keys()
-        # Shuffle live datanodes — randomize placement of blocks
+        # Shuffle live datanodes randomize placement of blocks
         random.shuffle(ips)
         for targetip in ips:
             print (targetip)
