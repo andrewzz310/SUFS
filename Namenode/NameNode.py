@@ -263,6 +263,8 @@ class NameNode:
             # 1. look at the list and delete all the files___________NEED TO TEST
             #    Note: Ignore if there is a sub-directory, it will be delete in the for loop
             retDict = {}
+            # the list of pathfilename needed to delete in dictionary fileD
+            delFileDList =[]
 
             # if the directory is empty, return here
             if len(self.contentsInDir[path]) == 0:
@@ -275,6 +277,8 @@ class NameNode:
                 # check if it is a directory or file
                 if re.match("^[\w,\s-]+[\.[A-Za-z]+]*$", file):
                     retDict.update(self.lsDataNode(path + file))
+                    # add pathfilename to delete in dictionary fileD later
+                    delFileDList.append(path + file)
             del self.contentsInDir[path]
 
             # 2. check if there is sub-directory in the current "path"
@@ -287,6 +291,8 @@ class NameNode:
                         # check if it is a directory or file
                         if re.match("^[\w,\s-]+[\.[A-Za-z]+]*$", file):
                             retDict.update(self.lsDataNode(key + file))
+                            # add pathfilename to delete in dictionary fileD later
+                            delFileDList.append(key + file)
 
                     del self.contentsInDir[key]
 
@@ -301,6 +307,10 @@ class NameNode:
             delDirName = path[index+1 : len(path)-1]
             self.contentsInDir[parentDir].remove(delDirName)
 
+        # remove files under this directory and its subdirectory form dictionary fileD
+        for pathfilename in delFileDList:
+            if pathfilename in self.fileD:
+                del self.fileD[pathfilename]
         self.removeItemInBlockD_dnToBlock(retDict)
         self.nameNodeDisk()
         return retDict
