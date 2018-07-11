@@ -1,3 +1,22 @@
+# Alex Lew, Hang Nguyen, Justin Shields, Andrew Zhu
+
+SUFS is a replica of the HDFS (Hadoop Distributed File System) that runs inside AWS using EC2 instances to form the cluster.
+We used Boto3 (AWS SDK for python) in order for our client (localhost) to connect to Namenode and Datanode EC2 instances. File storage was commenced in S3 buckets on AWS. Interactions and communication was done through RPC/Telnet/TCP. The SUFS distributed file system is resilient in storing and retrieving files, deletion of files, and includes fault tolerant datanodes based on replication, heart-beats, and block reports. For more information regarding HDFS:  https://hadoop.apache.org/docs/r1.2.1/hdfs_design.html
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # SUFS - Seattle University File System
 
 ## Useful Commands
